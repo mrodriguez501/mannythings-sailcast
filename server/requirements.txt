@@ -1,0 +1,21 @@
+# SailCast Backend Dependencies
+# Install: pip install -r requirements.txt
+
+# Web framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+
+# OpenAI SDK
+openai==1.59.3
+
+# HTTP client for NWS API
+httpx==0.28.1
+
+# Scheduling
+apscheduler==3.10.4
+
+# Environment variable management
+python-dotenv==1.0.1
+
+# CORS middleware (included with fastapi, listed for clarity)
+# starlette is a fastapi dependency

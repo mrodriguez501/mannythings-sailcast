@@ -1,0 +1,71 @@
+# ========================
+# Python Backend
+# ========================
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Distribution / packaging
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ========================
+# React Frontend (client)
+# ========================
+
+# Dependencies
+client/node_modules/
+
+# Build output
+client/dist/
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+server/.env
+
+# ========================
+# Runtime Data (usage tracking)
+# ========================
+server/app/data/usage.json
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# IDE / Editor
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================
+# Logs
+# ========================
+*.log
+npm-debug.log*
+
+# ========================
+# Runtime
+# ========================
+pids/
+*.pid
+*.seed
+*.pid.lock
