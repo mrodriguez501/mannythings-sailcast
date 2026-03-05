@@ -1,0 +1,142 @@
+/* SailCast – overrides on Pico */
+.location {
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.recommendation-box {
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+  background: var(--pico-card-background-color);
+  border-radius: var(--pico-border-radius);
+  border: 1px solid var(--pico-muted-border-color);
+}
+
+.recommendation-box .loading,
+.recommendation-box .error {
+  margin: 0;
+  color: var(--pico-muted-color);
+}
+
+.recommendation-box .error {
+  color: var(--pico-del-color);
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: var(--pico-muted-color);
+}
+
+/* USWDS-style alerts (designsystem.digital.gov/components/alert/) */
+.usa-alert {
+  padding: 1rem 1rem 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  border-left: 0.5rem solid;
+  background-color: var(--pico-background-color);
+}
+
+.usa-alert__body {
+  padding: 0;
+}
+
+.usa-alert__heading {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.usa-alert__text {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.usa-alert__text:last-child {
+  margin-bottom: 0;
+}
+
+.usa-alert--info { border-left-color: #005ea2; }
+.usa-alert--warning { border-left-color: #b45309; }
+.usa-alert--error { border-left-color: #b50909; background-color: #f8e8e8; }
+.usa-alert--emergency { border-left-color: #9c3d10; background-color: #fef0eb; }
+
+#alerts-list .usa-alert:last-child {
+  margin-bottom: 0;
+}
+
+.marine-forecast-text {
+  white-space: pre-wrap;
+  font-family: var(--pico-font-family);
+  font-size: 0.9rem;
+}
+
+/* 24-hour cards grid below recommendation */
+.hour-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--pico-block-spacing-vertical);
+}
+
+.hour-card {
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+  background: var(--pico-card-background-color);
+  border-radius: var(--pico-border-radius);
+  border: 1px solid var(--pico-muted-border-color);
+}
+
+.hour-card .hour-card-date {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem 0;
+  padding: 0;
+  border: none;
+}
+
+.hour-card .hour-card-conditions {
+  font-size: 0.8rem;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+
+.hour-card .hour-card-wind {
+  font-size: 0.8rem;
+  margin: 0 0 0.2rem 0;
+}
+
+.hour-card .hour-card-tide {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* Section states: loading, no data, error */
+.section-message {
+  margin: 0;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.section-message--loading {
+  color: var(--pico-muted-color);
+}
+
+.section-message--no-data {
+  color: var(--pico-muted-color);
+}
+
+.section-message--error {
+  color: var(--pico-del-color);
+}
+
+#tide-chart-container {
+  position: relative;
+  max-width: 100%;
+  min-height: 200px;
+}
+
+#tide-chart {
+  max-height: 320px;
+}
+
+table {
+  width: 100%;
+  font-size: 0.9rem;
+}

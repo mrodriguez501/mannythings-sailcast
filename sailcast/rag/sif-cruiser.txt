@@ -1,0 +1,645 @@
+d
+SCOW CRUISER SKIPPER INFORMATION FILE
+Approved by the Board February 10, 2025
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 1 of 15
+Table of Contents
+INTRODUCTION.............................................................................................................................................................. 1
+TOWING INSURANCE ....................................................................................................................................................... 2
+SAILING AREA, GENERAL USE AND SCHEDULING .......................................................................................................... 2
+CRUISING AREA .............................................................................................................................................................. 2
+RESERVATIONS &TIME SLOTS........................................................................................................................................... 2
+SAFETY CONSIDERATIONS.............................................................................................................................................. 4
+DEBRIS &ICE ................................................................................................................................................................. 4
+SMOKING ...................................................................................................................................................................... 4
+OPEN FLAMES, GRILLS &STOVES ...................................................................................................................................... 4
+ONBOARD DOCUMENTS AND RESOURCES............................................................................................................................ 4
+FLOAT PLANS ................................................................................................................................................................. 4
+SEACOCK VALVES ............................................................................................................................................................ 5
+SIGNALING DEVICES ........................................................................................................................................................ 5
+FIRE ABOARD A VESSEL.................................................................................................................................................... 5
+GENERAL OPERATING PROCEDURES.............................................................................................................................. 5
+DISPLACEMENT, FREEBOARD, SAIL AREA, DRAFT AND MAST HEIGHT ....................................................................................... 5
+FOUR-STROKE ENGINE OPERATION.................................................................................................................................... 6
+DOCKING PROCEDURES.................................................................................................................................................... 8
+MARINE HEAD ............................................................................................................................................................... 8
+ELECTRICAL SYSTEM ........................................................................................................................................................ 8
+MARINE RADIO USE...................................................................................................................................................... 10
+GETTING UNDERWAY UNDER POWER............................................................................................................................... 11
+DOCKING..................................................................................................................................................................... 11
+HEADSAILS &REEFING................................................................................................................................................... 12
+Headsail configuration ........................................................................................................................................ 12
+Reefing................................................................................................................................................................. 13
+SECURING THE BOAT AFTER SAILING................................................................................................................................ 13
+GROUNDING & GETTING OFF ...................................................................................................................................... 14
+INTRODUCTION
+This Cruiser Skipper Information File (SIF) sets forth the skipper responsibilities and SCOW procedures
+specific to SCOW's three cruising keelboats: 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 2 of 16
+• Rebecca (1980 Catalina 25)
+• Hiatus (2003 Catalina 250)
+• Lion’s Paw2
+(2003 Catalina 250)
+In addition to this SIF Skippers must also comply with:
+• SCOW Skipper Requirements and Boat Use Policy
+• Inland Navigation Rules
+• Other SCOW’s policies and legal requirements
+• Washington Sailing Marina Rules, posted on the Bylaws and Policies page of the SCOW website
+This SIF only addresses certain features of the boats; it is not a substitute for SCOW Cruiser Training or a
+complete instruction manual on how to operate the boats. Detailed operating instructions, equipment
+lists and stowage plans are on board each boat. The Pre-Sail and Post-Sail checklists on each boat list
+additional items that must be done before and after sailing.
+Towing Insurance: Cruiser skippers are required to purchase an individual towing policy such as the
+Unlimited Freshwater Towing policy offered at a discount to SCOW members by BoatUs.com. Skippers
+must maintain coverage as a condition of skippering a cruiser. Skippers must carry their insurance
+information, including information on how to request a tow, while skippering. Skippers may be liable for
+damages incurred if towed by a vessel not sanctioned by their towing insurance carrier.
+SAILING AREA, GENERAL USE AND SCHEDULING
+Cruising Area
+Cruising boats may be sailed in the following areas:
+• Up the Potomac only to the 14th Street Bridge.
+• Up the Washington Channel to the Washington Marina (beware of shifting winds and boat
+traffic).
+• Up the Anacostia River under the Frederick Douglass Memorial Bridge to the Martin Luther
+King Jr. Ave SE/ 11th St. Bridge. The new Douglass Bridge has 43’-3” minimum vertical
+clearance above mean high water in the navigable channel. The tallest SCOW boat, Rebecca,
+has a mast hight of 36’ with a 1.5’ antenna. The remains of the old Douglass Bridge center
+pier are submerged and marked with numerous danger buoys. Leave those well to port
+going upriver. Respect restricted areas near the Navy Yard.
+• Downriver as the skipper pleases, provided that the boat can be returned on time.
+Boats must be motored under bridges. The sails may be left up while motoring if steering will not be
+affected. However, depending on wind and traffic conditions, the skipper may want to lower the
+sails. If the sails are up, a careful lookout must be kept for traffic.
+Reservations & Time Slots
+Cruisers may be reserved during the following time slots The boats must be returned to their proper
+slip at the end of the usage period except in emergency situations. If the boats are not returned to
+their proper slip, the skipper must notify the Skipper Director and Commodore as soon as possible.
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 3 of 16
+1. Day Sail Time Slots
+a) 8:00 a.m. to 5:00 p.m. daily
+b) 5:00 p.m. to 12:00 a.m. daily
+2. Overnight Sail Time Slot
+a) 5:00 p.m. to 8:00 a.m. daily
+b) The Skipper must have prior permission of the Director Skipper and pay a fee of $10 for
+each 5 PM to 8 AM overnight time slot. The skipper may enter a reservation in the
+system pending approval. The fee will be due after the overnight has been completed. No
+fee will be due if the skipper cancels the reservation more than 48 hours in advance of
+the reservation period, if the boat is removed from service or if the Skipper Director
+agrees that forecast weather or other unsafe condition justified cancellation.
+3. SCOW boat reservations are made online at https://scowreg.herokuapp.com/. Authorized
+Skippers have access to the system. When making a reservation, put your phone number in
+the comment field in case someone needs to contact you regarding the reservation.
+Boats can be reserved for one or more hour-long periods. The boat reservation system is not
+programmed to enforce the SCOW rules. It is the skipper’s responsibility to follow the rules
+by only making reservations within the approved time slots.
+Reservations made by SCOW Board members for training, social sails, maintenance, and
+other club events, show in the reservation system as reserved by a Director. If you wish to
+contact a Board member about these reservations, please send an email to that Board
+member directly.
+• A skipper may only have two future reservations on the books at the same time for
+personal use. Reservations for training, etc. do not count as personal reservations. Club
+use reservations normally are made by a Board member, but may be made by an
+individual member if authorized by a Board member. Reservations for training or
+tutoring must be made by, or approved by, the Training Director.
+• A single skipper may not reserve two consecutive time slots in advance for the same
+boat. However, during the week (Monday – Friday) other than Federal Holidays, cruisers
+may be reserved for consecutive time slots by a single skipper.
+• If more than one SCOW skipper is in the boat and they have scheduled consecutive time
+slots, they may sail together until the end of the two consecutive slots.
+• Skippers may schedule cruisers for part of a sailing time slot but must not cross slots,
+e.g., may reserve from noon to 3 PM, but not reserve from 3 PM to 8 PM.
+• Skippers have a one-hour grace period to arrive at the Marina after the start of the time
+their reserved cruising boat use period begins. If the scheduled skipper has not arrived
+at the end of the grace period, another skipper may use the boat after entering a
+reservation in boat reservation system or, if the existing reservation cannot be deleted,
+sending an email to Skipper@scow.org explaining the situation. Note that a reservation
+may not necessarily start at the beginning of a boat use time slot. For example, Skipper
+A has reserved Rebecca from 9 AM to noon. Skipper B arrives at the Marina at 9 AM and 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 4 of 16
+sees Rebecca in her slip. Although this is 1 hour after the start of the 8 AM to 5 PM
+“time slot” it is not 1 hour after the start of Skipper A’s reserved period.
+• Skippers who cannot keep a reservation shall promptly delete the reservation and, if
+possible, send and “all-SCOW” email alerting other skippers that the boat is available.
+• When a skipper returns to the dock at the end of a reservation, if the next skipper with a
+reservation is at the dock, the returning skipper may turn over responsibility for the
+boat to the next skipper without performing the post-sail activities.
+SAFETY CONSIDERATIONS
+Smoking
+Smoking (cigarettes, cigars and pipes) and vaping is not permitted on the boats, either in the cockpit
+or cabin. Our boats have gas tanks in the cockpits. Use of cannabis in any fashion is prohibited.
+Open Flames, Grills & Stoves
+1. The Marina prohibits charcoal grills, gas grills or open flames of any type on the docks or
+on any boat tied to the docks. The use of grills is not permitted on board SCOW boats at
+any time, whether or not at the Marina. Only the stoves installed in the cruising boat
+galleys may be used on board and only when docked or anchored. Be sure that the fire
+extinguisher is charged and available. These stoves can cause a fire, or carbon monoxide
+poisoning, if used improperly. Before lighting a stove, ensure that the cabin is well
+ventilated and free of gasoline vapors. Carbon Monoxide/Smoke detectors are installed
+on our cruisers. Ensure that the detectors are charged and working.
+2. Rebecca has an alcohol stove. Skippers are responsible for providing fuel. Only refill the
+stove when the boat is docked or moored. If possible, fill the stove on shore. Avoid
+spilling or overfilling. Never refill a hot stove. If there is spillage, do not light the alcohol
+stove until the area has been thoroughly cleaned and the spill has evaporated. Skippers
+must bring their own fuel.
+3. Hiatus and Lion’s Paw2 have propane (LPG) stoves. Confirm with the Cruiser
+Maintenance Director to determine if they are currently operable. Fuel tanks are in
+cockpit starboard lazarette. Turn off propane flow in this order: at the knob on the
+propane tank, at the LPG switch on the starboard cabin wall, and then at the knob on
+the stove. Ensure that all knobs and switches are in the off/closed position as soon as
+stove is no longer in use.
+Onboard Documents and Resources
+Each boat has two binders. The yellow binder contains the boat registration, skipper logs, sailing
+checklists, repair logs and the stowage plan. The black binder contains reference documents such as
+club policies and manuals for the boats and various equipment. Each boat has a stowage plan in the
+yellow binder. Equipment is generally stored in the same areas on each boat. Skippers must ensure
+that all equipment is stowed in the proper location after use and that it is in working order.
+Float Plans
+A float plan must be filled out and left in the unlocked black box labeled FLOAT PLANS on the dock
+box. Blank forms can be found in the log. Float plans must be removed at the end of each sail.
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 5 of 16
+Seacock valves
+Rebecca has two seacocks. One is accessible under the v-berth and drains the sink in the head. This
+seacock should be closed at all times unless the sink is being used. The other is accessible under the
+sink and drains the ice chest, which is not used; this seacock always should be left closed. The
+seacocks are ball valves and should be turned so handle is perpendicular to the drain hose to close
+and parallel to open. Lion’s Paw2
+’s and Hiatus’ sinks drain above the waterline; neither have
+seacocks.
+Signaling Devices
+Instead of flares, each boat has a battery-operated beacon stored in the head area, which runs on 2
+D batteries in a mesh bag attached to the beacon, that must be installed when using the beacon.
+Each boat also has a 12v corded searchlight to be plugged into the cigarette lighter.
+Fire Aboard A Vessel
+1. Fires may be electrical such as from wiring or a battery (Type C), liquid such as gas or alcohol
+(Type B), or paper/wood (Type A). SCOW’s cruisers are equipped with Type A/B/C extinguishers
+that will be effective on any type of fire. Only Type A fires can be extinguished with water.
+2. The most effective fire-fighting technique taking care to avoid fire. Skippers should be alert for
+dangers such as a leaking fuel line when they perform their pre-sailing check. If detected, the
+boat must be taken out of service immediately and the Maintenance Director notified.
+3. If a fire occurs on a vessel, act quickly. Focus on the safety of the crew rather than the vessel.
+The crew should immediately don PFDs and, if below, immediately go topside. If the fire is small
+and contained, you may be able to fight it. If you have any doubt about whether you can contain
+the fire, immediately give a Mayday with your situation and location and prepare to abandon
+the vessel. If you do fight the fire, have the crew continue preparations to abandon the vessel in
+case you are unsuccessful.
+AN EXTINGUISHER WILL DISCHARGE FOR APPROXIMATELY 10 SECONDS BEFORE EMPTY. DO
+NOT OVERESTIMATE YOUR ABILITY TO PUT OUT A FIRE.
+It is critical to aim it at the BASE of the fire. To use a fire extinguisher, BoatUS recommends a
+mnemonic, P-A-S-S:
+Pull the pin at the top of the cylinder
+Aim the nozzle at the base of the fire
+Squeeze or press the handle
+Sweep the contents from side to side at the base of the fire or use a series of short
+blasts aimed at the base until it goes out
+GENERAL OPERATING PROCEDURES
+Displacement, Freeboard, Sail Area, Draft and Mast Height
+1. Rebecca displaces approximately 4500 pounds, with approximately 1500 pounds of ballast and
+approximately 270 square feet of sail area. Hiatus and Lion’s Paw2 displace approximately 4,200
+pounds with approximately 1,050 pounds of ballast and a little less sail area. 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 6 of 16
+2. Because of their size and displacement, keelboats do not “turn on a dime” like Flying Scots. This
+has to be considered in light winds or in proximity to other boats or obstructions.
+3. The cruisers have more freeboard (the distance from the deck to the waterline) than small
+boats. Freeboard acts like a sail when the wind is blowing. This means that the cruisers may be
+affected by wind conditions when docking.
+4. Rebecca’s draft is 4’-0” feet; it has a fixed fin keel.
+5. Hiatus and Lion’s Paw2 have fixed wing keels with a draft of 3’-5”. For a wing keel, if you go
+aground, instead of shifting weight from port to starboard, you should instead move weight fore
+and aft to assist in ungrounding the boat.
+6. Rebecca has the tallest mast in our fleet and has been measured at 36.5 feet from the top of the
+mast to the waterline. The antenna is estimated to add another 1.5 feet. The masts on Hiatus
+and Lion’s Paw2 are slightly shorter.
+Four-Stroke Engine Operation
+SCOW’s cruisers all are equipped with four-stroke engines, which use regular unleaded gas, not an
+oil/gas mixture. SCOW requires use of ethanol-free gas (see below). For issues not addressed
+below, see the onboard engine operations manual, found in the black binder. In particular:
+1. Review the procedures for tilting and lowering the engines. All three boats use similar but
+slightly different procedures. For all three, rotate the tilt lever directly under the engine housing,
+then pull the engine toward the transom, them slowly release it to tilt to vertical. Then
+disengage the engine bracket handle and let the engine drop until the cavitation plate is a few
+inches under water.
+a. On Hiatus and Lion’s Paw2
+if you are unable to move the motor, do not force anything.
+Consult the engine owner’s manual in the black binder.
+b. On Rebecca, watch the video showing how to raise and lower the engine that’s linked
+to the SCOW website.
+2. The engines on all three cruisers have electrical starters. If the batteries have discharged, the
+engines can be started with their manual pull starters. Set transmission to neutral before
+starting.
+3. The engine on Rebecca and Hiatus do not have a manual choke. Lion’s Paw2 has a manual choke.
+The choke is opened to start the engine when cold, then adjusted when the engine has warmed
+up.
+4. To start the engine, first tilt and/or lower the engine into the run position (varies on each boat).
+Then open the air vent on the gas tank completely, pump the bulb on the gas line two or three
+times until it is firm, make sure the engine is in neutral and the throttle is at the “start” setting.
+Make sure the kill-switch key is properly attached. On Rebecca and Hiatus, push the start
+button. On Lion’s Paw2
+, pull out the manual choke and then press the start button.
+5. Check the oil pressure indicator light (varies on each boat):
+• Rebecca: green light on
+• Hiatus: red light off
+• Lion’s Paw2
+: red light off
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 7 of 16
+If the oil pressure is not registering, do not use the boat. Immediately turn off the engine, and
+notify the appropriate bosun or the Maintenance Director so that they can take the boat out of
+service and address the problem.
+6. Allow the engine to idle for several minutes to ensure it is running properly before taking off
+from the dock. (On Lion’s Paw2
+, adjust the manual choke when the engine has heated.) Make
+sure the engine is in low idle before engaging the forward or reverse gears or returning to
+neutral. When switching from forward to reverse, wait in neutral for 2 seconds. To stop the
+engine, throttle to idle, put the engine in neutral, and then hold in the kill–switch button until
+engine has completely stopped.
+7. The engines are water-cooled. The “cavitation plate” on the engine must be underwater when
+the engine is running to allow the engine to draw cooling water. When you first start the motor,
+check to see that a small “stream” of water about the width of a pencil is coming out from
+below the engine housing and do so periodically while motoring. This shows that engine cooling
+water is flowing. The stream must be continuous as long as the motor runs. If several people are
+on the foredeck, the engine may lift out of the water high enough so that the cavitation plate
+will not be underwater and therefore, will not draw in water to cool the motor. Even a few
+seconds without cooling water will damage the engine.
+8. When the engine is off and you are sailing, close the air vent on the tank to avoid gas spilling if
+the boat heels. The caps should be fully closed when the cruisers are docked or at anchor.
+9. During low-use winter months, disconnect the fuel line from the fuel tank and let the engine
+run until it consumes all the fuel remaining in the fuel system. Ensure no fuel spills in the fuel
+tank compartment. Absorbent pads are under the sink area.
+10. Ethanol-free gas must be used on all three cruisers. Gas tanks must be refilled to FULL after
+each use but leave enough room for fuel expansion. Do not add any fuel additives to the
+cruiser fuel tanks.
+a) Skippers should purchase a small personal gas can to refill the tank when they use a cruiser.
+If the skipper is on the water, ethanol-free gas can be purchased at the gas dock at The
+Wharf Marina or National Harbor. Skippers may fill their personal gas can and the cruiser
+tank at those locations. Alternatively, if on land, the skipper can fill their personal gas can at
+Columbia Island Marina or consult the website at <https://www.pure-gas.org> for a list of
+service stations carrying ethanol-free gas.
+b) Skippers may want to fill their personal can at the beginning of the season. Make sure the
+tank is free of debris. Ethanol-free gas can be stored for as long as six months without
+deteriorating. At the end of the sailing season, if the skipper has gas left over, it can be used
+in their car. Do not save it until the next sailing season; it will be stale.
+c) Never fill a fuel tank onboard the boat. If the skipper brought gas, the tank must be
+removed from the boat and fueling done on shore. If refueling at a gas dock, remove the
+tank from the boat and fill on the dock. Use the provided red screened funnels when adding
+gas to the fuel tanks.
+d) Tanks are to be filled (to FULL) after each use. Leave just enough room to allow expansion in
+the tank. Do not use any fuel additives. Ensure caps are tight and vents are closed any time
+the engine is not running. 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 8 of 16
+Docking Procedures
+1. Whether docking at the Marina or elsewhere, boats must be docked under engine power,
+except in emergencies or during training, tutoring, or checkouts.
+2. At the Marina, boats must be docked in their correct slips. Rebecca and Hiatus are secured
+against the “T” end of G dock, with bows facing each other, approximately 6 feet apart. Lion’s
+Paw2
+is docked in a slip next to Rebecca. All boats are to be secured with fore and aft spring lines
+and bow and stern lines, and with fenders.
+3. The dock lines have been adjusted and fixed to hold each boat in the correct position in its slip.
+Do not untie the ends of the dock lines attached to the cleats on the dock. Cleat and uncleat the
+ends of the lines attached to the cleats on the boats and leave the lines on the dock. SCOW has
+a specific technique to attach the docking lines to the boat, including which cleat, the path to
+the cleat and a proper cleat knot. The technique is shown in the logbook. If you arrive at the
+boat and it is not tied properly then make a note in the log and notify the Skipper Director.
+4. Hang the fenders at the designated locations by clipping the hooks onto the stainless steel
+“loops” marked with colored tape, either at the base of a stanchion or in the middle of a railing
+post. The fender lines colors match the tape markings on the steel loops. Do not adjust the lines
+on the fenders or hang in other locations. When hung correctly from the marked loops, the
+fenders will hang at the correct heights.
+Marine Head
+1. Portable heads with removable holding tanks meeting Federal regulations are installed on all
+three vessels. Instructions for operation are posted next to each head. The head consists of two
+halves; the bottom half is the waste holding tank and the top half holds fresh water for flushing.
+2. Before starting a sail, make sure there is flushing water in the upper tank sufficient for the
+number of people and the length of the sail. If water needs to be added, also add one vial of
+head treatment from the box of vials under the sink, replacing the empty vial back in the box, to
+be refilled. When the head is flushed, treated flush water will move into the holding tank,
+breaking down the waste and controlling odors.
+3. If the head was used during the sail, the skipper responsible for emptying the holding tank. The
+Marina pump-out station does not fit porta-potties so detach and set the upper tank aside and
+take the waste holding tank to a marina restroom and empty it into a commode. Take a bucket
+of water to the restroom to use to rinse the tank. Reassemble and reinstall the head per the
+posted instructions.
+4. Use only the single-ply toilet tissue on the boat, which is specially made for use with the
+portable heads. If possible, put used tissue in a trash bag instead of the head, which will make
+emptying the head easier.
+Electrical System
+1. SCOW cruiser engines have alternators that charge the batteries when the engine is running and
+solar panels to trickle charge them when at dock. For the solar panels, a blue pilot light shows
+when they are generating electricity. They will work even when in partial shade and even with
+no direct sun. The panels are highly weatherproof but are glass. For that reason, they are
+attached to bridles with snap shackles. Upon opening the boat, remove them and store on the
+cushions in the aft berth. Return them to their bridles when locking up. The solar panel location
+is different on each boat.
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 9 of 16
+a. Hiatus’ panel is used facing south on the windshield in front of the mast, secured
+both to a bridle on the tabernacle and a bridle looped around the forehatch hinges.
+The cable runs through the companionway hatch drainage channel and can be
+disconnected by lifting the hatch cover.
+b. Lion’s Paw 2’s panel is used facing south on the starboard cockpit bulkhead,
+secured to a bridle looped around the base of the coach roof winch. The cable is tied
+back to the companionway stairs with a snap shackle and need not be disconnected to
+reach the aft berth.
+c. Rebecca’s panel is used facing east on the starboard deck just forward of the lifeline
+gate, secured to the diagonal strut on the stanchion base. There’s no need to
+disconnect the cable for the panel to reach the quarterberth. It will generate power
+through the afternoon from ambient light.
+2. Rebecca’s DC panel, with an analog voltmeter, is on the starboard side above quarter berth.
+Note that the analog voltmeter is unreliable. Immediately below it is an accessory panel
+containing a cigarette lighter port, two USB ports for charging the handheld VHF, personal
+phones, etc., and a digital voltmeter that displays the status of the house batteries. The
+accessory panel is activated by the “Accessory” switch on the main DC panel. To conserve
+battery power, activate individual circuits only when needed.
+3. Rebecca has two batteries and a “1, 2, 1 + 2” battery switch near the base of the companionway
+ladder, which allows either battery to be used as the “house” battery or the engine starting
+battery. Do not change the battery switch position with engine running – doing so may damage
+the engine’s alternator.
+a) When starting or running engine: Switch the battery to position “1 + 2” to use and
+charge both batteries.
+b) When under sail, at anchor or at a dock (engine not running): Switch to “1” on odd
+calendar days; “2” on even calendar days. Because the boats are not used daily, this
+ensures alternating use of the batteries as the “house” battery.
+c) When stowing the boat: Turn off all electrical panel switches, then turn battery switch
+to “OFF.”
+4. The Lion’s Paw2 power system consists of two marine batteries wired in parallel. One battery
+starts the engine and the other is the “house” battery. However, there is no “1 + 2” switch as on
+Rebecca. Instead, when the red battery switch is “on,” the boat has a power management
+system that charges both batteries at once while also isolating the house and engine battery
+system. In the event you have a dead battery on one side, an indicator lamp will glow. In that
+case, turn the switch to the yellow mark to combine both batteries. The LED indicator will flash
+to show various conditions such as charging, which generally are not of concern. However, a
+triple flashing signals that one or both batteries have dropped below 9.5 volts.
+Lion’s Paw2 has a 12-volt power outlet panel above and to the right of the sink, wired on the
+house battery. It has a 15-amp internal circuit breaker (which is also the "on" and "off" switch), a
+12-volt power socket and two 2.1A USB power sockets for charging phones, GPS and so on. The
+panel also has a voltmeter that will display the status of the house battery in volts when the
+switch on the panel is turned on to power the panel. The 12-volt panel should be switched “on”
+only when needed. When leaving the boat, make sure all switches on the DC panel are off.
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 10 of 16
+5. Hiatus has two marine batteries wired in parallel and a power management system similar to
+Lion’s Paw2
+. It is controlled by a panel on the bulkhead at the aft end of the quarterberth, and
+the two red switches on the panel should be left ON at all times. If the starting battery is dead,
+the yellow EMERGENCY PARALLEL switch can be turned to the “on” position to place the
+batteries in parallel for starting. Once started, turn the EMERGENCY PARALLEL switch to off.
+There is a white DC panel above and to right of thesink. Next to the panel are two 12-volt power
+sockets. When leaving the boat, make sure all switches on the DC panel are off.
+6. If the voltmeter shows less than 12.0 volts or the running lights are inoperative or not bright
+enough to be seen at a safe distance at night, do not use the boat at night until the batteries
+have been charged or replaced and all running lights are working properly. Seek assistance from
+the Maintenance Director or Lead Bosuns who will investigate and take needed action.
+7. The cigarette lighter recepticals are for use only with 12 volt devices, including the searchlights,
+and USB adapters. Do not use AC power inverters. These will quickly run down the batteries. The
+power systems on the boats are not designed for this use.
+8. Lion’s Paw2 does not have a shore connection available to skippers. Its 110v power socket is only
+for use by maintenance crews. Rebecca has no shore power connection. Hiatus has a shore
+power connection for AC power when docked, also only for use by maintenance crews. Hiatus
+also has a wooden AC switch panel below and to the right of the sink. This only for use by
+maintenance crews.
+When using shore power on any boat, never connect or disconnect the plug on the boat when
+the shore power cord is “live.” When connecting to shore power, always plug the power cord
+first into the receptacle on the boat, then into the shore power on the dock. When
+disconnecting, do the reverse. First, disconnect the cord from the dock, then disconnect the
+cord from the boat. Failure to do this can cause “arcing” on the plug and socket of the boat,
+which is a leading cause of fires. Also, this sequence means that individuals are never holding
+the live end of a shore power plug while standing near or in water. Shore power uses a special
+cord with locking connectors.
+9. The steaming light switch on Lion’s Paw2 on the panel is inoperative – attach the removable
+steaming light kept in the starboard locker when needed.
+Marine Radio Use
+1. All cruisers are equipped with fixed marine radios and hand-held radios. No license is needed.
+The radios also receive National Weather Service broadcasts. There are emergency antennas for
+the fixed marine radios.
+2. Skippers should monitor Channel 16 unless they are monitoring another channel, for example,
+during a race. Do not transmit messages or engage in conversations on Channel 16, which is only
+for emergency use and hailing. Instead, only hail another vessel on Channel 16. Then
+immediately direct the other vessel to switch to another channel to conduct your discussion.
+Normally, you tell the other vessel to switch to Channel 68, although 69, 71, 72 and 78A are also
+authorized as working channels for non-commercial vessel-related communications.
+3. To initiate a transmission, announce the name of the boat you are hailing three times, then the
+name of your boat, then say “over” to indicate that you are done transmitting – then release the 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 11 of 16
+talk button. You cannot hear a response if the transmit button is depressed. Keep messages
+short.
+4. Skippers must comply with the proper usage of “Mayday,” “Pan Pan,” and “Securite” hailing.
+Getting Underway Under Power
+1. Go through the items on the Pre-Sail Checklist in the log book.
+2. Make the mainsail ready to hoist in case the motor fails. Also make certain that the anchor and
+rode are not fouled in case the motor fails and it is necessary to drop anchor.
+3. Start the engine and allow it to warm to confirm it is running properly. For Rebecca and Hiatus,
+cast off the spring lines. Undo the stern line from the boat cleat and hold onto the stern line.
+Cast off the bow line. Push the bow away from the dock (crew will need to be slightly forward of
+amidships), making certain that the engine doesn’t hit the dock. Have a boat hook ready above
+decks in case the boat needs an additional push from the dock or to fend off the boat in front if
+needed. Once the bow has cleared the other boat, place the motor into forward; apply modest
+throttle and toss the stern line onto the dock. The engine may be used in reverse to assist
+backing down the fairway far enough to clear the boat ahead.
+4. For Lion’s Paw2
+, the boat is backed stern-first out of its slip and fairway, past Rebecca’s stern and
+into the channel. To do this, station a crewmember on the bow of the boat with a boat hook to
+fend off the dock or the boat in the adjacent slip. Cast off the spring lines. Have the
+crewmember on the bow uncleat and hold the bow line and either the skipper or a
+crewmember then uncleat and hold the stern line. Put the engine in reverse. As the boat begins
+to move out of the slip, the remaining lines are tossed to the dock. Back Lion’s Paw2
+’s stern
+down the fairway, watching that its bow clears the adjacent boat and the stern clears the dock
+and Rebecca’s engine. Continue in reverse past Rebecca’s stern and into the main channel.
+(Remember that when the boat is moving in reverse from the slip, moving the handle end of the
+tiller to the port side of the boat will cause the boat to torque in a counter-clockwise fashion,
+which is what you will want to get your stern backing down the fairway. Keep your engine in idle
+so that it is easy to fend off if needed, and easy to compensate if you make an error.) Once
+Lion’s Paw2
+is in the main channel, the engine is put in neutral for two seconds then into
+forward.
+5. All lines are left fixed to the dock and cast off from the boat. Leave the lines on the dock
+organized and arranged in a manner that they can be easily retrieved during docking. Stow the
+fenders in the lazarette, not the cabin, since they will be muddy.
+Docking
+1. Before docking, advise your crew of your docking plan and what you want them to do. If there
+are crew that should do nothing, tell them to do nothing and where to sit. Crew will tend to go
+to the side of the boat nearest the dock as you approach to “be helpful.” This can alter the
+direction of the boat. As you approach the dock, check for departing boats moving down the
+adjacent fairways.
+2. The sails should already be doused. Docking requires evaluating speed, wind and currents. It is
+better to be going slowly, since it is easier to add speed than to slow a boat down. However, the
+ability to steer diminishes as speed decreases. If the boat has no forward movement, there is no
+water moving over the rudder and the boat cannot be steered at all. The “freeboard” of a boat
+may cause the wind to push it sideways and the skipper may need to increase the throttle speed 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 12 of 16
+to counteract this. The skipper should analyze all of these variables before attempting to dock,
+and should monitor them during the docking to make needed adjustments. (One easy way to
+reduce speed on our cruisers is to smoothly wag the tiller back and forth several times.)
+3. Do not plan to rev the engine in reverse to slow the boat. Although it may occasionally be
+necessary to put the engine into reverse gear (particularly when docking Lion’s Paw2
+), your
+docking plan should not assume that you can approach at high speed then use reverse.
+4. As the bow reaches the mooring location on the dock, the boat should be close enough to allow
+the crew to retrieve the bow line and the bow spring line. The boat is then secured using the
+bow, stern and spring lines.
+5. For Rebecca and Hiatus:
+a) Approach the dock from the direction in which you plan to be facing when docked, at a 45-
+degree angle and low speed aiming for a point just a foot or two from the corner of the
+dock.
+b) Station crew at the bow or forward of amidships with boat hooks. Ask one crew member to
+call out the distances from the dock to the bow.
+c) When the bow is approximately 3 feet from the dock, sharply turn the tiller so that the stern
+of the boat swings into the dock, bringing the boat parallel to the dock.
+d) The crew may retrieve and secure the bow line and spring line. You might also find that a
+crew member can easily step from the boat to the dock and arrest the movement of the
+boat by gently holding onto the shrouds. Retrieve the stern and stern spring lines.
+6. For Lion’s Paw2
+:
+a) Lion’s Paw2
+is turned into the fairway, then turned into the slip. Before turning into the
+fairway, check for departing boats moving down the fairway. Crew should be posted on the
+bow with a boathook to fend off the adjoining vessel, to fend off the dock if the approach is
+“hot,” and to pick up lines. Wind or current may suggest stationing another crew amidships
+with a second boathook. A helpful strategy for docking Lion’s Paw2
+is to have just enough
+forward momentum to enable water flow across the rudder and steerage. Keel boats turn
+on their keel, located about a meter back from the mast. Plan to have your port beam just
+barely pass by Lion’s Paw2
+’s dock slip’s corner and then turn the boat smartly to port so that
+your crew members can step off and hand over dock lines.
+Headsails & Reefing
+Headsail configuration
+1. Rebecca Jib: Rebecca has a set of jibs with traditional “hanks” that are attached to the
+forestay. Rebecca carries a storm sail, a 110% jib, a 130% jib, and a 150% genoa, stowed in
+the v-berth. Additional sails (a drifter and a spinnaker) are kept in the sail shed for use when
+needed.
+2. Hiatus and Lion’s Paw2
+foresails: Hiatus and Lion’s Paw2 are equipped with a roller
+furling/reefing system which allows the jib to adjusted from a minimum of 0% (fully furled -
+heavy winds or docked) to a maximum of 135%. To unfurl the jib, luff up slightly off the wind
+and pull on the active sheet, while at the same time easing the grey furling line but
+maintaining some tension. (Always maintain tension on the furling line when taking out and
+putting away a roller furling jib so that the furling line does not tangle.) When at the desired 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 13 of 16
+sail position, cleat off the furling line, adjust the jib lead blocks on both sides, and tension
+the jib sheet appropriately as you fall off the wind. To furl the jib, luff up and ease the active
+sheet slightly, maintaining some sheet tension; pull the grey furling line until you reach the
+desired amount of sail. Cleat off the furling line. Adjust both jib sheet blocks and tension the
+jib sheet as you fall off the wind.
+Reefing
+All cruisers have two rows of reefing points but they differ in whether the reef tack is secured
+via a cringle (a large grommet) or via a pair of reefing rings attached by a strap sewn to the sail
+at the luff, and whether that cringle or ring is held down by looping it over a ram’s horn
+(on Rebecca) or by pulling the hook of the Cunningham/downhaul line across the front of the
+mast and engaging it in the cringle or ring (on Hiatus and Lions Paw 2). The reef clew, on the
+other hand, is secured the same way on all boats, with a reefing line rigged through a cringle
+and led to a cleat or clutch.
+Before reefing, decide whether to reef to the first (lower) or second (upper) reefing point. If the
+aft reef line is not currently rigged through the reefing point you want, you’ll have to re-rig it by
+untying the reefing line from the eye strap at the aft end of the boom, moving it to the cringle
+you want, and retying it to that eye strap with a bowline.
+To reef, follow these steps:
+1. Release the halyard to drop the sail until the desired reefing points are adjacent to the
+boom.
+2. Secure the reef tack via either a cringle or a reefing ring.
+3. Hold down the reef clew by tightening the reef line and then securing it by closing the
+deck clutch or by tying it to the boom cleat.
+4. Re-raise the halyard to tighten the luff
+5. Tie the reef buntings very loosely under the excess sail area below the boom.
+To “shake out” a reef, reverse these steps: Lower the sail a little bit to ease the tension, untie
+the buntings, loosen the reefing line (freeing the aft reef cringle) and detach the forward reef
+cringle or ring from the ram’s horn or Cunningham, then raise the sail to tighten the luff.
+Securing The Boat After Sailing
+1. Go through the Post-Sail Checklist in the log book.
+2. Properly stow the sails:
+a) Main sails are flaked to boom, tied with sail ties, and the cover secured. Each boat’s sail
+cover has a D-ring at the aft end, with a 12’ piece of ¼” rope or webbing attached to it. Once
+the sail is flaked and covered, spiral-wrap that line around the boom/sail/cover and tie it off
+at the mast to hold it all securely. Coil the mainsheet neatly and hang it from the boom.
+b) On Rebecca, jibs are flaked ashore and stowed in the v-berth. Wet sails, wet sail bags
+and wet sheets should not be stowed in the v-berth; they will cause the cushions to
+mildew. Leave them on the cabin sole and put a note in the log that you left then in that
+condition because they were wet. If only the jib sheets are wet, leave them outside the
+bag to dry.
+c) On Hiatus and Lion’s Paw2
+, completely furl the foresail, cleat the roller furling line, pull
+the jib sheets taut, wrap once around the winch then cleat them.
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 14 of 16
+3. Lift the engine out of the water properly (varies by boat – Lions Paw 2 has a metal clip that is
+released by pulling on a yellow line when lifting). If the engine is difficult to lift, do not force it.
+Check to see if the engine is still in gear and then consult the manual.
+4. Remove all food, trash and personal items.
+5. Clean the boat. Damp towel and broom clean the cabin. Scrub and rinse the deck and cockpit.
+Cleaning supplies are in each boat. If the anchor has been used, clean the anchor and chain and
+properly stow the ground tackle and rode. Factor in time to clean up when you are determining
+when to head back to port.
+6. Clean the galley.
+7. Check that all gear is stowed per the stowage plan. Failing to return equipment to the proper
+location endangers the next crew, who could be unable to find equipment in an emergency.
+8. If you or your crew used the head, empty, clean and refill the head.
+9. Turn off VHF radio and all electrical panel switches, then, on Rebecca, turn battery switch to
+“off.” No battery switch action is required on Hiatus or Lion’s Paw2
+.
+10. Refill the fuel tank, leaving just enough room for expansion and close the gas tank vent.
+11. Leave all lines on the dock and boat neatly coiled and properly secured.
+12. Make the proper entries in the log and sign the log.
+13. Secure all hatches and lock the companionway hatch (with the numbers in the combination lock
+right-side up). Spin the wheels on the companionway lock so the combination is scrambled.
+When leaving the dock, be sure the gate is closed and locked behind you.
+14. Even if you have an experienced crew, the skipper is responsible for checking the crew’s work
+and ensuring that all equipment is properly stowed, the dock lines are properly cleated, the boat
+is clean, and is locked.
+GROUNDING & GETTING OFF
+The most effective technique is to avoid grounding at all. Become familiar with the area in which we
+sail. Monitor the depth guage in unfamiliar waters. Seek “local knowledge” from other skippers.
+Consult the charts, but remember that charts may be out of date and unreliable for shoaling
+conditions:
+1. Potomac River shoals change from season to season, and after flooding or high water.
+2. Channel markers sometimes move, or are lost, during winter due to heavy ice. (The red “WR
+6” buoy marking the sunken barge in our channel is often lost over the winter).
+3. Areas outside of channel markers become shallow very quickly.
+4. Areas near the Naval Research Lab pier and the Alexandria waterfront have submerged
+pilings. Areas outside of the channel near the Wilson Bridge were historically used to dump
+concrete and other materials.
+5. The area between just off of the Blue Plains plant, south of the white “Danger” mark, is known
+as “Dave’s Cradle,” with 20 – 30 submerged pilings 1’ to 3’ below the surface at low tide. A
+chart is available at [http://discsailing.org/DISC_Docs/Daves_cradle.pdf] on the Daingerfield
+Island Sailing Club webpage. 
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 15 of 16
+If you run aground, take one or more of the following actions, depending on your situation. For
+example, groundings often occur at an angle to the shoal if you try to hold a tack too long in a narrow
+channel and skirt the edge. This will affect where your deep water is.
+1. React quickly to avoid grounding. If you feel yourself grounding at an angle to a shoal (such as
+along the edge of a channel), as soon as you sense the boat slowing but before you completely
+stop, try to immediately tack to use any remaining momentum to turn the bow of the boat
+towards deep water. You may then be able to turn the boat further and get back underway by
+sheeting in hard or backing-winding the jib.
+2. If you are grounded, avoid being driven further aground. Luff the sails or stop the
+motor. When headed downwind, if needed, drop the sails or put out the anchor to the
+stern. If you are being blown further into the shoal, drop anchor.
+3. Check for damage to the boat. Don PFDs. Before taking any action to get off, brief the crew on
+what you plan to do and what they should do.
+4. Determine where the deep water is. Immediately note the path that got you into trouble –
+that may be the best path out. If you go aground at an angle to a shoal, shallow water may be
+on one side, deep water on the other side and not behind you. Use a boat hook to “sound”
+the bottom around the boat.
+5. Evaluate the wind, current and tide and your options. If at low tide, the rising tide may carry
+you off. If you are in an area with other traffic, a large wake may lift you.
+6. If stuck in mud, rock the boat to break the suction holding the keel in place and to enlarge the
+“groove” in the mud to free the keel. On Rebecca, shift weigh from port to starboard.
+On Hiatus and Lion’s Paw2 due to the wing keel, move weight fore and aft.
+7. If stuck on rocks, swing the boom out over the side with crew weight to heel the boat.
+However, on a rocky bottom, the skipper should consider potential damage to the vessel
+before taking any action and, if such danger exists, call for a tow.
+8. Try to pivot the boat to head toward deep water, using the jib or main or possibly a boat hook,
+(on Rebecca, try “sculling” to turn the boat towards deeper water) then try to sail out.
+9. With the help of another boat, try kedging. Pass the anchor to the assisting boat. Have that
+boat drop the anchor in deep water at least several boat lengths away (i.e., as much scope as
+possible). Use the anchor line to pull the boat to deeper water. You may need to use a winch.
+10. Using the motor when aground risks stirring up silt which will be sucked into the raw-water
+intake of the engine cooling system, seriously damaging the engine. You should use the
+engine only if there is sufficient water below the engine to avoid stirring up silt. At the first
+sign that the bottom is being disturbed, you must shut off the engine.
+• If you can back into deeper water without kicking up silt, put the motor in slow reverse,
+and steer the stern toward deep water while everyone else rocks or heels the boat.
+• If you can pivot the boat to point to deeper water without kicking up silt, try using the
+motor to pivot. Because Hiatus and Lion’s Paw2 have a wing keel, a complete turn may
+not be possible. If you are able to pivot adequately, you may be able to motor out or use
+sails to further turn and sail out. Note, that if you are at an angle to the shoal, as the bow
+pivots toward deep water, the stern and engine may move into the shoaled area, risking
+damage to the engine if it continues to run.
+SCOW Cruiser Skipper Information File Approved 2/10/25 -- Page 16 of 16
+11. If, after assessing the situation, the skipper determines that getting the boat off the grounding
+is not feasible, or would potentially create risk to the crew or vessel, the skipper should call for
+tow assistance.

@@ -1,0 +1,675 @@
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 1 of 15
+Safety First! Safe Boating is no Accident
+Sailing Club of Washington
+Flying Scot Skipper Information File
+Approved by the Board February 10, 2025
+1 Safety First!
+Safety around the marina and on the water is the priority and responsibility for skipper and crew. Rules,
+regulations, experience and good judgment all contribute to a safe and enjoyable sailing experience.
+2 Introduction
+This Flying Scot Skipper Information File (SIF) sets forth the skipper responsibilities and SCOW procedures for the
+use of the club’s Flying Scot sailboats. This SIF supplements the SCOW Skipper Requirements and Boat Use Policy,
+which contain general procedures for the use of all club boats. Skippers are required to be familiar with and follow
+these documents before operating the Flying Scots.
+This SIF is intended only to emphasize important procedures for using the Flying Scot. It is not a sailing
+instruction manual. Each skipper is responsible for being completely capable of launching, rigging, sailing,
+docking and retrieving the Flying Scots. This SIF is not a substitute for training and experience. This SIF does not
+address the use of an optional spinnaker.
+3 General Rules and Regulations
+The skipper is responsible for operating the club’s boats safely and in accordance with the Inland Navigation Rules,
+other legal requirements, and SCOW’s policies. Smoking (cigarettes, cigars and pipes) and vaping is not permitted
+on any SCOW boats. Use of cannabis in any fashion is prohibited.
+a) Minimum age restrictions: skipper: 18, crew/guests: 5.
+b) Mandatory U.S. Coast Guard-approved PFD (Type III, Type V or auto-inflating) use applies for:
+• Dates from October 1 through April 30
+• Winds exceeding 17 mph (15 knots )
+• Children under 13 years of age
+• Non-swimmers
+• Single-handed skippers
+4 Scheduling and Reservations
+The SCOW Reservations app (https://scowreg.herokuapp.com/user_session/new), is also accessible from the
+SCOW website (www.scow.org). If the reservation will be the same day or within a few days, check the weather
+forecast first. Weather links are on the SCOW website and below in section 16, Resources and References.
+4.1 Scheduling Periods
+Scheduling priority is given for club activities, such as maintenance, training, social sail and racing. These
+reservations will be made by the respective SCOW director for each activity, or by a designated representative.
+Refer to the Boat Use Policy for more details.
+For personal use of the Flying Scots, the normal usage periods are daily:
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 2 of 15
+Safety First! Safe Boating is no Accident
+• 8 AM to 12 Noon
+• 12 Noon to 4 PM
+• 4 PM to Dusk (until 10PM May 1 – Sept 30)
+Sailing after sunset: Flying Scots can be operated (whether under sail, being paddled, at anchor, or being towed)
+after sunset only under the following conditions:
+• Only until 10 PM from May 1 – Sept 30
+• Sailing is in the WSM lagoon (north of the boat ramp that’s adjacent to the floating docks).
+• All aboard must wear PFDs.
+• The boat must have a working flashlight, VHF, and a U.S. Coast Guard-approved visual distress signal
+(SCOW prefers an approved electric S-O-S distress light over a signal flare).
+4.2 Additional Reservation Rules
+a) A skipper may only have two reservations on the books at the same time for personal use regardless of
+the type of boat reserved, e.g., two Flying Scot reservations, or one Flying Scot and one cruiser
+reservation. Reservations for training, etc. do not count as personal reservations. Club use reservations
+normally are made by a Board member but may be made by an individual member if authorized by a
+Board member.
+b) A single skipper may not reserve two consecutive time slots in advance for the same boat. For example,
+Skipper A cannot reserve a Scot from 8 AM to noon and from noon to 4 PM on the same day.
+c) If more than one SCOW skipper is in the boat and they have scheduled consecutive time slots, they may
+sail together until the end of the two consecutive slots. In other words, if Skippers A and B are sailing
+together on a Flying Scot, and A has reserved the boat from 8 AM to noon and B has reserved the boat
+from noon until 4 PM, they may remain out from 8 until 4 without returning at noon to transfer
+responsibility.
+d) A skipper may not reserve a boat in 2 consecutive usage periods. However, If after the boat has been
+returned to the dock, the skipper checks the SCOW Reservations and finds that no other skipper has
+reserved the boat for the next usage period, he or she may reserve it and continue sailing
+e) Skippers may schedule for only part of a sailing time slot.
+f) Cancellations must be made in the SCOW Reservations as soon as possible so the usage period can be
+available for others.
+g) The reservation period must, in general, fall within one usage period. However, to enable increased boat
+use at times with generally lower usage, Flying Scots may be reserved across two back-to-back usage
+periods during typical weekday daytime work hours (Monday – Friday), not including Federal Holidays,
+and during the off-season. So, for example, a boat can be reserved from 10 AM to 2 PM, on a weekday.
+Also, during these low usage periods, boats may be reserved for me than 4 hours.
+h) The boats must be secured in the SCOW dry slips when not scheduled.
+5 Sailing Boundaries, Marina Docks and Personal Gear
+The Flying Scots are located in reserved dry slips. Our boats are launched and retrieved via the three small cranes,
+and we use the adjacent floating docks for rigging, casting off and docking.
+5.1 Sailing Area Boundaries
+• Up-river: Railroad Bridge on the Potomac River, adjacent to the 14th Street Bridge
+• Up-river: bridge near the north end of the Washington Channel
+• Up-river: first bridge (Frederick Douglass) on the Anacostia River
+• Down-river: Wilson Bridge
+• Lagoon: The boat must remain in the lagoon when Social Sail guests are aboard.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 3 of 15
+Safety First! Safe Boating is no Accident
+Be cautious near bridges - heaving-to, luffing or loitering near bridges may arouse suspicion and draw the attention
+of the harbor police.
+5.2 Prohibited Sailing and Docking Areas
+Prohibited areas include, but are not limited to:
+• The northern-most WSM dock (see diagram below)
+• Under bridges
+• Between any docks, anywhere
+• Shallow areas (rudder depth)
+• Restricted/prohibited military waters/docks
+• Within 100 yards of a U.S. Naval vessel
+• Areas with ice cover
+After docking, immediately move the boat away from the end of the dock to leave the docking area free for
+others to land.
+5.3 Personal Gear Checklist
+The following items range from convenient on some days to essential on others:
+ Two winch cranks • First-aid kit • Sunscreen, Chapstick
+ Dry bag • Cell phone • Hat, hat keeper
+ Sunglasses (w/floatable
+lanyard)
+• Marine VHF/weather
+radio
+• Jacket
+ Flashlight • Small line assortment • Insect repellent/After-Bite
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 4 of 15
+Safety First! Safe Boating is no Accident
+ Multi-purpose tool/knife • Chart of the local river • Yarn for tell-tales
+ Carry-on bag • Snacks • Water
+ Children’s PFDs • Sailing gloves • Boating safety certificate
+ Whistle for each person
+The two winch cranks are required gear – the second crank ensures that sails can be lowered if the first crank
+breaks or is lost. A dry bag provides moisture protection for wallets, phones, cameras and key fobs. Several dry bag
+sizes are available at outdoor/sporting goods retailers. A zip-lock bag can be an acceptable substitute. Soft-sole,
+non-marking sturdy shoes are a requisite for our boats. Sandals and open-toe shoes present an opportunity for
+injury.
+6 Pre-Launching Procedures
+6.1 Before Arriving
+a) Obtain the current weather conditions and forecast.
+b) Obtain the times of high and low tides (also available in the logbooks).
+c) Advise guests what to expect and how to prepare for their excursion on the water (proper clothing; some of
+the Personal Gear Checklist items will apply).
+6.2 At the Marina and Sail Locker
+a) Go to the launching area and observe the sky, wind and wave conditions.
+b) Inspect the boat and trailer for any problems that would prevent or delay operation (e.g., flat tire).
+c) Open the SCOW Flying Scot sail locker.
+d) For the reserved boat, check the previous log entry for faulty equipment or cautions, verify any repairs, and
+cancel the reservation if necessary.
+e) Fill in pre-sail weather/tide information and crew manifest in the log sheet.
+f) Have non-members read and sign the SCOW liability waiver.
+g) Pick up the boat safety kit (boat registration, radio, first aid, etc.) for the boat you have reserved.
+h) Sails with battens are stowed in the boats. If you will be using the spinnaker, check for required gear:
+spinnaker, spinnaker basket, lines, and spinnaker pole. Spinnakers should only be used by skippers who are
+familiar with the sail, and in appropriate winds.
+i) Secure the locker and move the dials away from the combination setting.
+6.3 At the Dry Slip
+a) Remove the drain plug, ensure that it is securely attached to the boat by a small line, and clear debris from the
+drain.
+b) Tilt the boat/trailer up to drain any water.
+c) Secure the drain plug in the drain hole. Reduce the chance of line fouling by pointing the lock clip up.
+d) Inspect the standing rigging (shrouds and forestay) for tension and wire fraying. Check chainplate connections,
+taping, clevis pins, ring pins, and cotter pins. Check the forestay and jib tack extension wires at the bow plate
+passage.
+e) Inspect the hull for damage.
+f) Inspect the tiller, rudder and hull attachments.
+g) Unhook the bungee cords securing the cover. You may find one or more passing under the hull.
+h) Keep the wheels chocked.
+i) Have a crew member climb onto the bow of the boat to untie the front of the boat cover. The crew member
+in the boat must stay forward of the trailer axle to avoid pivoting the boat and trailer. If not, have another
+crew member stand on the tongue of the trailer and remain there as a counterbalance.
+j) Roll back the boat cover (one person on each side of the boat), fold it, and place it at the back of the dry slip.
+k) Exit the boat by sliding over the gunwale or climbing down from the foredeck.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 5 of 15
+Safety First! Safe Boating is no Accident
+l) At this point, do an inspection to ensure that required gear is on board, that the boat hook is on a seat to be
+accessible during launching, and the lifting bridle (make sure it straddles the boom), and boom are properly
+secured .
+m) Stow the sail bag and any personal equipment in the front of the boat (to maintain balance during launching).
+n) Unlock and remove the cable lock at the bow eye/trailer. The cable lock should be secured to (locked to) the
+trailer.
+7 Launching
+Certain winds and tidal heights require more caution and effort during launching. Plan and communicate the
+launching steps and maintain a safety zone around the seawall for you and the boat.
+Never get underneath a hoisted boat. Keep clear of the space between the boat and seawall. Do not step into or
+through the trailer frame.
+There are three cranes, but all do not swing out over the water in the same pattern. The preferred crane is the one
+with the crane boom (upper arm) pointing to windward. Plan ahead and select the lee side of a windward dock,
+where the boat will be tied up for rigging. If you use the preferred crane, you will not have to warp the boat to
+windward after it is in the water and risk damaging the rudder by contact with the seawall or boom with crane.
+a) Untie the trailer if it has been tied down and remove the wheel chocks. Our dry-slips next to the cranes do not
+have trailer tie-downs.
+b) Move the boat to the preferred crane.
+c) Check for electric crane operation. Turn on the adjacent control switch if necessary. If the crane does not
+work, move to another crane.
+d) Position the trailer with the stern toward the water, and the wheels at the concrete bumper. Note: The yellow
+lines painted on the pavement are inaccurate. Line the boom of the boat up with the crane’s chain and hook;
+swing the crane chain over the boat to line them up.
+e) Lower the crane hook and connect it to bridle ring, then raise the hook enough to take up the slack in the
+crane chain (you can use the boat hook to you reach the bridle ring). Ensure the bridle is not fouled on the
+centerboard cap, boom hardware, or furled mainsail.
+f) Move the crane control rope to the crane side of the boat, pass it over the boom carefully so as not to injure
+an unsuspecting crew member. The crane control rope should be passed between the shroud and the crane
+chain.
+g) Remove the belly band and stow it in the basket near the front of the trailer.
+h) Ease the tension on the trailer winch that holds the bow of the boat to the trailer and remove the winch hook
+from the boat’s bow eye.
+i) Have a crew member keep control of the bow line (also called a painter).
+j) Lift the boat clear of the trailer and move the trailer a few feet away to allow room along the seawall.
+k) Swing the boat over the water until it is clear of the seawall. Watch that the mast doesn’t bang into the crane.
+l) Lower the boat to the water. With one hand controlling the bow line and another hand on the shroud, you can
+control the boat to keep it parallel to and clear of the seawall.
+m) Once the boat is sitting on the water, have a crew member step down into the boat and slack the chain to
+release the crane hook. This crew member can remain on the boat as you move the boat to the dock, or they
+can climb out of the boat onto the seawall. At high tide, it is easy to step off the boat here; at low tide,
+wooden ladders along the seawall can be used. Often times, just lowering the crane hook will cause the hook
+to drop off the bridle ring by itself.
+n) Once the boat is free of the crane, swing the crane inland, raise the crane hook above head level, secure the
+crane control rope to the sea wall cleat, and return the crane control to its pocket.
+o) Lead the boat to the lee side of the windward dock. If a crew member is aboard the boat, they can fend the
+boat off the dock using the boat hook or a paddle. Stop at an area that is well away from the seawall ( e.g., 
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 6 of 15
+Safety First! Safe Boating is no Accident
+mid-way) to leave room for other boats. Do not tie up near the end of the dock, because that area should
+remain clear for casting off and landing.
+p) Secure the bow line to a horn cleat. There should be no more than about 18” of line between the dock and
+boat, and that will enable easier boarding and disembarking.
+q) Return the trailer to proper dry slip without delay, as others may be waiting to use the crane. The empty
+trailer does not need to be backed into the dry slip. Secure the trailer with a wheel chock.
+8 Rigging
+Advise crew members to be cautious while boarding and watch out for a
+slippery foredeck. Lightly grasp the forestay or shroud to help maintain
+balance as you board. While on board, it’s much safer to be down in the
+cockpit than out on the foredeck. Rigging tasks can be divided among crew
+members, with one on the dock to hank on the jib. Always use one hand to
+hold onto the boat.
+a) Offer PFDs for all crew to wear.
+b) Check for required gear (stowed aboard):
+ Adult PFDs  Type IV throwable cushion  2 paddles  Boat hook
+ Bailer  Anchor and rode  Whistle  Throw line
+c) Uncoil the centerboard line.
+d) Lower the centerboard slowly. If the centerboard line is allowed to run free or is paid out too quickly, the
+roller bolt can be bent when it stops suddenly at the end of its travel. (Also watch for the rollers catching on
+the boom vang.)
+e) Once the centerboard is lowered, raise it slightly and cleat the centerboard line. If the centerboard strikes a
+submerged object while underway, the pennant (also called a pendant) will absorb the shock, and prevent the
+roller bolt from impacting the centerboard trunk and possibly being bent. (This costs SCOW maintenance time
+and money to replace)
+f) Release the tiller tie-down, remove the tiller cover, and lower the rudder.
+NOTE: When using the winches, always secure the winch handle when not in use, e.g., keep it in your pocket. The
+official Flying Scot winch crank is made from a specially manufactured aluminum alloy designed to shear if too
+much tension is applied. If a sail is difficult to hoist, check for a fouled halyard aloft or on the winch spool. Do not
+apply excessive force. Skippers must supply their own winch cranks. They’re available from Flying Scot.
+(https://flyingscot.com/product/flying-scot-winch-handles/) Do not purchase the more expensive stainless handle.
+Again – carry two winch cranks in case one breaks or goes overboard.
+g) Slacken the jib halyard. – insert the winch crank on the starboard side of the jib halyard winch (the upper of
+the two winches), turn the winch slightly clockwise and release the latching pawl (located just below the
+winch).
+h) Place the jib on the foredeck – secure the jib tack shackle to the jib tack , and hank the jib onto the forestay,
+working your way up the luff of the sail to the head.
+i) Remove the jib halyard, look aloft to make sure the halyard is not foiled, and secure it to the head of the sail.
+(Look aloft and confirm that the halyard is not fouled.)
+j) Reeve (thread) the bitter ends of the jib sheets (attached to the boat) through the blocks attached to the jib
+clew, the jib fairlead blocks, and the jib ratchet blocks. The jib sheets stay inside the shrouds and should not be
+twisted. The thinner jib sheets require a “figure eight on a bight” at the bitter ends of the jib sheets as stopper
+knots. This is a standard figure eight knot tied with the rope doubled back on itself.
+k) Slacken the main halyard.
+l) Slacken the boom vang.
+Do not alter or modify rigging.
+If you rig the spinnaker, secure
+the rigging to the original
+positions after docking.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 7 of 15
+Safety First! Safe Boating is no Accident
+m) Remove the lifting bridle from the aft end of the centerboard trunk and roll and stow it behind the bridle bolt
+that passes through the fore end of the bridle.
+n) Un-coil, un-cleat and slacken the mainsheet. Make sure there’s a stopper knot on the bitter end.
+o) Remove the sail ties from the mainsail and stow them in a cubby onboard. Unroll the sail on the port side of
+the boom. This permits better access to rigging on the starboard side of the boom.
+p) Tension the outhaul as needed. Stronger winds will require more tension on the outhaul. Don’t over-tension
+the outhaul just because you can! (Note: this step is usually not needed with the current rigging
+configuration.)
+q) Remove the main halyard from the bail on the fore side of the mast (halyard has already been slackened).
+r) Look aloft and confirm the main halyard is clear and not fouled with other lines.
+s) Attach the main halyard to the head of the mainsail.
+t) * Insert the mainsail luff bolt rope into the mast channel, and winch it up about one foot, taking care to keep
+light tension on the halyard so that it spools evenly on the winch.
+u) Conduct a safety briefing for the crew (see the bullet points in the safety bag).
+ Just prior to raising the sails is a good opportunity for a last-minute shore break to the restrooms.
+9 Raising the Sails and Casting off
+If the weather conditions are marginal per SCOW policy or your sailing ability, this is an opportunity to make a go,
+no-go decision.
+a) The Type-IV throwable cushion must be within reach while under way.
+b) Assign crew positions and review the cast-off procedure with the crew. It is vital that the skipper assign a
+competent person for casting off from the dock. An improper cast-off can place the boat in the hazard of
+sailing between the docks or colliding with a docked boat.
+c) Confirm that the mainsheet and the boom vang are uncleated.
+v) Hoist the main – turn the winch crank clockwise. Keep light tension on the halyard to enable proper spooling
+on the winch spool. As the headboard nears the top of the mast, have a crew member slightly lift the boom to
+finish hoisting the main. Do not over tension the main halyard.
+d) Remove and stow the boom crutch.
+e) Hoist the jib – turn the winch crank clockwise. Start with light tension on the halyard where it enters the mast.
+Once the sail is hoisted, adjust the halyard tension to leave a few wrinkles along the luff.
+f) Tension the boom vang. Use gentle tension for winds 10kt or less.
+g) Ensure the sheets are free and the sails are luffing.
+h) With firm control of the bow line and shroud, lead the boat to the end of the dock. Do not cast off from
+between the docks.
+i) Once again, ensure that the sails are luffing. Guests may feel the need to pull on sheets or grasp the boom.
+Advise them to keep the sheets slackened until the skipper issues commands otherwise.
+j) Watch for boat traffic and make sure the area is clear before casting off. Note the wind direction and decide
+the initial direction and point of sail.
+k) Give the command to cast off. Dock crew should firmly push the boat toward the open channel and board the
+boat before it is clear of the dock.
+l) Stow the bow line under the foredeck on the port side to prevent fouling the centerboard line.
+m) Trim the sails and get underway.
+10 Under Way
+• Keep the mainsheet untangled and clear of other lines, equipment, and debris.
+• Watch for changing weather, wind direction and speed.
+• Be prepared to reef the mainsail or douse sails.
+• Consider the river currents and tidal currents and estimate the time to return to the marina. A quick ride to
+Alexandria on an ebb flow and north wind could mean a lengthy return trip.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 8 of 15
+Safety First! Safe Boating is no Accident
+• In gusty or strong winds, avoid excessive heeling or capsize by keeping the mainsheet un-cleated and ready to
+be eased.
+• If the weather deteriorates, ensure that all crew are wearing life jackets.
+• If the wind builds beyond reasonable limits of boat and crew, reduce sail or douse the sails.
+• Return to the marina or seek a safe haven if the weather makes it unsafe to remain on the river.
+• Report any suspicious vessels or behavior in or around the sailing area. Contact the DC Harbor Police on VHF
+channel 16 or call 911.
+11 Landing and Un-Rigging
+The boats must be returned to the slips at the end of the usage period. If another SCOW skipper has reserved time
+and is at the dock, the boat may be turned over to that person after verification that he/she is an authorized
+skipper. A skipper can be verified by asking them for the locker combination.
+If the wind speed or wind direction indicates a difficult landing, consider dousing the main and approaching the
+docks under jib power alone. Also, consider dousing both sails while upwind, then paddling to the docks. If you
+douse the main while under way, place the boom crutch through the hole in the port seat – this permits a full arc
+of the tiller for steering.
+a) Brief the crew on the landing procedure and what their actions will be regarding sails/docking.
+b) Select a crew member to be prepared to take the bow line and secure the boat at the dock after landing.
+Sometimes they may be inexperienced, such as at social sail, so it is useful to provide explicit instructions to
+them. Most importantly, advise them to be safe, If the boat speed or distance to the dock makes it unsafe for
+them to step onto the dock, the skipper should call off the landing. Note: the if the bow crew feels that the
+landing is unsafe, they also have the discretion to shout to the skipper to abort the landing. As the boat slows
+sufficiently, the designated crew member steps onto the dock, and secures the bow line to the nearest cleat
+on the dock.
+c) Select a dock and advise the crew which side of the boat will be next to the dock upon landing.
+d) Watch for other traffic and approach the selected dock.
+e) Luff the sails but maintain steerage.
+f) Be prepared to turn away from the dock if necessary. Have a crew member ready to backwind the jib to assist
+in turning.
+g) Land at an outside edge of the end of the dock. Sailing/landing between the docks is not permitted by SCOW.
+h) When the boat slows sufficiently, have the designated crew member step onto the dock, and secure the bow
+line to the nearest cleat.
+i) Walk the boat away from the end of the dock to the lee side and secure the bow line to a horn cleat.
+j) Lower the jib sail.
+k) Place the boom crutch through the aft deck fitting.
+l) Lower the mainsail to the starboard side of the boom and have a crew ease the boom into the crutch.
+m) Secure the main halyard to the bail on the mast. Gently crank the slack onto the winch and latch it.
+n) Un-reeve the jib sheets but leave them attached to the boat. Leave the bridle and blocks attached to the jib
+clew. Un-hank the jib, roll it from head to foot, release the jib tack, pull the jib sail bag onto the sail (tack first),
+and stow the sail bag onboard. Coil the jib sheets and hang them over the fairleads.
+o) Secure the jib halyard to the jib tack shackle at the bow. Gently crank the slack onto the winch, and latch.
+p) Slacken the outhaul (leaving it cleated) so as to minimize stretching the sail.
+q) Roll the mainsail to the boom. 
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 9 of 15
+Safety First! Safe Boating is no Accident
+1) With crew on the port side, reach over the boom and find the triangle at the luff and diamond at the
+leech – near the batten, above the sail number, and below the Flying Scot logo.
+2) Grab the sail at these two symbols and pull it over the boom. This will create a fold that is parallel with
+the batten.
+3) Starting at the fold, roll the sail. Pull loose sail over the boom as you roll. As needed, tug the sail edges to
+remove creases.
+4) Secure the sail to the side of the boom away from the outhaul hardware using sail ties – one near the
+gooseneck, one mid-boom, and one near the aft end of the boom.
+r) Cleat the main sheet with light tension only, coil the line and hang it from the boom.
+s) Raise the centerboard, cleat the centerboard line, coil the line and hang it from the centerboard cleat.
+t) Pass the hoisting bridle over the boom and attach to the tang on the aft end of the centerboard trunk.
+u) Secure the tiller to the starboard side of the boom crutch.
+v) Raise the rudder (or wait until after the boat is raised on the crane). Note that on some boats you have to
+raise the rudder before putting the tiller cover on because there is a line on the tiller to raise and lower the
+rudder.
+w) Remove remaining personal gear and trash.
+x) Stow on-board gear out of sight but keep the boat hook available on a seat.
+12 Hauling-out and Securing
+a) Position the trailer at the crane, as in launching, but leave enough room for crew movement at the seawall.
+b) Move the boat to the crane. One crew member may remain in the boat to fend off with the boat hook.
+c) Position the boat parallel to the sea wall with the bow pointing in the direction of the crane boom (upper
+arm).
+d) Attach the crane hook to the hoisting bridle and raise the hook just enough to reduce slack. Ensure the bridle
+is not fouled on the centerboard cap, boom hardware, or furled mainsail.
+e) Leave the boat hook on a seat so it can be used later to reach the crane hook.
+f) Have the crew exit the boat by climbing up the ladder on the seawall.
+g) Lift the boat out of the water. Control the bow line and shroud to keep the boat clear of the seawall. Take care
+to not allow the spinnaker clips to get crushed by hitting the seawall.
+h) Raise the rudder (if you chose not to raise it when the boat was still in the water).
+i) Push the trailer to the concrete bumper.
+j) Using the bow line and crane control rope, pull the boat over the trailer.
+k) Attach the trailer winch hook to the bow eye and winch it toward the trailer fork but leave some slack.
+l) Lower the boat onto the trailer while a crew member centers the keel above the trailer’s keel rollers.
+m) Winch the boat forward until the bow rests gently in the trailer fork.
+n) Secure the boat to the trailer with the belly band strap and tighten the bow winch.
+o) Slacken the crane’s chain.
+p) Detach the crane hook and raise it above head height (the boat hook can bring the hook within reach).
+q) Secure the crane control rope to the cleat on the seawall. And put the crane control in its pocket.
+r) Move the boat to a level part of the wash area.
+s) Clean out the interior – remove trash and personal items.
+t) Remove the drain plug.
+u) Wash the decks, topsides and bottom of the
+hull.
+v) Pivot the boat up if necessary and allow the
+water to drain out.
+w) Move the boat (stern first) into the dry slip.
+x) Place chocks on the wheels.
+y) Lock the boat to the trailer. Coil the bow line
+and hang it on the trailer winch.
+z) Unroll and secure the boat cover.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 10 of 15
+Safety First! Safe Boating is no Accident
+aa) Make any simple repairs. Report outstanding maintenance issues to the Flying Scot maintenance director
+(scotmaint@scow.org) and to the boat bosun.
+bb) If the boat needs to be taken out of service, notify those holding reservations for the boat.
+cc) Return the boat safety kit to the sail locker, as well as any spinnaker and pole or other equipment.
+dd) Complete the log, including maintenance notes.
+ee) Secure the locker and move the dials away from combination settings.
+13 Shallows and Ungrounding
+The understanding of shallow-water locations is one of the most important components of a SCOW skipper’s local
+knowledge. Our sailing waters become shallower each year as silt settles into this wider and slower tidal portion of
+the Potomac. The skipper must have constant awareness of shallow areas, particularly at the lower-than-average
+spring tides that occur around the new and full moons and when strong northerly winds blow river water
+downstream. The aids to navigation mark only a small portion of the many shallow areas in these DC waters.
+The shoal next to the main river channel (between the Navy pier and the airport pier) is hard and gravelly, and the
+centerboard will make noise if you stray into this area at low tide. The area between the Green 13 day mark and
+the sea wall in front of the marina’s restaurant is very shallow even at high tide and has a hard bottom. Most of
+the remaining shallows are soft, and there is little or no warning as the boat eases to a firm stop on the muddy
+bottom. Heading south in the channel to the river in the area of the Green 7 and 9 day marks, there are large
+concrete blocks submerged near the shore. Do not hold a tack too close to the shore.
+The Flying Scot’s draft is 4 feet with the centerboard down, and 8 inches when the board and rudder are raised.
+Do not exit the boat to attempt an ungrounding. The soft mud may allow you to sink up to your hips, and the
+suction will prevent an unassisted escape. There are biological and chemical hazards in the water and sediments.
+Quick awareness and reaction can save you from going hard aground. Almost simultaneously you will need to
+change course, raise the centerboard just enough to clear the shallow, and trim the sails.
+13.1Steps for Getting Ungrounded
+• React quickly to avoid being driven further aground. When you hear the centerboard scrape or feel the
+boat slow, you might be able to immediately turn the boat towards deep water before it gets stuck,
+otherwise:
+• Luff the sails. If you are headed downwind, possibly drop the sails to prevent the wind from
+driving you further into the shallows.
+• Keep the centerboard down to avoid going further aground.
+• Check for damage to the boat.
+• Consider donning PFDs.
+• Determine where the deep water is. Immediately note the path that got you into trouble – that may be
+the best path out. Boats often go aground at an angle to a shoal. Shallow water may be on one side, deep
+water on the other side.
+• Evaluate the conditions (wind, current and tide) and your options. As long as the boat isn’t moving, you
+have time. Better to take a minute – or five – than to take the wrong action and make the situation worse.
+A rising tide may carry you off. A falling tide may constrain your options.
+• Make a plan. Carefully brief the crew on what to do and exactly when to do it. When the centerboard
+comes up, everything happens quickly.
+• Primary options for ungrounding:
+• Raise the centerboard no more than necessary to start moving, try to pivot the boat toward deep
+water and sail out. Consider using the jib, main, “sculling,” or a paddle to turn the boat.
+• Backing the jib and luffing the main may turn the boat away from the wind.
+• Centering the main and luffing the jib may turn the bow toward the wind.
+h
+i
+l
+e
+u
+n
+d
+e
+r
+w
+a
+y
+,
+a
+n
+a
+l
+t
+e
+r
+n
+a
+t
+i
+v
+e
+t
+o
+r
+e
+e
+f
+i
+n
+g
+i
+s
+t
+o
+d
+o
+u
+s
+e
+t
+h
+e
+m
+a
+i
+n
+s
+a
+i
+l
+a
+n
+d
+s
+a
+
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 11 of 15
+Safety First! Safe Boating is no Accident
+• As the bow approaches the wind, it may be useful to backwind the jib to help the boat tack.
+• If pointed toward the shoal on a beam reach, consider backing the jib, heading downwind, and
+quickly jibing
+• Drop the sails, raise the centerboard further and paddle to deeper water. Shifting crew weight to
+one side may help free the boat.
+• Possible options:
+• With the help of another boat, try to kedge (pulling the boat to deep water using the anchor).
+First, pass the anchor line through the bow eye and tie it to the bridle bolt (where the forward
+end of the lifting bridle is attached). Have the other boat drop the anchor in deep water far from
+the Flying Scot. Pull the Flying Scot to deeper water. Repeat the kedging as needed.
+• Lower the anchor toward deep water and wait for the tide to rise.
+• Possible options, but not recommended:
+• Another boat may offer a tow. If accepted, the Flying Scot must be towed slowly.
+• If there is no boat that can help, with great care, throw the anchor toward deeper water. Be very
+careful to keep the anchor clear of crew and boat. Then kedge. Throwing the anchor is dangerous
+and usually not effective.
+14 Reefing Procedure
+Safe sailing of our Flying Scots requires skippers to be able to reef the mainsail. Practice reefing when you do not
+need to reef so you will be prepared to quickly and safely reef when necessary.
+If you are even considering whether to reef before you depart, then reef the main before casting-off. It is much
+easier to reef at the dock, and you can easily shake-out the reef while underway. If there is the potential of
+pushing SCOW’s policy on wind limits, or pushing your own limits, cancel the reservation.
+14.1Reefing the Mainsail
+The objective is to secure the reef tack forward and down, then the reef clew aft and down, in that order. Prerigged reefing pendants are attached to the reef tack and reef clew grommets. The steps are:
+1.a Prepare the mainsail for reefing while underway:
+• Head into the wind, luff the sails, un-cleat the mainsheet and boom
+vang.Lower the main while supporting the boom leaving the head in the
+mast slot; latch the main halyard winch.
+• You may sail under jib alone while reefing. This will help maintain control and keep the jib from
+flogging.
+1.b Or, at the dock, start with the mainsail lowered, release the mainsheet and boom vang.
+While underway, an
+alternative to reefing is to
+douse the mainsail and sail
+under jib alone.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 12 of 15
+Safety First! Safe Boating is no Accident
+2. Tie the reefing tack (the grommet 3 feet up the luff near the mast from the tack incorrectly labeled as
+“clew” in item 2 in the picture above) forward to the mast and down to the gooseneck using reef (square)
+knots, using the two lines running through the reefing tack.
+3. By the mast, release the outhaul.
+4. At the end of the boom, take the shackle out of the clew grommet and attach it to the reefing clew (the
+grommet about three feet up the leech from the clew). On Andiamo, the shackle is attached to a line tied
+through the reefing grommet.
+5. Tension the new (reefing) foot by tightening the outhaul at the mast end of the boom. Make sure the
+outhaul is secure in the jam cleat.
+6. Roll up the now-useless baggy part of the sail below the reef.
+7. Tie the reefing clew down to the boom. The line will go around the boom and the rolled sail. Do not wrap
+it around the main sheet! Tie it fairly tight using the line running through the reefing clew.
+8. The SCOW sails have reefing lines attached through three reefing points (small grommets) between the
+reefing clew and reefing tack. Tie these intermediate reefing lines loosely around the rolled sail. You do
+not want tension on the reefing points.
+9. Hoist the main, support the boom, tension and cleat the main halyard, adjust the boom vang, and get
+underway.
+With the sail most of the way up, there may be tension on the bolt rope going into the mast slot making it
+difficult to finish raising the sail. This can be fixed by 1) lifting up on the boom, 2) tying the reefing tack
+closer to the mast, or 3) relaxing the tension on the outhaul, raising the sail, and re-tensioning the
+outhaul.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 13 of 15
+Safety First! Safe Boating is no Accident
+15 Capsize Response
+A capsize must be reported per the SCOW Incident Reporting Policy.
+To prevent capsize, be prepared:
+• Do not sail in winds beyond SCOW policy or your ability (recognize that skipper/crew ability and physiology are
+not a constant – strength and mental acuity are variable).
+• Reduce sail area by reefing.
+• Keep the centerboard fully lowered in windy conditions.
+• Keep the sheets un-cleated; Slacken the sheets to “spill” wind
+• 3 Quick actions if hit by a gust:
+1. Let the sails out.
+2. Head up (steer to windward).
+3. Balance the boat by shifting crew weight (to the windward side if necessary).
+Wind Vortices: The WSM lies next to the airport, and wind vortices can be generated off of the wingtips of landing
+planes. Areas where vortices are likely to occur are several hundred yards along both sides of the landing path
+south of the airport and extending to either shore of the river. Vortices are often be observed hitting the Virginia
+shoreline. Vortices might linger up to several minutes after a plane has passed. They are more likely to affect our
+boats in lighter winds, but they dissipate quickly in stronger winds. The vortices are visible as water spouts above
+the river surface. Briefly, if your boat is hit be a vortex, get down low in the boat, uncleat your sails, and hang on as
+it quickly passes. Wind vortices have caused capsizes.
+If capsized in a shallow area, do not stand on the river bottom. You can easily get stuck in the mud and drown. This
+has happened in the local Potomac waters.
+Following are general procedures during a capsize:
+a) Do not attempt to swim for shore!
+b) Stay with the boat and check immediately for the safety of the crew.
+c) Account for all crew members.
+d) Have a crew member retrieve life vests from under the seats and pass them out for all crew to wear.
+e) The Flying Scot mast is designed to float, at least for a while. If the throwable cushion or an extra life vest is
+available, have a crew member take it, swim out and place it under the top of the mast. This will prevent the
+boat from turning turtle (completely upside down) or having the mast dig into the river bottom. The same
+crew member may be able to point the bow to windward by pushing on the top of the mast.
+f) Release the sheets. If you don't release the sheets, the boat may sail away from you when it rights. Pull slack
+in the main sheet to be sure the boom can move freely. Wet lines do not run freely.
+g) Point the bow to windward.
+h) Have a crew member swim around the boat to the centerboard and verbally confirm that they are holding on
+and ready.
+i) While hanging from the centerboard, apply steady weight and be patient. There may be a lot of water to spill
+from the sails; the boat should start to right very slowly at first, then quickly become upright.
+j) When the boat has been righted, crew members can begin re-boarding via the stern ladder.
+k) Check for injuries and provide first aid as available. There are some first aid supplies in the safety bag.
+l) Bail as necessary. If substantial water has entered the boat, rapid bailing will be needed, and it may take a long
+time before the boat is ready to be sailed. If you attempt to sail a partially swamped boat, any heeling may
+allow more water to wash in.
+m) Check for damage that would prevent the boat from being sailed, and make/improvise repairs, if possible. If
+the boat is not sailable, paddle in or call for assistance or a tow.
+n) All water must be bailed before hauling out at the crane. Do not attempt to haul out if water remains – the
+load may exceed the limits of the hardware and hull.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 14 of 15
+Safety First! Safe Boating is no Accident
+o) Notify the Commodore, Skipper Director, and Maintenance Director of the capsize, per the incident reporting
+policy. Be sure to record the incident in the log.
+Use your best judgment if other vessels approach to assist. Safety of the crew is the first priority. If the capsize
+occurs in a busy channel, a nearby boat may be agreeable to stand on-station to increase visibility of the situation.
+A Flying Scot is designed to prevent water from entering after a capsize, if the boat does not turtle. The seats
+effectively form a barrier, but if crew remain inside the boat, there may be enough weight to submerge the boat
+enough to allow water to flow over the seat deck.
+If the boat capsizes while the centerboard is up, it will turtle fairly quickly. For this case it’s important for a crew to
+take a throwable cushion, swim out to the top of the mast, and place the cushion under the mast.
+Flying Scot Skipper Information File (SIF)
+Approved February 10, 2025 Sailing Club of Washington Page 15 of 15
+Safety First! Safe Boating is no Accident
+16 Resources and References
+Reserve a boat with SCOW Reservations: https://scowreg.herokuapp.com/user_session/new
+SCOW boat reservation email (for problems or questions): reservations@scow.org
+SCOW Maintenance Director: scotmaint@scow.org
+SCOW Skipper Requirements, Boat Use Policy, Washington Sailing Marina regulations: www.scow.org/bylaws
+Washington Sailing marina office: (703) 548-9027 http://www.washingtonsailingmarina.com
+The Flying Scot Company: www.flyingscot.com
+Boat U.S. VHF Basics: https://www.boatus.com/expert-advice/expert-advice-archive/2012/july/vhf-basics
+Knots: http://www.animatedknots.com/
+Another knot reference: https://asa.com/online-sailing-course/knots-made-easy-videos/
+16.1Weather and Tides
+NOAA local Potomac River marine forecast: http://www.ndbc.noaa.gov/data/Forecasts/FZUS51.KLWX.html
+NOAA forecast, National Airport: https://www.weather.gov/, and enter DCA for the location.
+NOAA forecast: Marine VHF WX channel 5
+WJLA weather radar: https://wjla.com/weather/radar
+Weather Underground: https://www.wunderground.com/
+Lightning locator: http://lightning.nsstc.nasa.gov/lma/dclma/
+NOAA local tides at Washington Channel:
+https://tidesandcurrents.noaa.gov/stationhome.html?id=8594900&units=standard
+River flow at Little Falls:
+https://waterdata.usgs.gov/md/nwis/uv?cb_00060=on&format=gif_stats&site_no=01646500&period=7&begin_d
+ate=&end_date
+National Weather Service marine forecast and tides: 703-996-2200, options 1-2-1-1
+National Airport ATIS: 703-419-3917 (includes local wind speed and direction)
+16.2 Other Websites and Apps
+Smartphone Apps are generally designed to be easy to use. However, when the wind picks up, it may be difficult to
+look at your phone and sail at the same time (distracted sailing is like distracted driving). Before you go out, be
+prepared to complete your sail without using your phone. Besides, your phone may get wet, or the battery may
+die.
+Apps to consider: Local weather apps, AeroWeather Light, MyRadar, NOAA Radar Pro, RadarScope, Storm Radar,
+Navigation and Charts (Navionics), Windy, WindFinder, SailFlow, Marine Traffic, Tide Charts Near Me, TideTrac,
+Storm Shield, and American Sailing Association.
