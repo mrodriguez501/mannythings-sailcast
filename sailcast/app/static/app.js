@@ -61,6 +61,44 @@ function formatTime(iso) {
   }
 }
 
+/** Long format for card title: "Thursday March 5, 7:00 AM" */
+function formatLongDate(iso) {
+  if (!iso) return '—';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  } catch {
+    return iso;
+  }
+}
+
+/** Map NWS shortForecast + time to weather icon filename (from static-icons / Makin-Things/weather-icons). */
+function getWeatherIconName(shortForecast, startTime) {
+  const s = (shortForecast || '').toLowerCase();
+  const d = startTime ? new Date(startTime) : new Date();
+  const hour = d.getHours();
+  const day = hour >= 6 && hour < 19 ? 'day' : 'night';
+  if (/clear|sunny/.test(s) && !/partly|mostly/.test(s)) return `clear-${day}`;
+  if (/mostly clear|mostly sunny/.test(s)) return `cloudy-1-${day}`;
+  if (/partly cloudy|partly sunny/.test(s)) return `cloudy-1-${day}`;
+  if (/mostly cloudy/.test(s)) return `cloudy-2-${day}`;
+  if (/overcast|cloudy/.test(s)) return `cloudy-3-${day}`;
+  if (/scattered showers|showers|rain/.test(s)) return `rainy-2-${day}`;
+  if (/isolated.*thunder|thunderstorm/.test(s)) return `isolated-thunderstorms-${day}`;
+  if (/scattered.*thunder/.test(s)) return `scattered-thunderstorms-${day}`;
+  if (/fog|patchy fog/.test(s)) return `fog-${day}`;
+  if (/snow/.test(s)) return `snowy-2-${day}`;
+  if (/wind/.test(s)) return 'wind';
+  return `cloudy-1-${day}`;
+}
+
 function renderLocation(loc) {
   if (!locationEl || !loc) return;
   const { name, lat, lon } = loc;
@@ -98,7 +136,8 @@ function buildTidesByHour(tides) {
 }
 
 /**
- * Render 24 hours forecast cards: date, conditions, wind (speed + direction), tide.
+ * Render 24 hours forecast cards: long date, icon, description, temp, wind, tide.
+ * Icons from /static-icons (e.g. Makin-Things/weather-icons in sailcast/static-icons).
  */
 function render24HourCards(hourly, tides) {
   if (!hourCardsEl) return;
@@ -113,11 +152,18 @@ function render24HourCards(hourly, tides) {
     const key = hourKey(p.startTime);
     const tideText = tidesByHour[key] ?? '—';
     const windStr = [p.windSpeed, p.windDirection].filter(Boolean).join(' ') || '—';
+    const iconName = getWeatherIconName(p.shortForecast, p.startTime);
+    const conditions = p.shortForecast ?? '—';
+    const temp = p.temp != null ? `${p.temp}°F` : '—';
     const card = document.createElement('article');
     card.className = 'hour-card';
     card.innerHTML = `
-      <header class="hour-card-date">${formatTime(p.startTime)}</header>
-      <p class="hour-card-conditions">${escapeHtml(p.shortForecast ?? '—')}</p>
+      <header class="hour-card-date">${escapeHtml(formatLongDate(p.startTime))}</header>
+      <div class="hour-card-icon" aria-hidden="true">
+        <img src="/static-icons/${escapeHtml(iconName)}.svg" alt="" width="48" height="48" loading="lazy" onerror="this.style.display='none'">
+      </div>
+      <p class="hour-card-conditions">${escapeHtml(conditions)}</p>
+      <p class="hour-card-temp meta">${escapeHtml(temp)}</p>
       <p class="hour-card-wind meta">Wind ${escapeHtml(windStr)}</p>
       <p class="hour-card-tide meta">${escapeHtml(tideText)}</p>
     `;

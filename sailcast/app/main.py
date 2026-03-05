@@ -25,6 +25,11 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
+# Serve weather icons from sailcast/static-icons (e.g. from Makin-Things/weather-icons)
+STATIC_ICONS_DIR = Path(__file__).resolve().parent.parent / "static-icons"
+if STATIC_ICONS_DIR.exists():
+    app.mount("/static-icons", StaticFiles(directory=str(STATIC_ICONS_DIR)), name="static-icons")
+
     @app.get("/")
     async def root():
         """Serve the main static HTML page."""
