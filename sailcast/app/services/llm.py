@@ -1,11 +1,35 @@
 """
-LLM service: weather + alerts + tides + club guidance → concise sailing recommendation.
+LLM service: weather + alerts + tides + club guidance (RAG) → sailing recommendation.
+Includes boat type (Scot vs Cruiser), brief weather summary, and safe window.
+Rate-limited to stay under ~$5/month in token usage.
 """
 import os
+from datetime import datetime, timezone
 import httpx
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5-nano")
+
+# Allow more RAG context (core rules + excerpts)
+MAX_GUIDANCE_CHARS = 5000
+
+# Rate limit: max LLM calls per day to keep under ~$5/month (gpt-5-nano / mini pricing)
+MAX_LLM_CALLS_PER_DAY = 50
+_calls_today: int = 0
+_date_today: str = ""
+
+
+def _check_rate_limit() -> bool:
+    """Return True if we can make a call; False if over daily limit."""
+    global _calls_today, _date_today
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if today != _date_today:
+        _date_today = today
+        _calls_today = 0
+    if _calls_today >= MAX_LLM_CALLS_PER_DAY:
+        return False
+    _calls_today += 1
+    return True
 
 
 async def generate_report(
@@ -15,22 +39,28 @@ async def generate_report(
     alerts: list[dict],
     tides: list[dict],
     guidance: str,
+    boat_type: str = "both",
 ) -> str:
     """
-    Call LLM with 3-day forecast, hourly wind, alerts, tides, and club rules.
+    Call LLM with forecast, alerts, tides, RAG guidance. Optionally scope to boat type (scot | cruiser | both).
+    Returns fallback if no key, rate limited, or API error.
     """
     if not OPENAI_API_KEY:
         return _fallback_recommendation(forecast_3day, hourly, alerts)
 
-    # Build context
+    if not _check_rate_limit():
+        return _fallback_recommendation(
+            forecast_3day, hourly, alerts, note="Daily recommendation limit reached; try again tomorrow."
+        )
+
     period_lines = "\n".join(
         f"- {p.get('name', '')}: {p.get('shortForecast', '')} "
         f"Temp {p.get('temp')}°F, Wind {p.get('windSpeed')}"
         for p in forecast_3day[:6]
     )
     hourly_lines = "\n".join(
-        f"- {p.get('startTime', '')}: Wind {p.get('windSpeed')} Gusts {p.get('windGust')}"
-        for p in hourly[:12]
+        f"- {p.get('startTime', '')}: Wind {p.get('windSpeed')} Gusts {p.get('windGust')} — {p.get('shortForecast', '')}"
+        for p in hourly[:24]
     )
     alerts_text = "None active."
     if alerts:
@@ -42,23 +72,41 @@ async def generate_report(
         f"{t.get('type')} {t.get('v')} ft at {t.get('t')}" for t in tides[:6]
     ) if tides else "No tide data"
 
-    prompt = f"""You are a sailing club forecaster. Given the location's 3-day forecast, hourly wind, any active weather alerts (e.g. small craft advisories), tide predictions, and club rules, write a brief (2–4 sentence) sailing recommendation.
+    guidance_trimmed = guidance[:MAX_GUIDANCE_CHARS] if guidance else ""
 
-Club rules:
-{guidance[:2000]}
+    boat_instruction = (
+        "Address both boat types: Flying Scot (stricter wind/weather limits per SIF) and Cruiser (more tolerant). "
+        "Say which guidance applies to Scot vs Cruiser when it differs."
+        if boat_type == "both"
+        else (
+            "Address Cruiser skippers only (more tolerant limits)."
+            if boat_type == "cruiser"
+            else "Address Flying Scot skippers only (stricter wind/weather limits per SIF)."
+        )
+    )
+
+    prompt = f"""You are a sailing club forecaster for SCOW. Using the weather and club rules below, write a concise recommendation that includes:
+
+1) Brief weather explanation for the period (1–2 sentences).
+2) A recommended safe window (e.g. "9 AM–2 PM" or "avoid after 3 PM") based on the hourly wind and conditions.
+3) Boat-specific guidance where relevant. {boat_instruction}
+4) If there are active alerts, mention them first. Reference club rules (wind limits, PFD, reefing) when conditions warrant. Mention tides if they affect docking or timing.
+
+Use the hourly list to pick a safe window; avoid hours with high wind/gusts or poor visibility. Output only the recommendation (no preamble, no "Recommendation:" label). Keep to 4–6 sentences.
+
+Club rules and relevant excerpts:
+{guidance_trimmed}
 
 3-day forecast:
 {period_lines}
 
-Hourly wind (next 12h):
+Hourly (use for safe window):
 {hourly_lines}
 
 Active alerts:
 {alerts_text}
 
-Tides (next 2 days): {tides_preview}
-
-Reply with only the recommendation, no preamble."""
+Tides (next 2 days): {tides_preview}"""
 
     async with httpx.AsyncClient(timeout=30.0) as client:
         resp = await client.post(
@@ -70,7 +118,7 @@ Reply with only the recommendation, no preamble."""
             json={
                 "model": OPENAI_MODEL,
                 "messages": [{"role": "user", "content": prompt}],
-                "max_tokens": 300,
+                "max_tokens": 400,
             },
         )
         if resp.status_code != 200:
@@ -85,9 +133,12 @@ def _fallback_recommendation(
     forecast_3day: list[dict],
     hourly: list[dict],
     alerts: list[dict],
+    note: str | None = None,
 ) -> str:
-    """When LLM is unavailable."""
+    """When LLM is unavailable or rate limited."""
     parts = []
+    if note:
+        parts.append(f"{note} ")
     if alerts:
         parts.append(f"Active alerts: {', '.join(a.get('event', '') for a in alerts)}. ")
     if hourly:
@@ -95,5 +146,5 @@ def _fallback_recommendation(
         parts.append(
             f"Current: Wind {p.get('windSpeed', 'N/A')}, Gusts {p.get('windGust', 'N/A')}. "
         )
-    parts.append("Check club rules and local conditions before sailing. (LLM not configured.)")
+    parts.append("Check club rules and local conditions before sailing. (LLM not configured or limit reached.)")
     return "".join(parts).strip()

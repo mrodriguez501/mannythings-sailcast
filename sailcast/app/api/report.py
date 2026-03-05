@@ -1,4 +1,5 @@
 """Sailing report API: location, 3-day forecast, hourly wind, alerts, tides, LLM recommendation."""
+import os
 from fastapi import APIRouter, HTTPException
 
 from app.services.weather import get_all_weather_data
@@ -21,13 +22,17 @@ async def api_report():
             return cached
 
         data = await get_all_weather_data()
-        guidance = get_club_guidance(data["hourly"])
+        guidance = get_club_guidance(data["hourly"], data.get("alerts"))
+        boat_type = os.environ.get("BOAT_TYPE", "both").lower()
+        if boat_type not in ("scot", "cruiser", "both"):
+            boat_type = "both"
         recommendation = await generate_report(
             forecast_3day=data["forecast_3day"],
             hourly=data["hourly"],
             alerts=data["alerts"],
             tides=data["tides"],
             guidance=guidance,
+            boat_type=boat_type,
         )
 
         response = {
