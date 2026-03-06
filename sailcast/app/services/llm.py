@@ -7,9 +7,13 @@ import os
 from datetime import datetime, timezone
 import httpx
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-# gpt-4o-mini is widely available; set OPENAI_MODEL=gpt-5-nano if your account has it
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+# Read at request time so env is definitely loaded (e.g. after load_dotenv in main)
+def _get_api_key() -> str:
+    return (os.environ.get("OPENAI_API_KEY") or "").strip()
+
+
+def _get_model() -> str:
+    return (os.environ.get("OPENAI_MODEL") or "gpt-4o-mini").strip()
 
 # Allow more RAG context (core rules + excerpts)
 MAX_GUIDANCE_CHARS = 5000
@@ -46,7 +50,8 @@ async def generate_report(
     Call LLM with forecast, alerts, tides, RAG guidance. Optionally scope to boat type (scot | cruiser | both).
     Returns fallback if no key, rate limited, or API error.
     """
-    if not OPENAI_API_KEY:
+    api_key = _get_api_key()
+    if not api_key or api_key.lower() == "your-key-here":
         return _fallback_recommendation(forecast_3day, hourly, alerts)
 
     if not _check_rate_limit():
@@ -109,17 +114,18 @@ Active alerts:
 
 Tides (next 2 days): {tides_preview}"""
 
+    model = _get_model()
     async with httpx.AsyncClient(timeout=30.0) as client:
         resp = await client.post(
             "https://api.openai.com/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
             },
             json={
-                "model": OPENAI_MODEL,
+                "model": model,
                 "messages": [{"role": "user", "content": prompt}],
-                "max_tokens": 400,
+                "max_completion_tokens": 400,
             },
         )
         if resp.status_code != 200:
@@ -131,7 +137,12 @@ Tides (next 2 days): {tides_preview}"""
         data = resp.json()
         choice = data.get("choices", [{}])[0]
         content = (choice.get("message", {}).get("content") or "").strip()
-        return content or _fallback_recommendation(forecast_3day, hourly, alerts)
+        if not content:
+            return _fallback_recommendation(
+                forecast_3day, hourly, alerts,
+                note="Recommendation unavailable (model returned no content). ",
+            )
+        return content
 
 
 def _fallback_recommendation(
