@@ -1,9 +1,9 @@
 /**
- * SailCast frontend: fetch /api/report and display location, recommendation,
- * 3-day forecast, hourly wind, alerts, tides. Refreshes every 30 minutes.
+ * SailCast frontend: fetch /api/report and display sailing report.
+ * Refreshes every hour (primary flow).
  */
 const REPORT_URL = '/api/report';
-const REFRESH_INTERVAL_MS = 30 * 60 * 1000; // 30 minutes
+const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
 
 const locationEl = document.getElementById('location');
 const recommendationEl = document.getElementById('recommendation');

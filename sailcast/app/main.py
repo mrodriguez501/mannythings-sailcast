@@ -1,14 +1,20 @@
 """
 SailCast FastAPI entry point.
-Serves static files and exposes /health, /api/forecast, /api/report.
+Primary flow: GET / → static page → fetch /api/report every hour → sailing report.
+Also: /health for infra/CI.
 """
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load .env from sailcast/ so OPENAI_API_KEY and others are set
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from app.api import forecast, report
+from app.api import report
 
 app = FastAPI(
     title="SailCast",
@@ -16,8 +22,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Mount API routers
-app.include_router(forecast.router, prefix="/api", tags=["forecast"])
+# Single user-facing API (primary directive)
 app.include_router(report.router, prefix="/api", tags=["report"])
 
 # Serve static files from app/static

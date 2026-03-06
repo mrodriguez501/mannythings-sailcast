@@ -22,16 +22,15 @@ python -m venv .venv
 .venv/bin/uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Open **http://localhost:8000**. Data refreshes every 30 minutes in the UI.
+Open **http://localhost:8000**. The page fetches `/api/report` and refreshes every hour.
 
-## Endpoints
+## Endpoints (primary flow)
 
 | Endpoint | Description |
 |----------|-------------|
 | `GET /` | Static HTML frontend |
-| `GET /health` | Health check |
-| `GET /api/forecast` | Raw hourly forecast (NWS) |
 | `GET /api/report` | Full report: location, 3-day + hourly + alerts + marine + tides + recommendation (cached per UTC hour when enabled) |
+| `GET /health` | Health check (for infra/CI) |
 
 ## Config
 

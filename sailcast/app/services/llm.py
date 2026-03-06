@@ -8,7 +8,8 @@ from datetime import datetime, timezone
 import httpx
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5-nano")
+# gpt-4o-mini is widely available; set OPENAI_MODEL=gpt-5-nano if your account has it
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
 # Allow more RAG context (core rules + excerpts)
 MAX_GUIDANCE_CHARS = 5000
@@ -122,7 +123,11 @@ Tides (next 2 days): {tides_preview}"""
             },
         )
         if resp.status_code != 200:
-            return _fallback_recommendation(forecast_3day, hourly, alerts)
+            err_msg = resp.text[:200] if resp.text else f"HTTP {resp.status_code}"
+            return _fallback_recommendation(
+                forecast_3day, hourly, alerts,
+                note=f"Recommendation unavailable (API error: {err_msg}). "
+            )
         data = resp.json()
         choice = data.get("choices", [{}])[0]
         content = (choice.get("message", {}).get("content") or "").strip()
@@ -146,5 +151,8 @@ def _fallback_recommendation(
         parts.append(
             f"Current: Wind {p.get('windSpeed', 'N/A')}, Gusts {p.get('windGust', 'N/A')}. "
         )
-    parts.append("Check club rules and local conditions before sailing. (LLM not configured or limit reached.)")
+    if note and ("limit" in note.lower() or "error" in note.lower() or "unavailable" in note.lower()):
+        parts.append("Check club rules and local conditions before sailing.")
+    else:
+        parts.append("Check club rules and local conditions before sailing. (Set OPENAI_API_KEY in .env to enable AI recommendations.)")
     return "".join(parts).strip()
