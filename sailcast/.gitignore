@@ -10,3 +10,6 @@ venv/
 .vscode/
 *.swp
 .DS_Store
+
+# Agent context (do not commit)
+context.txt

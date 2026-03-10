@@ -1,46 +1,36 @@
 """
-Minimal RAG-style retrieval: load club rules markdown and return relevant guidance
-based on wind speed, gusts, and conditions.
+RAG: load a single curated file of weather, rules, and boat-type guidance for the LLM.
+Uses rag/sailing-weather-rules.txt (parsed from club_rules, SIFs, skipper agreement).
 """
 from pathlib import Path
 
-# Path to club rules relative to project root (sailcast/)
 RAG_DIR = Path(__file__).resolve().parent.parent.parent / "rag"
-CLUB_RULES_PATH = RAG_DIR / "club_rules.md"
+SAILING_WEATHER_RULES_PATH = RAG_DIR / "sailing-weather-rules.txt"
 
-_cached_rules_text: str | None = None
-
-
-def _load_rules() -> str:
-    global _cached_rules_text
-    if _cached_rules_text is not None:
-        return _cached_rules_text
-    if not CLUB_RULES_PATH.exists():
-        _cached_rules_text = "# Club rules\nNo club rules file found. Use safe sailing practices."
-        return _cached_rules_text
-    _cached_rules_text = CLUB_RULES_PATH.read_text(encoding="utf-8")
-    return _cached_rules_text
+_cached_guidance: str | None = None
 
 
-def get_club_guidance(forecast_data: list[dict]) -> str:
+def _load_guidance() -> str:
+    """Load the curated sailing weather/rules text (cached)."""
+    global _cached_guidance
+    if _cached_guidance is not None:
+        return _cached_guidance
+    if not SAILING_WEATHER_RULES_PATH.exists():
+        _cached_guidance = (
+            "Wind: do not sail sustained above 20 knots; gusts above 25 consider reefing or staying in. "
+            "PFD required on water. Check weather before leaving dock. When in doubt, stay ashore. Reef early in heavy air."
+        )
+        return _cached_guidance
+    _cached_guidance = SAILING_WEATHER_RULES_PATH.read_text(encoding="utf-8")
+    return _cached_guidance
+
+
+def get_club_guidance(
+    hourly: list[dict],
+    alerts: list[dict] | None = None,
+) -> str:
     """
-    Return relevant club guidance based on forecast (wind, gusts, conditions).
-    Uses simple heuristics: if any period has high wind/gusts, include full rules.
+    Return guidance for the LLM: weather, rules, and boat-type content from
+    rag/sailing-weather-rules.txt. hourly and alerts are unused (single file has all relevant text).
     """
-    rules = _load_rules()
-    if not forecast_data:
-        return rules
-
-    # Heuristic: if any hour has strong wind/gusts, return full rules for context
-    for p in forecast_data[:12]:  # next 12 hours
-        ws = p.get("windSpeed") or ""
-        gust = p.get("windGust") or ""
-        # Simple check: "20 mph" or "25 mph" etc.
-        try:
-            w = "".join(c for c in str(ws) if c.isdigit() or c == ".")
-            g = "".join(c for c in str(gust) if c.isdigit() or c == ".")
-            if (w and float(w) >= 18) or (g and float(g) >= 22):
-                return rules
-        except (ValueError, TypeError):
-            pass
-    return rules
+    return _load_guidance()

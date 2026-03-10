@@ -3,9 +3,12 @@ LLM service: weather + alerts + tides + club guidance (RAG) → sailing recommen
 Includes boat type (Scot vs Cruiser), brief weather summary, and safe window.
 Rate-limited to stay under ~$5/month in token usage.
 """
+import logging
 import os
 from datetime import datetime, timezone
 import httpx
+
+logger = logging.getLogger(__name__)
 
 # Read at request time so env is definitely loaded (e.g. after load_dotenv in main)
 def _get_api_key() -> str:
@@ -15,8 +18,8 @@ def _get_api_key() -> str:
 def _get_model() -> str:
     return (os.environ.get("OPENAI_MODEL") or "gpt-4o-mini").strip()
 
-# Allow more RAG context (core rules + excerpts)
-MAX_GUIDANCE_CHARS = 5000
+# Cap RAG + forecast to keep prompt under ~800 input tokens
+MAX_GUIDANCE_CHARS = 1200
 
 # Rate limit: max LLM calls per day to keep under ~$5/month (gpt-5-nano / mini pricing)
 MAX_LLM_CALLS_PER_DAY = 50
@@ -60,22 +63,22 @@ async def generate_report(
         )
 
     period_lines = "\n".join(
-        f"- {p.get('name', '')}: {p.get('shortForecast', '')} "
-        f"Temp {p.get('temp')}°F, Wind {p.get('windSpeed')}"
-        for p in forecast_3day[:6]
+        f"{p.get('name', '')}: {p.get('shortForecast', '')} {p.get('temp')}°F wind {p.get('windSpeed')}"
+        for p in forecast_3day[:3]
     )
+    # First 12 hours only, compact: time wind gusts
     hourly_lines = "\n".join(
-        f"- {p.get('startTime', '')}: Wind {p.get('windSpeed')} Gusts {p.get('windGust')} — {p.get('shortForecast', '')}"
-        for p in hourly[:24]
+        f"{p.get('startTime', '')[:16]}: {p.get('windSpeed')} mph gusts {p.get('windGust') or '—'}"
+        for p in hourly[:12]
     )
     alerts_text = "None active."
     if alerts:
         alerts_text = "\n".join(
-            f"- {a.get('event')} ({a.get('severity')}): {a.get('headline', '')}"
-            for a in alerts
+            f"{a.get('event')}: {str(a.get('headline', ''))[:80]}"
+            for a in alerts[:3]
         )
     tides_preview = ", ".join(
-        f"{t.get('type')} {t.get('v')} ft at {t.get('t')}" for t in tides[:6]
+        f"{t.get('type')} {t.get('v')} ft" for t in tides[:4]
     ) if tides else "No tide data"
 
     guidance_trimmed = guidance[:MAX_GUIDANCE_CHARS] if guidance else ""
@@ -91,30 +94,26 @@ async def generate_report(
         )
     )
 
-    prompt = f"""You are a sailing club forecaster for SCOW. Using the weather and club rules below, write a concise recommendation that includes:
+    prompt = f"""Sailing forecaster. Write a short recommendation (4–6 sentences): weather summary, safe window from hourly wind, boat guidance ({boat_type}). Mention alerts first if any. Reference club rules for wind/PFD/reefing. Output only the recommendation, no label.
 
-1) Brief weather explanation for the period (1–2 sentences).
-2) A recommended safe window (e.g. "9 AM–2 PM" or "avoid after 3 PM") based on the hourly wind and conditions.
-3) Boat-specific guidance where relevant. {boat_instruction}
-4) If there are active alerts, mention them first. Reference club rules (wind limits, PFD, reefing) when conditions warrant. Mention tides if they affect docking or timing.
-
-Use the hourly list to pick a safe window; avoid hours with high wind/gusts or poor visibility. Output only the recommendation (no preamble, no "Recommendation:" label). Keep to 4–6 sentences.
-
-Club rules and relevant excerpts:
+Rules:
 {guidance_trimmed}
 
-3-day forecast:
+Forecast:
 {period_lines}
 
-Hourly (use for safe window):
+Hourly wind (pick safe window):
 {hourly_lines}
 
-Active alerts:
-{alerts_text}
-
-Tides (next 2 days): {tides_preview}"""
+Alerts: {alerts_text}
+Tides: {tides_preview}"""
 
     model = _get_model()
+    payload: dict = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    # Omit max_completion_tokens for test (use model default)
     async with httpx.AsyncClient(timeout=30.0) as client:
         resp = await client.post(
             "https://api.openai.com/v1/chat/completions",
@@ -122,11 +121,7 @@ Tides (next 2 days): {tides_preview}"""
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
             },
-            json={
-                "model": model,
-                "messages": [{"role": "user", "content": prompt}],
-                "max_completion_tokens": 400,
-            },
+            json=payload,
         )
         if resp.status_code != 200:
             err_msg = resp.text[:200] if resp.text else f"HTTP {resp.status_code}"
@@ -135,12 +130,25 @@ Tides (next 2 days): {tides_preview}"""
                 note=f"Recommendation unavailable (API error: {err_msg}). "
             )
         data = resp.json()
-        choice = data.get("choices", [{}])[0]
-        content = (choice.get("message", {}).get("content") or "").strip()
+        choices = data.get("choices") or []
+        content = ""
+        for ch in choices:
+            msg = ch.get("message") or {}
+            raw = msg.get("content")
+            if raw is not None and str(raw).strip():
+                content = str(raw).strip()
+                break
         if not content:
+            first = choices[0] if choices else {}
+            finish = first.get("finish_reason", "unknown")
+            logger.warning(
+                "OpenAI returned 200 but no content. finish_reason=%s",
+                finish,
+            )
+            reason = f" (finish_reason: {finish})" if finish and finish != "unknown" else ""
             return _fallback_recommendation(
                 forecast_3day, hourly, alerts,
-                note="Recommendation unavailable (model returned no content). ",
+                note=f"Recommendation unavailable (model returned no content{reason}). ",
             )
         return content
 

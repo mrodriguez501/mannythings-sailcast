@@ -1,0 +1,16 @@
+# Deploy SailCast to AWS Lightsail on push to main.
+# Requires: self-hosted runner on the Lightsail instance and a deploy script on the server.
+# See sailcast/README.md section "CI/CD (GitHub Actions → Lightsail)".
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Run deployment script
+        run: /home/bitnami/deploy.sh

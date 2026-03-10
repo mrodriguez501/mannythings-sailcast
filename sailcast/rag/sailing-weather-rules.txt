@@ -1,0 +1,85 @@
+[club_rules.md]
+# Sailing Club Rules & Safety Guidelines
+
+## Wind limits
+- Do not sail in sustained winds above 20 knots without approval.
+- Gusts above 25 knots: consider reefing or staying in.
+- When in doubt, stay ashore.
+
+## General safety
+- Always wear a PFD on the water.
+- Check weather before leaving the dock.
+- File a float plan when going outside the harbor.
+
+## Boat handling
+- Know your boat's limits and your own.
+- In heavy air, reef early.
+
+[sif-scott.txt – Flying Scot: PFD, wind, weather]
+b) Mandatory U.S. Coast Guard-approved PFD (Type III, Type V or auto-inflating) use applies for:
+• Dates from October 1 through April 30
+• Winds exceeding 17 mph (15 knots )
+• Children under 13 years of age
+• Non-swimmers
+• Single-handed skippers
+
+If the reservation will be the same day or within a few days, check the weather forecast first.
+
+Sailing after sunset: Flying Scots can be operated after sunset only under the following conditions:
+• All aboard must wear PFDs.
+
+a) Obtain the current weather conditions and forecast.
+b) Obtain the times of high and low tides (also available in the logbooks).
+
+a) Go to the launching area and observe the sky, wind and wave conditions.
+
+If the weather conditions are marginal per SCOW policy or your sailing ability, this is an opportunity to make a go, no-go decision.
+
+10 Under Way
+• Watch for changing weather, wind direction and speed.
+• Be prepared to reef the mainsail or douse sails.
+• In gusty or strong winds, avoid excessive heeling or capsize by keeping the mainsheet un-cleated and ready to be eased.
+• If the weather deteriorates, ensure that all crew are wearing life jackets.
+• If the wind builds beyond reasonable limits of boat and crew, reduce sail or douse the sails.
+• Return to the marina or seek a safe haven if the weather makes it unsafe to remain on the river.
+
+If the wind speed or wind direction indicates a difficult landing, consider dousing the main and approaching the docks under jib power alone.
+
+14 Reefing Procedure
+Safe sailing of our Flying Scots requires skippers to be able to reef the mainsail. Practice reefing when you do not need to reef so you will be prepared to quickly and safely reef when necessary.
+If you are even considering whether to reef before you depart, then reef the main before casting-off. It is much easier to reef at the dock, and you can easily shake-out the reef while underway. If there is the potential of pushing SCOW's policy on wind limits, or pushing your own limits, cancel the reservation.
+
+15 Capsize Response
+To prevent capsize, be prepared:
+• Do not sail in winds beyond SCOW policy or your ability (recognize that skipper/crew ability and physiology are not a constant – strength and mental acuity are variable).
+• Reduce sail area by reefing.
+• Keep the centerboard fully lowered in windy conditions.
+• Keep the sheets un-cleated; Slacken the sheets to "spill" wind
+• 3 Quick actions if hit by a gust:
+1. Let the sails out.
+2. Head up (steer to windward).
+3. Balance the boat by shifting crew weight (to the windward side if necessary).
+
+Wind Vortices: The WSM lies next to the airport, and wind vortices can be generated off of the wingtips of landing planes. Areas where vortices are likely to occur are several hundred yards along both sides of the landing path south of the airport and extending to either shore of the river. Wind vortices have caused capsizes.
+
+[sif-cruiser.txt – Cruiser: float plan, reefing, weather]
+Float Plans
+A float plan must be filled out and left in the unlocked black box labeled FLOAT PLANS on the dock box. Blank forms can be found in the log. Float plans must be removed at the end of each sail.
+
+Headsails & Reefing
+Reefing
+All cruisers have two rows of reefing points. Before reefing, decide whether to reef to the first (lower) or second (upper) reefing point.
+To reef, follow these steps:
+1. Release the halyard to drop the sail until the desired reefing points are adjacent to the boom.
+2. Secure the reef tack via either a cringle or a reefing ring.
+3. Hold down the reef clew by tightening the reef line and then securing it.
+4. Re-raise the halyard to tighten the luff
+5. Tie the reef buntings very loosely under the excess sail area below the boom.
+
+GROUNDING & GETTING OFF
+3. Check for damage to the boat. Don PFDs. Before taking any action to get off, brief the crew on what you plan to do and what they should do.
+5. Evaluate the wind, current and tide and your options. If at low tide, the rising tide may carry you off.
+
+[skipper-agreement.txt]
+I agree to adhere to and abide by SCOW bylaws, policies and procedures including but not limited to the SCOW Skipper Requirements and Boat Use Policy.
+Annually, on or before April 1, I agree to read the SCOW Skipper Requirements and Boat Use Policy, the Incident Reporting Policy and the Skipper Information File (SIF) applicable to each type of boat for which I am certified.
