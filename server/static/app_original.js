@@ -10,10 +10,6 @@ const WIND_LIMIT_DAYSAILER_RESTRICTED = 17; // reef, lagoon-only, PFDs
 const WIND_LIMIT_DAYSAILER_MAX = 23;        // no daysailers
 const WIND_LIMIT_CRUISER_MAX = 29;          // no boats at all
 
-function isMobileView() {
-  return window.innerWidth <= 480;
-}
-
 function windRestrictionColor(mph) {
   if (mph > WIND_LIMIT_CRUISER_MAX)
     return { bg: 'rgba(120, 0, 0, 0.9)', border: 'rgb(120, 0, 0)' };
@@ -30,46 +26,41 @@ const windThresholdLinesPlugin = {
     const yScale = chart.scales.y;
     if (!yScale) return;
     const ctx = chart.ctx;
-    const mobile = isMobileView();
     const lines = [
-      { value: WIND_LIMIT_DAYSAILER_RESTRICTED, color: 'rgba(245, 124, 0, 0.7)', label: '17', labelFull: '17 mph – Daysailer restrictions' },
-      { value: WIND_LIMIT_DAYSAILER_MAX, color: 'rgba(211, 47, 47, 0.7)', label: '23', labelFull: '23 mph – No daysailers' },
-      { value: WIND_LIMIT_CRUISER_MAX, color: 'rgba(120, 0, 0, 0.7)', label: '29', labelFull: '29 mph – No boats' },
+      { value: WIND_LIMIT_DAYSAILER_RESTRICTED, color: 'rgba(245, 124, 0, 0.7)', label: '17 mph – Daysailer restrictions' },
+      { value: WIND_LIMIT_DAYSAILER_MAX, color: 'rgba(211, 47, 47, 0.7)', label: '23 mph – No daysailers' },
+      { value: WIND_LIMIT_CRUISER_MAX, color: 'rgba(120, 0, 0, 0.7)', label: '29 mph – No boats' },
     ];
     for (const line of lines) {
       if (line.value < yScale.min || line.value > yScale.max) continue;
       const y = yScale.getPixelForValue(line.value);
       ctx.save();
       ctx.beginPath();
-      ctx.setLineDash(mobile ? [4, 3] : [6, 4]);
+      ctx.setLineDash([6, 4]);
       ctx.strokeStyle = line.color;
-      ctx.lineWidth = mobile ? 1 : 1.5;
+      ctx.lineWidth = 1.5;
       ctx.moveTo(chart.chartArea.left, y);
       ctx.lineTo(chart.chartArea.right, y);
       ctx.stroke();
       ctx.fillStyle = line.color;
-      ctx.font = mobile ? '8px sans-serif' : '10px sans-serif';
+      ctx.font = '10px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText(mobile ? line.label : line.labelFull, chart.chartArea.left + 4, y - 3);
+      ctx.fillText(line.label, chart.chartArea.left + 4, y - 4);
       ctx.restore();
     }
   },
 };
 
 const locationEl = document.getElementById('location');
+const recommendationEl = document.getElementById('recommendation');
 const lastFetchEl = document.getElementById('last-fetch');
 const alertsListEl = document.getElementById('alerts-list');
-const adviceCardEl = document.getElementById('advice-card');
-const conditionsGridEl = document.getElementById('conditions-grid');
-const tideSummaryEl = document.getElementById('tide-summary');
 const forecast3dayListEl = document.getElementById('forecast-3day-list');
 const hourlyListEl = document.getElementById('hourly-list');
 const hourCardsEl = document.getElementById('hour-cards');
 const marineForecastEl = document.getElementById('marine-forecast');
 const tideChartContainerEl = document.getElementById('tide-chart-container');
 const tideChartMessageEl = document.getElementById('tide-chart-message');
-
-let _cachedReportData = null;
 
 /** Show loading / no-data / error message in a section container. */
 function showSectionMessage(container, state, sectionName) {
@@ -103,15 +94,7 @@ function _hideCanvas(id) {
 
 function setLoading() {
   if (locationEl) locationEl.textContent = '—';
-  if (adviceCardEl) adviceCardEl.innerHTML = '<p class="loading">Loading…</p>';
-  if (tideSummaryEl) tideSummaryEl.innerHTML = '';
-  [
-    document.getElementById('metric-wind-val'),
-    document.getElementById('metric-gust-val'),
-    document.getElementById('metric-temp-val'),
-    document.getElementById('metric-direction-val'),
-    document.getElementById('metric-tide-val'),
-  ].forEach((el) => { if (el) el.textContent = '—'; });
+  if (recommendationEl) recommendationEl.innerHTML = '<p class="loading">Loading…</p>';
   _applySectionStates([
     [hourCardsEl, 'loading'], [alertsListEl, 'loading'], [marineForecastEl, 'loading'],
     [hourlyListEl, 'loading'], [forecast3dayListEl, 'loading'],
@@ -178,215 +161,19 @@ function renderLocation(loc) {
   locationEl.textContent = `${name} (${lat}, ${lon})`;
 }
 
+function renderRecommendation(text) {
+  if (!recommendationEl) return;
+  recommendationEl.innerHTML = '';
+  const p = document.createElement('p');
+  p.textContent = text || 'No recommendation available.';
+  recommendationEl.appendChild(p);
+}
+
 function escapeHtml(str) {
   if (str == null) return '';
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
-}
-
-function parseMph(val) {
-  if (typeof val === 'number') return val;
-  if (typeof val === 'string') return parseFloat(val.replace(/[^\d.-]/g, '')) || 0;
-  return 0;
-}
-
-/**
- * Compute safety level from raw hourly + alerts data (client-side fallback).
- * Uses SCOW club rule thresholds: 17/23/29 MPH.
- */
-function computeSafetyLevel(hourly, alerts) {
-  if (Array.isArray(alerts)) {
-    for (const a of alerts) {
-      const sev = (a.severity || '').toLowerCase();
-      if (sev === 'severe' || sev === 'extreme') return 'UNSAFE';
-    }
-  }
-  if (Array.isArray(hourly) && hourly.length > 0) {
-    const p = hourly[0];
-    const wind = parseMph(p.windSpeed);
-    const gust = parseMph(p.windGust);
-    if (wind > WIND_LIMIT_DAYSAILER_MAX || gust > WIND_LIMIT_CRUISER_MAX) return 'UNSAFE';
-    if (wind > WIND_LIMIT_DAYSAILER_RESTRICTED || gust > WIND_LIMIT_DAYSAILER_MAX) return 'CAUTION';
-  }
-  return 'SAFE';
-}
-
-/**
- * Scan hourly periods for the longest consecutive SAFE stretch during daylight (6am-7pm).
- * Returns a string like "11:00 AM – 3:00 PM" or null.
- */
-function findBestWindow(hourly) {
-  if (!Array.isArray(hourly) || hourly.length === 0) return null;
-
-  let bestStart = null;
-  let bestLen = 0;
-  let curStart = null;
-  let curLen = 0;
-
-  for (const p of hourly) {
-    const d = new Date(p.startTime);
-    const hour = d.getHours();
-    const isDaylight = hour >= 6 && hour < 19;
-    const wind = parseMph(p.windSpeed);
-    const gust = parseMph(p.windGust);
-    const safe = isDaylight && wind <= WIND_LIMIT_DAYSAILER_RESTRICTED && gust <= WIND_LIMIT_DAYSAILER_MAX;
-
-    if (safe) {
-      if (curStart === null) curStart = p.startTime;
-      curLen++;
-    } else {
-      if (curLen > bestLen) {
-        bestStart = curStart;
-        bestLen = curLen;
-      }
-      curStart = null;
-      curLen = 0;
-    }
-  }
-  if (curLen > bestLen) {
-    bestStart = curStart;
-    bestLen = curLen;
-  }
-
-  if (!bestStart || bestLen === 0) return null;
-
-  const fmt = (d) => d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
-  const startD = new Date(bestStart);
-  const endD = new Date(startD.getTime() + bestLen * 3600000);
-  return `${fmt(startD)} – ${fmt(endD)}`;
-}
-
-const SAFETY_COLORS = {
-  SAFE: { border: '#2e7d32', bg: '#e8f5e9', badge: '#2e7d32', text: 'Safe to Sail' },
-  CAUTION: { border: '#f9a825', bg: '#fff8e1', badge: '#f57f17', text: 'Caution' },
-  UNSAFE: { border: '#c62828', bg: '#ffebee', badge: '#c62828', text: 'Unsafe' },
-};
-
-function renderAdviceCard(data) {
-  if (!adviceCardEl) return;
-  adviceCardEl.innerHTML = '';
-
-  const advice = data.advice || null;
-  const level = (advice && advice.safetyLevel) || computeSafetyLevel(data.hourly || [], data.alerts || []);
-  const colors = SAFETY_COLORS[level] || SAFETY_COLORS.SAFE;
-
-  adviceCardEl.style.borderLeftColor = colors.border;
-  adviceCardEl.style.backgroundColor = colors.bg;
-
-  const badge = document.createElement('span');
-  badge.className = 'advice-badge';
-  badge.style.backgroundColor = colors.badge;
-  badge.textContent = colors.text;
-  adviceCardEl.appendChild(badge);
-
-  const summary = (advice && advice.summary) || data.recommendation || '';
-  if (summary) {
-    const p = document.createElement('p');
-    p.className = 'advice-summary';
-    p.textContent = summary;
-    adviceCardEl.appendChild(p);
-  }
-
-  const advisory = advice && advice.advisory;
-  if (advisory) {
-    const p = document.createElement('p');
-    p.className = 'advice-advisory';
-    p.textContent = advisory;
-    adviceCardEl.appendChild(p);
-  }
-
-  const concerns = (advice && advice.keyConcerns) || [];
-  if (concerns.length > 0) {
-    const ul = document.createElement('ul');
-    ul.className = 'advice-concerns';
-    for (const c of concerns) {
-      const li = document.createElement('li');
-      li.textContent = c;
-      ul.appendChild(li);
-    }
-    adviceCardEl.appendChild(ul);
-  }
-
-  const bestWindow = findBestWindow(data.hourly || []);
-  if (bestWindow) {
-    const p = document.createElement('p');
-    p.className = 'advice-window meta';
-    p.textContent = `Best sailing window: ${bestWindow}`;
-    adviceCardEl.appendChild(p);
-  }
-
-  if (advice && advice.generatedAt) {
-    const p = document.createElement('p');
-    p.className = 'advice-meta meta';
-    p.textContent = `AI-generated${advice.model ? ` (${advice.model})` : ''} at ${formatTime(advice.generatedAt)}`;
-    adviceCardEl.appendChild(p);
-  }
-}
-
-function renderConditionsGrid(hourly, tides) {
-  if (!conditionsGridEl) return;
-  const windVal = document.getElementById('metric-wind-val');
-  const gustVal = document.getElementById('metric-gust-val');
-  const tempVal = document.getElementById('metric-temp-val');
-  const dirVal = document.getElementById('metric-direction-val');
-  const tideVal = document.getElementById('metric-tide-val');
-
-  if (!Array.isArray(hourly) || hourly.length === 0) {
-    [windVal, gustVal, tempVal, dirVal, tideVal].forEach((el) => { if (el) el.textContent = '—'; });
-    return;
-  }
-
-  const p = hourly[0];
-  if (windVal) windVal.textContent = p.windSpeed || '—';
-  if (gustVal) gustVal.textContent = p.windGust || '—';
-  if (tempVal) tempVal.textContent = p.temp != null ? `${p.temp}°F` : '—';
-  if (dirVal) dirVal.textContent = p.windDirection || '—';
-
-  if (tideVal) {
-    const nextTide = findNextTide(tides);
-    tideVal.textContent = nextTide || '—';
-  }
-}
-
-function findNextTide(tides) {
-  if (!Array.isArray(tides) || tides.length === 0) return null;
-  const now = Date.now();
-  for (const t of tides) {
-    const d = new Date(t.t.replace(' ', 'T'));
-    if (d.getTime() >= now) {
-      const label = t.type === 'H' ? 'High' : t.type === 'L' ? 'Low' : '';
-      const time = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
-      return `${label} ${t.v || ''} ft @ ${time}`.trim();
-    }
-  }
-  return null;
-}
-
-function renderTideSummary(tides) {
-  if (!tideSummaryEl) return;
-  tideSummaryEl.innerHTML = '';
-  if (!Array.isArray(tides) || tides.length === 0) return;
-
-  const now = Date.now();
-  let nextHigh = null;
-  let nextLow = null;
-  for (const t of tides) {
-    const d = new Date(t.t.replace(' ', 'T'));
-    if (d.getTime() < now) continue;
-    const fmt = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
-    if (t.type === 'H' && !nextHigh) nextHigh = `High ${t.v} ft @ ${fmt}`;
-    if (t.type === 'L' && !nextLow) nextLow = `Low ${t.v} ft @ ${fmt}`;
-    if (nextHigh && nextLow) break;
-  }
-
-  const parts = [nextHigh, nextLow].filter(Boolean);
-  if (parts.length > 0) {
-    const p = document.createElement('p');
-    p.className = 'meta';
-    p.textContent = parts.join('  |  ');
-    tideSummaryEl.appendChild(p);
-  }
 }
 
 /**
@@ -550,68 +337,6 @@ function renderForecast3day(periods) {
 }
 
 /**
- * Time filter: slice the cached hourly data and re-render the wind chart + hourly table.
- */
-function applyTimeFilter(filterName) {
-  if (!_cachedReportData) return;
-  const hourly = _cachedReportData.hourly || [];
-  if (hourly.length === 0) return;
-
-  const now = new Date();
-  let filtered;
-
-  switch (filterName) {
-    case '2hr':
-      filtered = hourly.filter((p) => {
-        const d = new Date(p.startTime);
-        return d >= now && d <= new Date(now.getTime() + 2 * 3600000);
-      });
-      break;
-    case '6hr':
-      filtered = hourly.filter((p) => {
-        const d = new Date(p.startTime);
-        return d >= now && d <= new Date(now.getTime() + 6 * 3600000);
-      });
-      break;
-    case 'today': {
-      const endOfDay = new Date(now);
-      endOfDay.setHours(23, 59, 59, 999);
-      filtered = hourly.filter((p) => new Date(p.startTime) <= endOfDay);
-      break;
-    }
-    case 'tomorrow': {
-      const tmrwStart = new Date(now);
-      tmrwStart.setDate(tmrwStart.getDate() + 1);
-      tmrwStart.setHours(0, 0, 0, 0);
-      const tmrwEnd = new Date(tmrwStart);
-      tmrwEnd.setHours(23, 59, 59, 999);
-      filtered = hourly.filter((p) => {
-        const d = new Date(p.startTime);
-        return d >= tmrwStart && d <= tmrwEnd;
-      });
-      break;
-    }
-    default:
-      filtered = hourly;
-  }
-
-  if (filtered.length === 0) filtered = hourly.slice(0, 1);
-  renderWindChart(filtered);
-  renderHourly(filtered);
-}
-
-function initTimeFilter() {
-  const buttons = document.querySelectorAll('.time-filter-btn');
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      buttons.forEach((b) => b.classList.remove('time-filter-btn--active'));
-      btn.classList.add('time-filter-btn--active');
-      applyTimeFilter(btn.dataset.filter);
-    });
-  });
-}
-
-/**
  * Build hour key (YYYY-MM-DD HH) in local time for matching tides to hourly rows.
  */
 function hourKey(dateOrIso) {
@@ -700,8 +425,6 @@ function renderWindChart(periods) {
   const maxWind = Math.max(...windValues, 0);
   const yMax = Math.max(maxWind + 5, WIND_LIMIT_CRUISER_MAX + 4);
 
-  const mobile = isMobileView();
-
   if (windChartInstance) windChartInstance.destroy();
   windChartInstance = new Chart(canvas, {
     type: 'bar',
@@ -714,41 +437,24 @@ function renderWindChart(periods) {
           backgroundColor: barColors.map((c) => c.bg),
           borderColor: barColors.map((c) => c.border),
           borderWidth: 1,
-          barPercentage: mobile ? 0.6 : 0.9,
-          categoryPercentage: mobile ? 0.7 : 0.8,
         },
       ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      aspectRatio: mobile ? 1.4 : 2,
+      aspectRatio: 2,
       plugins: {
-        legend: { display: !mobile },
-        title: { display: true, text: 'Next 8 hours wind speed', font: { size: mobile ? 11 : 14 } },
-        tooltip: { enabled: true, intersect: false, mode: 'index' },
+        legend: { position: 'top' },
+        title: { display: true, text: 'Next 8 hours wind speed' },
       },
       scales: {
         y: {
           beginAtZero: true,
           max: yMax,
-          title: { display: !mobile, text: 'Wind (mph)' },
-          ticks: { font: { size: mobile ? 9 : 12 } },
+          title: { display: true, text: 'Wind (mph)' },
         },
-        x: {
-          title: { display: false },
-          ticks: {
-            font: { size: mobile ? 8 : 12 },
-            maxRotation: mobile ? 45 : 0,
-            callback: mobile
-              ? function (val, idx) {
-                  const lbl = this.getLabelForValue(val);
-                  const parts = lbl.split(',');
-                  return parts.length > 1 ? parts[1].trim() : lbl;
-                }
-              : undefined,
-          },
-        },
+        x: { title: { display: true, text: 'Time' } },
       },
     },
     plugins: [windThresholdLinesPlugin],
@@ -789,8 +495,6 @@ function renderTideChart(tides) {
   });
   const values = tides.map((t) => parseFloat(t.v) || 0);
 
-  const mobile = isMobileView();
-
   if (tideChartInstance) tideChartInstance.destroy();
   tideChartInstance = new Chart(canvas, {
     type: 'line',
@@ -804,9 +508,7 @@ function renderTideChart(tides) {
           backgroundColor: 'rgba(179, 0, 0, 0.1)',
           fill: true,
           tension: 0.2,
-          borderWidth: mobile ? 1.5 : 2,
-          pointRadius: mobile ? 2.5 : 4,
-          pointHitRadius: mobile ? 16 : 8,
+          pointRadius: 4,
           pointBackgroundColor: values.map((_, i) => (tides[i].type === 'H' ? 'rgb(179, 0, 0)' : 'rgb(100, 100, 200)')),
         },
       ],
@@ -814,32 +516,14 @@ function renderTideChart(tides) {
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      aspectRatio: mobile ? 1.4 : 2,
+      aspectRatio: 2,
       plugins: {
-        legend: { display: !mobile },
-        title: { display: true, text: 'Tide height (ft) vs time', font: { size: mobile ? 11 : 14 } },
-        tooltip: { enabled: true, intersect: false, mode: 'index' },
+        legend: { position: 'top' },
+        title: { display: true, text: 'Tide height (ft) vs time' },
       },
       scales: {
-        y: {
-          title: { display: !mobile, text: 'Height (ft)' },
-          ticks: { font: { size: mobile ? 9 : 12 } },
-        },
-        x: {
-          title: { display: false },
-          ticks: {
-            font: { size: mobile ? 8 : 12 },
-            maxRotation: mobile ? 45 : 0,
-            maxTicksLimit: mobile ? 6 : undefined,
-            callback: mobile
-              ? function (val, idx) {
-                  const lbl = this.getLabelForValue(val);
-                  const parts = lbl.split(',');
-                  return parts.length > 1 ? parts[1].trim() : lbl;
-                }
-              : undefined,
-          },
-        },
+        y: { title: { display: true, text: 'Height (ft)' } },
+        x: { title: { display: true, text: 'Time' } },
       },
     },
   });
@@ -850,12 +534,7 @@ function renderTideChart(tides) {
 }
 
 function setErrorState(errorMessage) {
-  if (adviceCardEl) {
-    adviceCardEl.style.borderLeftColor = SAFETY_COLORS.UNSAFE.border;
-    adviceCardEl.style.backgroundColor = SAFETY_COLORS.UNSAFE.bg;
-    adviceCardEl.innerHTML = `<p class="section-message section-message--error">${escapeHtml(errorMessage)}</p>`;
-  }
-  if (tideSummaryEl) tideSummaryEl.innerHTML = '';
+  if (recommendationEl) recommendationEl.innerHTML = `<p class="section-message section-message--error">${escapeHtml(errorMessage)}</p>`;
   _applySectionStates([
     [hourCardsEl, 'error', 'No data (report failed).'],
     [alertsListEl, 'no-data'], [marineForecastEl, 'no-data'],
@@ -879,18 +558,15 @@ async function fetchReport() {
       return;
     }
     const data = await res.json();
-    _cachedReportData = data;
 
     renderLocation(data.location || null);
+    renderRecommendation(data.recommendation);
+    render24HourCards(data.hourly ?? [], data.tides ?? []);
     renderAlerts(data.alerts ?? []);
-    renderAdviceCard(data);
-    renderConditionsGrid(data.hourly ?? [], data.tides ?? []);
+    renderMarineForecast(data.marine_forecast ?? null);
     renderWindChart(data.hourly ?? []);
     renderHourly(data.hourly ?? []);
-    renderTideSummary(data.tides ?? []);
     renderTideChart(data.tides ?? []);
-    render24HourCards(data.hourly ?? [], data.tides ?? []);
-    renderMarineForecast(data.marine_forecast ?? null);
     renderForecast3day(data.forecast_3day ?? []);
 
     if (lastFetchEl) lastFetchEl.textContent = new Date().toLocaleString();
@@ -900,6 +576,5 @@ async function fetchReport() {
   }
 }
 
-initTimeFilter();
 fetchReport();
 setInterval(fetchReport, REFRESH_INTERVAL_MS);

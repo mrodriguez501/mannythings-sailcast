@@ -4,6 +4,7 @@ Loads environment variables and provides app-wide settings.
 """
 
 import os
+
 from dotenv import load_dotenv
 
 # Load .env file from the server directory
@@ -21,9 +22,7 @@ class Settings:
     NWS_OFFICE: str = os.getenv("NWS_OFFICE", "LWX")
     NWS_GRIDPOINT_X: int = int(os.getenv("NWS_GRIDPOINT_X", "97"))
     NWS_GRIDPOINT_Y: int = int(os.getenv("NWS_GRIDPOINT_Y", "74"))
-    NWS_USER_AGENT: str = os.getenv(
-        "NWS_USER_AGENT", "SailCast/1.0 (contact@mannythings.us)"
-    )
+    NWS_USER_AGENT: str = os.getenv("NWS_USER_AGENT", "SailCast/1.0 (contact@mannythings.us)")
     NWS_BASE_URL: str = "https://api.weather.gov"
 
     # Server
@@ -53,9 +52,7 @@ class Settings:
     def nws_forecast_7day_url(self) -> str:
         """NWS 7-day forecast endpoint for configured gridpoint."""
         return (
-            f"{self.NWS_BASE_URL}/gridpoints/"
-            f"{self.NWS_OFFICE}/{self.NWS_GRIDPOINT_X},{self.NWS_GRIDPOINT_Y}"
-            f"/forecast"
+            f"{self.NWS_BASE_URL}/gridpoints/{self.NWS_OFFICE}/{self.NWS_GRIDPOINT_X},{self.NWS_GRIDPOINT_Y}/forecast"
         )
 
     @property

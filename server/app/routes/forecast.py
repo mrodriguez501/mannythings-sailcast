@@ -4,9 +4,10 @@ Serves cached forecast data and AI-generated summaries to the frontend.
 """
 
 from fastapi import APIRouter, HTTPException
+
+from app.services.budget_tracker import budget_tracker
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
-from app.services.budget_tracker import budget_tracker
 
 router = APIRouter(prefix="/api/forecast", tags=["forecast"])
 

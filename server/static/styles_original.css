@@ -4,134 +4,29 @@
   margin-bottom: 0;
 }
 
+.recommendation-box {
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+  background: var(--pico-card-background-color);
+  border-radius: var(--pico-border-radius);
+  border: 1px solid var(--pico-muted-border-color);
+}
+
+.recommendation-box .loading,
+.recommendation-box .error {
+  margin: 0;
+  color: var(--pico-muted-color);
+}
+
+.recommendation-box .error {
+  color: var(--pico-del-color);
+}
+
 .meta {
   font-size: 0.9rem;
   color: var(--pico-muted-color);
 }
 
-/* ===== Smart Sailing Advice Card ===== */
-.advice-card {
-  padding: 1rem 1.25rem;
-  background: #e8f5e9;
-  border-radius: var(--pico-border-radius);
-  border: 1px solid var(--pico-muted-border-color);
-  border-left: 0.5rem solid #2e7d32;
-  margin-bottom: var(--pico-block-spacing-vertical);
-}
-
-.advice-card .loading {
-  margin: 0;
-  color: var(--pico-muted-color);
-}
-
-.advice-badge {
-  display: inline-block;
-  padding: 0.2rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.5rem;
-}
-
-.advice-summary {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.advice-advisory {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  color: var(--pico-muted-color);
-}
-
-.advice-concerns {
-  margin: 0 0 0.5rem 0;
-  padding-left: 1.25rem;
-  font-size: 0.85rem;
-}
-
-.advice-concerns li {
-  margin-bottom: 0.15rem;
-}
-
-.advice-window {
-  margin: 0 0 0.25rem 0;
-  font-weight: 600;
-}
-
-.advice-meta {
-  margin: 0;
-  font-size: 0.8rem;
-}
-
-/* ===== Current Conditions Grid ===== */
-.conditions-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.75rem;
-  margin-bottom: var(--pico-block-spacing-vertical);
-}
-
-.metric-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.75rem 0.5rem;
-  background: var(--pico-card-background-color);
-  border-radius: var(--pico-border-radius);
-  border: 1px solid var(--pico-muted-border-color);
-  text-align: center;
-}
-
-.metric-label {
-  font-size: 0.75rem;
-  color: var(--pico-muted-color);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.25rem;
-}
-
-.metric-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-/* ===== Time Filter Bar ===== */
-.time-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: var(--pico-block-spacing-vertical);
-}
-
-.time-filter-btn {
-  padding: 0.35rem 0.9rem;
-  border-radius: 999px;
-  border: 2px solid var(--pico-primary-border);
-  background: transparent;
-  color: var(--pico-primary);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.time-filter-btn:hover {
-  background: var(--pico-primary-focus);
-}
-
-.time-filter-btn--active {
-  background: var(--pico-primary-background);
-  color: var(--pico-primary-inverse);
-  border-color: var(--pico-primary-background);
-}
-
-/* ===== USWDS-style alerts ===== */
+/* USWDS-style alerts (designsystem.digital.gov/components/alert/) */
 .usa-alert {
   padding: 1rem 1rem 1rem 1.25rem;
   margin-bottom: 1rem;
@@ -174,7 +69,7 @@
   font-size: 0.9rem;
 }
 
-/* ===== 24-hour cards grid ===== */
+/* 24-hour cards grid below recommendation */
 .hour-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -230,7 +125,7 @@
   margin: 0;
 }
 
-/* ===== Section states: loading, no data, error ===== */
+/* Section states: loading, no data, error */
 .section-message {
   margin: 0;
   padding: 0.5rem 0;
@@ -249,11 +144,6 @@
   color: var(--pico-del-color);
 }
 
-/* ===== Tide section ===== */
-.tide-summary {
-  margin-bottom: 0.75rem;
-}
-
 #tide-chart-container {
   position: relative;
   max-width: 100%;
@@ -269,7 +159,7 @@ table {
   font-size: 0.9rem;
 }
 
-/* ===== Wind bar chart ===== */
+/* Wind bar chart (next 6 hours) */
 .chart-container {
   position: relative;
   max-width: 100%;
@@ -281,7 +171,7 @@ table {
   max-height: 280px;
 }
 
-/* ===== Wind restrictions legend ===== */
+/* Wind restrictions legend */
 .wind-restrictions-legend {
   margin-bottom: var(--pico-block-spacing-vertical);
   padding: 0.75rem 1rem;
@@ -331,16 +221,15 @@ table {
 .wind-row--danger td { background: rgba(211, 47, 47, 0.08); }
 .wind-row--no-sail td { background: rgba(120, 0, 0, 0.10); }
 
-/* ===== Collapsible <details> sections ===== */
-.collapsible {
+/* Accordion: 24-hour table */
+.accordion-hourly {
   margin-top: 0.5rem;
-  margin-bottom: 0.75rem;
   border: 1px solid var(--pico-muted-border-color);
   border-radius: var(--pico-border-radius);
   padding: 0;
 }
 
-.collapsible summary {
+.accordion-hourly summary {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -355,68 +244,25 @@ table {
   transition: background-color 0.15s ease, filter 0.15s ease;
 }
 
-.collapsible summary:hover {
+.accordion-hourly summary:hover {
   filter: brightness(1.1);
 }
 
-.collapsible summary::-webkit-details-marker {
+.accordion-hourly summary::-webkit-details-marker {
   display: none;
 }
 
-.collapsible summary::after {
-  content: '\25BC';
-  font-size: 0.7em;
+.accordion-hourly summary::after {
+  content: '';
+  font-size: 0.9em;
   margin-left: 0.25rem;
-  transition: transform 0.15s ease;
 }
 
-.collapsible[open] summary::after {
-  transform: rotate(180deg);
+.accordion-hourly[open] summary::after {
+  content: '';
 }
 
-.collapsible-body {
+.accordion-hourly #hourly-list {
   padding: 1rem;
   overflow-x: auto;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .conditions-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .conditions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .time-filter {
-    gap: 0.35rem;
-  }
-
-  .time-filter-btn {
-    padding: 0.3rem 0.65rem;
-    font-size: 0.8rem;
-  }
-
-  .wind-restrictions-list {
-    flex-direction: column;
-  }
-
-  .chart-container {
-    min-height: 140px;
-  }
-
-  #wind-chart {
-    max-height: 220px;
-  }
-
-  #tide-chart-container {
-    min-height: 140px;
-  }
-
-  #tide-chart {
-    max-height: 220px;
-  }
 }

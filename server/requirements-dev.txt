@@ -1,0 +1,4 @@
+# Dev/CI dependencies (not needed in production)
+-r requirements.txt
+
+ruff

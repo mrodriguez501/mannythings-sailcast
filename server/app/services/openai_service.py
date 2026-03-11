@@ -8,8 +8,7 @@ Budget-aware: checks limits before every API call.
 import json
 import logging
 import os
-from typing import Optional
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from openai import OpenAI
 
@@ -23,18 +22,16 @@ class OpenAIService:
     """Handles OpenAI API interactions for sailing advisory generation."""
 
     def __init__(self):
-        self._client: Optional[OpenAI] = None
-        self._summary_cache: Optional[dict] = None
+        self._client: OpenAI | None = None
+        self._summary_cache: dict | None = None
         self._club_rules: str = ""
         self._load_club_rules()
 
     def _load_club_rules(self):
         """Load club sailing rules from the data directory."""
-        rules_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "data", "club_rules.md"
-        )
+        rules_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "club_rules.md")
         try:
-            with open(rules_path, "r") as f:
+            with open(rules_path) as f:
                 self._club_rules = f.read()
             logger.info("Club rules loaded successfully")
         except FileNotFoundError:
@@ -45,9 +42,7 @@ class OpenAIService:
         """Lazy-initialize the OpenAI client."""
         if self._client is None:
             if not settings.OPENAI_API_KEY:
-                raise ValueError(
-                    "OPENAI_API_KEY is not set. Add it to your .env file."
-                )
+                raise ValueError("OPENAI_API_KEY is not set. Add it to your .env file.")
             self._client = OpenAI(api_key=settings.OPENAI_API_KEY)
         return self._client
 
@@ -69,9 +64,7 @@ class OpenAIService:
             "- Format your response with clear sections"
         )
 
-    def _build_forecast_prompt(
-        self, hourly_data: dict, seven_day_data: dict, alerts_data: dict
-    ) -> str:
+    def _build_forecast_prompt(self, hourly_data: dict, seven_day_data: dict, alerts_data: dict) -> str:
         """Build the user prompt with current forecast data."""
         return (
             "Based on the following NWS forecast data, generate:\n"
@@ -94,9 +87,7 @@ class OpenAIService:
             "}"
         )
 
-    async def generate_summary(
-        self, hourly_data: dict, seven_day_data: dict, alerts_data: dict
-    ) -> dict:
+    async def generate_summary(self, hourly_data: dict, seven_day_data: dict, alerts_data: dict) -> dict:
         """Generate an AI-powered weather summary and sailing advisory."""
 
         # --- Budget gate: check before calling OpenAI ---
@@ -112,7 +103,7 @@ class OpenAIService:
                 "advisory": "Please check raw forecast data for current conditions.",
                 "safetyLevel": "CAUTION",
                 "keyConcerns": [reason],
-                "generatedAt": datetime.now(timezone.utc).isoformat(),
+                "generatedAt": datetime.now(UTC).isoformat(),
                 "model": settings.OPENAI_MODEL,
                 "budgetNotice": reason,
             }
@@ -126,9 +117,7 @@ class OpenAIService:
                     {"role": "system", "content": self._build_system_prompt()},
                     {
                         "role": "user",
-                        "content": self._build_forecast_prompt(
-                            hourly_data, seven_day_data, alerts_data
-                        ),
+                        "content": self._build_forecast_prompt(hourly_data, seven_day_data, alerts_data),
                     },
                 ],
                 temperature=0.3,
@@ -146,7 +135,7 @@ class OpenAIService:
 
             content = response.choices[0].message.content
             parsed = json.loads(content)
-            parsed["generatedAt"] = datetime.now(timezone.utc).isoformat()
+            parsed["generatedAt"] = datetime.now(UTC).isoformat()
             parsed["model"] = settings.OPENAI_MODEL
 
             self._summary_cache = parsed
@@ -157,7 +146,7 @@ class OpenAIService:
             logger.error(f"Failed to generate AI summary: {e}")
             raise
 
-    def get_cached_summary(self) -> Optional[dict]:
+    def get_cached_summary(self) -> dict | None:
         return self._summary_cache
 
 

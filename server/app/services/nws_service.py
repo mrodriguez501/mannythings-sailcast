@@ -5,8 +5,7 @@ Caches the latest results in memory for fast API responses.
 """
 
 import logging
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 import httpx
 
@@ -19,10 +18,10 @@ class NWSService:
     """Handles all NWS API interactions and data caching."""
 
     def __init__(self):
-        self._hourly_cache: Optional[dict] = None
-        self._7day_cache: Optional[dict] = None
-        self._alerts_cache: Optional[dict] = None
-        self._last_fetch: Optional[str] = None
+        self._hourly_cache: dict | None = None
+        self._7day_cache: dict | None = None
+        self._alerts_cache: dict | None = None
+        self._last_fetch: str | None = None
 
     def _headers(self) -> dict:
         """NWS API requires a User-Agent header."""
@@ -36,9 +35,7 @@ class NWSService:
         logger.info("Fetching hourly forecast from NWS...")
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.get(
-                    settings.nws_forecast_url, headers=self._headers()
-                )
+                response = await client.get(settings.nws_forecast_url, headers=self._headers())
                 response.raise_for_status()
                 raw = response.json()
 
@@ -53,12 +50,13 @@ class NWSService:
                         "temperatureUnit": p["temperatureUnit"],
                         "windSpeed": p["windSpeed"],
                         "windDirection": p["windDirection"],
+                        "windGust": p.get("windGust"),
                         "shortForecast": p["shortForecast"],
                         "isDaytime": p["isDaytime"],
                     }
                     for p in periods
                 ],
-                "fetchedAt": datetime.now(timezone.utc).isoformat(),
+                "fetchedAt": datetime.now(UTC).isoformat(),
             }
 
             self._hourly_cache = parsed
@@ -75,9 +73,7 @@ class NWSService:
         logger.info("Fetching 7-day forecast from NWS...")
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.get(
-                    settings.nws_forecast_7day_url, headers=self._headers()
-                )
+                response = await client.get(settings.nws_forecast_7day_url, headers=self._headers())
                 response.raise_for_status()
                 raw = response.json()
 
@@ -97,7 +93,7 @@ class NWSService:
                     }
                     for p in periods
                 ],
-                "fetchedAt": datetime.now(timezone.utc).isoformat(),
+                "fetchedAt": datetime.now(UTC).isoformat(),
             }
 
             self._7day_cache = parsed
@@ -113,9 +109,7 @@ class NWSService:
         logger.info("Fetching active alerts from NWS...")
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.get(
-                    settings.nws_alerts_url, headers=self._headers()
-                )
+                response = await client.get(settings.nws_alerts_url, headers=self._headers())
                 response.raise_for_status()
                 raw = response.json()
 
@@ -134,7 +128,7 @@ class NWSService:
                     for f in features
                 ],
                 "count": len(features),
-                "fetchedAt": datetime.now(timezone.utc).isoformat(),
+                "fetchedAt": datetime.now(UTC).isoformat(),
             }
 
             self._alerts_cache = parsed
@@ -145,16 +139,16 @@ class NWSService:
             logger.error(f"Failed to fetch alerts: {e}")
             raise
 
-    def get_cached_hourly(self) -> Optional[dict]:
+    def get_cached_hourly(self) -> dict | None:
         return self._hourly_cache
 
-    def get_cached_7day(self) -> Optional[dict]:
+    def get_cached_7day(self) -> dict | None:
         return self._7day_cache
 
-    def get_cached_alerts(self) -> Optional[dict]:
+    def get_cached_alerts(self) -> dict | None:
         return self._alerts_cache
 
-    def get_last_fetch_time(self) -> Optional[str]:
+    def get_last_fetch_time(self) -> str | None:
         return self._last_fetch
 
 
