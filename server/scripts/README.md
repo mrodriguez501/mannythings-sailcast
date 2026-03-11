@@ -16,13 +16,25 @@ Deploys the **server** app (FastAPI + uvicorn on port 8000). Used by CI/CD when 
 
 **Uvicorn is restarted on every deploy** so the new code (and any new static mounts like `/static-icons`) is loaded.
 
-### Robust restart
+### systemd (recommended on the server)
+
+When `sailcast.service` is present and `systemctl` is available, the script installs/updates the unit and runs `systemctl restart sailcast`. That way uvicorn is managed by systemd and **survives after the CI job exits** (otherwise the runner can kill the nohup process → 503). The unit file is in `server/scripts/sailcast.service`; install it once on the server (see comments in the file) or let the deploy script copy it.
+
+### Fallback: nohup
 
 The script kills the old uvicorn by PID file, then frees port 8000 with `fuser -k 8000/tcp` or `pkill -f 'uvicorn app.main:app'` so the new process can always bind. This avoids "address already in use" when the PID file was stale.
 
 ### On the Lightsail server
 
-Use a **standalone** `/home/bitnami/deploy.sh` that contains the full script (with `REPO_ROOT=/home/bitnami/mannythings-sailcast`). That way the workflow does not depend on `server/scripts/deploy.sh` existing in the repo yet (avoiding exit 127 "command not found" on first deploy after adding the script).
+`/home/bitnami/deploy.sh` should pull the repo and then run this script so deploys use systemd and avoid 503:
 
-- **Option A:** Copy the full contents of `server/scripts/deploy.sh` into `/home/bitnami/deploy.sh` and set the first line after `set -e` to `REPO_ROOT=/home/bitnami/mannythings-sailcast`.
-- **Option B:** After cloning/pulling, run once: `bash /home/bitnami/mannythings-sailcast/server/scripts/deploy.sh` to confirm it works; keep `/home/bitnami/deploy.sh` as a copy of that script with `REPO_ROOT` set so the workflow always has a working script.
+```bash
+#!/bin/bash
+set -e
+export REPO_ROOT=/home/bitnami/mannythings-sailcast
+cd "$REPO_ROOT"
+git fetch origin && git reset --hard origin/main
+exec bash "$REPO_ROOT/server/scripts/deploy.sh"
+```
+
+Ensure the `sailcast` systemd unit is installed (the deploy script copies `server/scripts/sailcast.service` to `/etc/systemd/system/` and runs `systemctl restart sailcast`).

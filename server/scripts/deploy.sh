@@ -15,29 +15,44 @@ cd server || exit
 [[ -d venv ]] || python3 -m venv venv
 ./venv/bin/pip install -q -r requirements.txt
 
-# Restart uvicorn (port 8000). Kill by PID file first, then ensure nothing is left on the port.
+# Use systemd so uvicorn survives after the CI job exits (nohup is killed when the job ends -> 503).
+if command -v systemctl >/dev/null 2>&1 && [[ -f "$REPO_ROOT/server/scripts/sailcast.service" ]]; then
+  sudo cp "$REPO_ROOT/server/scripts/sailcast.service" /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable sailcast 2>/dev/null || true
+  sudo systemctl restart sailcast
+  sleep 3
+  for i in 1 2 3 4 5 6 7 8 9 10; do
+    if curl -sf -o /dev/null "http://127.0.0.1:8000/sailcast/health"; then
+      echo "Deployment finished at $(date). SailCast (systemd) running on port 8000."
+      exit 0
+    fi
+    sleep 2
+  done
+  echo "ERROR: sailcast service did not respond. sudo journalctl -u sailcast -n 50" >&2
+  exit 1
+fi
+
+# Fallback: nohup (may be killed when CI job ends; use systemd on the server to avoid 503)
 PIDFILE="$REPO_ROOT/server/sailcast.pid"
 if [[ -f "$PIDFILE" ]]; then
   OLD_PID=$(cat "$PIDFILE")
   kill "$OLD_PID" 2>/dev/null || true
   rm -f "$PIDFILE"
 fi
-# In case PID file was stale or process didn't exit, free port 8000 so the new process can bind
 if command -v fuser >/dev/null 2>&1; then
   fuser -k 8000/tcp 2>/dev/null || true
 else
   pkill -f 'uvicorn app.main:app' 2>/dev/null || true
 fi
-# Wait for port to be released (avoid "address already in use" -> 503)
 sleep 4
 
 nohup ./venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 > "$REPO_ROOT/server/uvicorn.log" 2>&1 &
 echo $! > "$PIDFILE"
 
-# Wait for app to be up; fail the deploy if it never responds (so pipeline fails instead of 503)
 for i in 1 2 3 4 5 6 7 8 9 10; do
   if curl -sf -o /dev/null "http://127.0.0.1:8000/sailcast/health"; then
-    echo "Deployment finished at $(date). SailCast running on port 8000."
+    echo "Deployment finished at $(date). SailCast running on port 8000 (nohup)."
     exit 0
   fi
   sleep 2

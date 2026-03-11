@@ -1,0 +1,25 @@
+# SailCast uvicorn service – survives after deploy script / CI job exits.
+# Install once on the server (paths for Lightsail Bitnami):
+#   sudo cp /home/bitnami/mannythings-sailcast/server/scripts/sailcast.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable sailcast
+#   sudo systemctl start sailcast
+# Deploy script will then use: sudo systemctl restart sailcast
+
+[Unit]
+Description=SailCast FastAPI (uvicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=bitnami
+Group=bitnami
+WorkingDirectory=/home/bitnami/mannythings-sailcast/server
+EnvironmentFile=/home/bitnami/mannythings-sailcast/server/.env
+ExecStart=/home/bitnami/mannythings-sailcast/server/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=on-failure
+RestartSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
