@@ -1,1 +1,0 @@
-# Caching (hourly report cache)

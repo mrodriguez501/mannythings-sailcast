@@ -74,29 +74,19 @@ sailcast_app.include_router(report_router, prefix="/api")
 
 # Serve static frontend at / when server/static exists
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
-# Single source: icons live in sailcast/static-icons (repo root is server/../)
-STATIC_ICONS_DIR = Path(__file__).resolve().parent.parent.parent / "sailcast" / "static-icons"
+STATIC_ICONS_DIR = Path(__file__).resolve().parent.parent / "static-icons"
 if STATIC_DIR.exists():
     sailcast_app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 if STATIC_ICONS_DIR.exists():
     sailcast_app.mount("/static-icons", StaticFiles(directory=str(STATIC_ICONS_DIR)), name="static-icons")
 
-    @sailcast_app.get("/")
-    async def root():
-        index_path = STATIC_DIR / "index.html"
-        if index_path.exists():
-            return FileResponse(index_path)
-        return {"app": "SailCast", "version": "1.0.0", "docs": "/docs"}
-else:
 
-    @sailcast_app.get("/")
-    async def root():
-        return {
-            "app": "SailCast",
-            "version": "1.0.0",
-            "description": "Coastal sailing safety advisories",
-            "docs": "/docs",
-        }
+@sailcast_app.get("/")
+async def root():
+    index_path = STATIC_DIR / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
+    return {"app": "SailCast", "version": "1.0.0", "docs": "/docs"}
 
 
 @sailcast_app.get("/health")

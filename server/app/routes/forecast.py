@@ -11,40 +11,34 @@ from app.services.budget_tracker import budget_tracker
 router = APIRouter(prefix="/api/forecast", tags=["forecast"])
 
 
+def _require_cached(data, detail: str = "Data not yet available"):
+    if data is None:
+        raise HTTPException(status_code=503, detail=detail)
+    return data
+
+
 @router.get("/hourly")
 async def get_hourly_forecast():
     """Return the cached 24-hour hourly wind forecast."""
-    data = nws_service.get_cached_hourly()
-    if data is None:
-        raise HTTPException(status_code=503, detail="Forecast data not yet available")
-    return data
+    return _require_cached(nws_service.get_cached_hourly(), "Forecast data not yet available")
 
 
 @router.get("/7day")
 async def get_7day_forecast():
     """Return the cached 7-day weather outlook."""
-    data = nws_service.get_cached_7day()
-    if data is None:
-        raise HTTPException(status_code=503, detail="Forecast data not yet available")
-    return data
+    return _require_cached(nws_service.get_cached_7day(), "Forecast data not yet available")
 
 
 @router.get("/alerts")
 async def get_alerts():
     """Return active NWS alerts for the sailing area."""
-    data = nws_service.get_cached_alerts()
-    if data is None:
-        raise HTTPException(status_code=503, detail="Alert data not yet available")
-    return data
+    return _require_cached(nws_service.get_cached_alerts(), "Alert data not yet available")
 
 
 @router.get("/summary")
 async def get_ai_summary():
     """Return the latest AI-generated weather summary and sailing advisory."""
-    summary = openai_service.get_cached_summary()
-    if summary is None:
-        raise HTTPException(status_code=503, detail="AI summary not yet available")
-    return summary
+    return _require_cached(openai_service.get_cached_summary(), "AI summary not yet available")
 
 
 @router.get("/budget")

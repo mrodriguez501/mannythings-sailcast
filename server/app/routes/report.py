@@ -35,26 +35,14 @@ def _map_7day_period(p: dict) -> dict:
     }
 
 
-def _map_alert_from_feature(f: dict) -> dict:
-    """Map GeoJSON feature (raw NWS) to report shape."""
-    props = f.get("properties", {})
+def _map_alert(d: dict, ends_key: str = "ends") -> dict:
+    """Map an alert dict (GeoJSON properties or cached) to report shape."""
     return {
-        "event": props.get("event"),
-        "severity": props.get("severity"),
-        "headline": props.get("headline"),
-        "onset": props.get("onset"),
-        "ends": props.get("ends"),
-    }
-
-
-def _map_alert_from_cached(a: dict) -> dict:
-    """Map cached alert dict (nws_service) to report shape."""
-    return {
-        "event": a.get("event"),
-        "severity": a.get("severity"),
-        "headline": a.get("headline"),
-        "onset": a.get("onset"),
-        "ends": a.get("expires"),
+        "event": d.get("event"),
+        "severity": d.get("severity"),
+        "headline": d.get("headline"),
+        "onset": d.get("onset"),
+        "ends": d.get(ends_key),
     }
 
 
@@ -80,9 +68,9 @@ async def api_report():
     alerts = []
     if alerts_data:
         if alerts_data.get("features"):
-            alerts = [_map_alert_from_feature(f) for f in alerts_data["features"]]
+            alerts = [_map_alert(f.get("properties", {})) for f in alerts_data["features"]]
         elif alerts_data.get("alerts"):
-            alerts = [_map_alert_from_cached(a) for a in alerts_data["alerts"]]
+            alerts = [_map_alert(a, ends_key="expires") for a in alerts_data["alerts"]]
 
     recommendation = ""
     if summary_data and isinstance(summary_data, dict):
