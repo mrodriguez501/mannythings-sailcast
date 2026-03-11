@@ -1,5 +1,15 @@
 # Server scripts
 
+## Environment (.env)
+
+**Never overwrite an existing `.env`.** To create one from the example only when missing:
+
+```bash
+cp -n .env.example .env
+```
+
+Then edit `.env` and set `OPENAI_API_KEY` (and any other values). Deploy and automation should never run `cp .env.example .env` without `-n`.
+
 ## deploy.sh
 
 Deploys the **server** app (FastAPI + uvicorn on port 8000). Used by CI/CD when the runner executes `/home/bitnami/deploy.sh`.
