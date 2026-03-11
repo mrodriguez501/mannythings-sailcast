@@ -67,13 +67,14 @@ STATIC_ICONS_DIR = Path(__file__).resolve().parent.parent / "static-icons"
 if STATIC_ICONS_DIR.exists():
     app.mount("/static-icons", StaticFiles(directory=str(STATIC_ICONS_DIR)), name="static-icons")
 
-    @app.get("/")
-    async def root():
-        """Serve the main static HTML page."""
-        index_path = STATIC_DIR / "index.html"
-        if index_path.exists():
-            return FileResponse(index_path)
-        return {"message": "SailCast API", "docs": "/docs"}
+
+@app.get("/")
+async def root():
+    """Serve the main static HTML page."""
+    index_path = STATIC_DIR / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
+    return {"message": "SailCast API", "docs": "/docs"}
 
 
 @app.get("/health")

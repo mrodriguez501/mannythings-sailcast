@@ -39,58 +39,37 @@ async def _nws_get(client: httpx.AsyncClient, url: str) -> dict:
     return resp.json()
 
 
-async def get_points_forecast() -> list[dict]:
-    """
-    3-day forecast from NWS: points/{lat},{lon} → forecast URL → periods.
-    Each period: name, startTime, endTime, temperature, windSpeed, windDirection, shortForecast, etc.
-    """
+async def _fetch_nws_periods(url_key: str, keys: list[str], limit: int | None = None) -> list[dict]:
+    """Resolve NWS points → follow *url_key* URL → pluck *keys* from periods."""
     points_url = f"https://api.weather.gov/points/{LOCATION_LAT},{LOCATION_LON}"
     async with httpx.AsyncClient(timeout=15.0) as client:
         points = await _nws_get(client, points_url)
-        forecast_url = points.get("properties", {}).get("forecast")
+        forecast_url = points.get("properties", {}).get(url_key)
         if not forecast_url:
             return []
-        forecast = await _nws_get(client, forecast_url)
-    periods = forecast.get("properties", {}).get("periods", [])
-    return [
-        {
-            "name": p.get("name"),
-            "startTime": p.get("startTime"),
-            "endTime": p.get("endTime"),
-            "temp": p.get("temperature"),
-            "windSpeed": p.get("windSpeed"),
-            "windDirection": p.get("windDirection"),
-            "shortForecast": p.get("shortForecast"),
-            "detailedForecast": p.get("detailedForecast"),
-        }
-        for p in periods
-    ]
+        data = await _nws_get(client, forecast_url)
+    periods = data.get("properties", {}).get("periods", [])
+    if limit:
+        periods = periods[:limit]
+    key_map = {"temp": "temperature"}
+    return [{k: p.get(key_map.get(k, k)) for k in keys} for p in periods]
+
+
+async def get_points_forecast() -> list[dict]:
+    """3-day forecast from NWS: points → forecast URL → periods."""
+    return await _fetch_nws_periods(
+        "forecast",
+        ["name", "startTime", "endTime", "temp", "windSpeed", "windDirection", "shortForecast", "detailedForecast"],
+    )
 
 
 async def get_hourly_forecast() -> list[dict]:
-    """
-    Hourly (2-day) wind forecast: points → forecastHourly URL → periods.
-    """
-    points_url = f"https://api.weather.gov/points/{LOCATION_LAT},{LOCATION_LON}"
-    async with httpx.AsyncClient(timeout=15.0) as client:
-        points = await _nws_get(client, points_url)
-        hourly_url = points.get("properties", {}).get("forecastHourly")
-        if not hourly_url:
-            return []
-        data = await _nws_get(client, hourly_url)
-    periods = data.get("properties", {}).get("periods", [])[:48]  # 2 days
-    return [
-        {
-            "startTime": p.get("startTime"),
-            "endTime": p.get("endTime"),
-            "temp": p.get("temperature"),
-            "windSpeed": p.get("windSpeed"),
-            "windGust": p.get("windGust"),
-            "shortForecast": p.get("shortForecast"),
-            "windDirection": p.get("windDirection"),
-        }
-        for p in periods
-    ]
+    """Hourly (2-day) wind forecast: points → forecastHourly URL → periods."""
+    return await _fetch_nws_periods(
+        "forecastHourly",
+        ["startTime", "endTime", "temp", "windSpeed", "windGust", "shortForecast", "windDirection"],
+        limit=48,
+    )
 
 
 async def get_alerts() -> list[dict]:

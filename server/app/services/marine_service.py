@@ -14,6 +14,31 @@ from app.config import settings
 logger = logging.getLogger("sailcast.marine")
 
 
+def _parse_marine_html(html: str) -> str:
+    """Extract and clean forecast text from NWS marine zone HTML."""
+    text = ""
+    for m in re.finditer(r"<td[^>]*>(.*?)</td>", html, re.DOTALL | re.IGNORECASE):
+        cell = m.group(1)
+        if "TODAY" in cell.upper() and ("TONIGHT" in cell.upper() or "kt" in cell):
+            block = re.sub(r"<[^>]+>", " ", cell)
+            block = block.replace("&nbsp;", " ").replace("&#160;", " ")
+            block = re.sub(r"\s+", " ", block).strip()
+            text = block[:2500]
+            break
+    if not text:
+        block = re.sub(r"<[^>]+>", " ", html)
+        block = block.replace("&nbsp;", " ").replace("&#160;", " ")
+        block = re.sub(r"\s+", " ", block).strip()
+        if "TODAY" in block.upper():
+            idx = block.upper().find("TODAY")
+            text = block[idx : idx + 2500].strip()
+        else:
+            text = block[:2500].strip() if block else ""
+    for label in ("TONIGHT", "THU ", "THU NIGHT", "FRI ", "FRI NIGHT", "SAT ", "SUN "):
+        text = re.sub(rf"\s+({re.escape(label)})", r"\n\1", text, flags=re.IGNORECASE)
+    return text
+
+
 class MarineService:
     def __init__(self):
         self._marine_cache: Optional[dict] = None
@@ -58,29 +83,7 @@ class MarineService:
         except Exception:
             pass
 
-        forecast_text = ""
-        for m in re.finditer(r"<td[^>]*>(.*?)</td>", html, re.DOTALL | re.IGNORECASE):
-            cell = m.group(1)
-            if "TODAY" in cell.upper() and ("TONIGHT" in cell.upper() or "kt" in cell):
-                block = re.sub(r"<[^>]+>", " ", cell)
-                block = block.replace("&nbsp;", " ").replace("&#160;", " ")
-                block = re.sub(r"\s+", " ", block).strip()
-                forecast_text = block[:2500] if len(block) > 2500 else block
-                break
-        if not forecast_text:
-            block = re.sub(r"<[^>]+>", " ", html)
-            block = block.replace("&nbsp;", " ").replace("&#160;", " ")
-            block = re.sub(r"\s+", " ", block).strip()
-            if "TODAY" in block.upper():
-                idx = block.upper().find("TODAY")
-                forecast_text = block[idx : idx + 2500].strip()
-            else:
-                forecast_text = block[:2500].strip() if block else ""
-
-        for label in ("TONIGHT", "THU ", "THU NIGHT", "FRI ", "FRI NIGHT", "SAT ", "SUN "):
-            forecast_text = re.sub(
-                rf"\s+({re.escape(label)})", r"\n\1", forecast_text, flags=re.IGNORECASE
-            )
+        forecast_text = _parse_marine_html(html)
 
         self._marine_cache = {
             "zone_id": zone_id,

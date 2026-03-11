@@ -22,7 +22,7 @@ async def api_report():
             return cached
 
         data = await get_all_weather_data()
-        guidance = get_club_guidance(data["hourly"], data.get("alerts"))
+        guidance = get_club_guidance()
         boat_type = os.environ.get("BOAT_TYPE", "both").lower()
         if boat_type not in ("scot", "cruiser", "both"):
             boat_type = "both"

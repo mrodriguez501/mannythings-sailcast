@@ -25,12 +25,6 @@ def _load_guidance() -> str:
     return _cached_guidance
 
 
-def get_club_guidance(
-    hourly: list[dict],
-    alerts: list[dict] | None = None,
-) -> str:
-    """
-    Return guidance for the LLM: weather, rules, and boat-type content from
-    rag/sailing-weather-rules.txt. hourly and alerts are unused (single file has all relevant text).
-    """
+def get_club_guidance() -> str:
+    """Return guidance text from rag/sailing-weather-rules.txt for the LLM prompt."""
     return _load_guidance()

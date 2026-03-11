@@ -35,20 +35,29 @@ function showSectionMessage(container, state, sectionName) {
   }
 }
 
+function _applySectionStates(specs) {
+  for (const [el, state, msg] of specs) {
+    if (el) showSectionMessage(el, state, msg);
+  }
+}
+
+function _hideCanvas(id) {
+  const c = document.getElementById(id);
+  if (c) c.style.display = 'none';
+}
+
 function setLoading() {
   if (locationEl) locationEl.textContent = '—';
   if (recommendationEl) recommendationEl.innerHTML = '<p class="loading">Loading…</p>';
-  if (hourCardsEl) showSectionMessage(hourCardsEl, 'loading');
-  if (alertsListEl) showSectionMessage(alertsListEl, 'loading');
-  if (marineForecastEl) showSectionMessage(marineForecastEl, 'loading');
-  if (hourlyListEl) showSectionMessage(hourlyListEl, 'loading');
-  const tideCanvas = document.getElementById('tide-chart');
-  if (tideCanvas) tideCanvas.style.display = 'none';
+  _applySectionStates([
+    [hourCardsEl, 'loading'], [alertsListEl, 'loading'], [marineForecastEl, 'loading'],
+    [hourlyListEl, 'loading'], [forecast3dayListEl, 'loading'],
+  ]);
+  _hideCanvas('tide-chart');
   if (tideChartMessageEl) {
     tideChartMessageEl.innerHTML = '<p class="section-message section-message--loading">Loading…</p>';
     tideChartMessageEl.style.display = '';
   }
-  if (forecast3dayListEl) showSectionMessage(forecast3dayListEl, 'loading');
 }
 
 function formatTime(iso) {
@@ -397,17 +406,16 @@ function renderTideChart(tides) {
 
 function setErrorState(errorMessage) {
   if (recommendationEl) recommendationEl.innerHTML = `<p class="section-message section-message--error">${escapeHtml(errorMessage)}</p>`;
-  if (hourCardsEl) showSectionMessage(hourCardsEl, 'error', 'No data (report failed).');
-  if (alertsListEl) showSectionMessage(alertsListEl, 'no-data');
-  if (marineForecastEl) showSectionMessage(marineForecastEl, 'no-data');
-  if (hourlyListEl) showSectionMessage(hourlyListEl, 'no-data');
+  _applySectionStates([
+    [hourCardsEl, 'error', 'No data (report failed).'],
+    [alertsListEl, 'no-data'], [marineForecastEl, 'no-data'],
+    [hourlyListEl, 'no-data'], [forecast3dayListEl, 'no-data'],
+  ]);
+  _hideCanvas('tide-chart');
   if (tideChartMessageEl) {
     tideChartMessageEl.innerHTML = `<p class="section-message section-message--error">${escapeHtml(errorMessage)}</p>`;
     tideChartMessageEl.style.display = '';
   }
-  const tideCanvas = document.getElementById('tide-chart');
-  if (tideCanvas) tideCanvas.style.display = 'none';
-  if (forecast3dayListEl) showSectionMessage(forecast3dayListEl, 'no-data');
 }
 
 async function fetchReport() {

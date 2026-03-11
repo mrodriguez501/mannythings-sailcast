@@ -81,22 +81,13 @@ if STATIC_DIR.exists():
 if STATIC_ICONS_DIR.exists():
     sailcast_app.mount("/static-icons", StaticFiles(directory=str(STATIC_ICONS_DIR)), name="static-icons")
 
-    @sailcast_app.get("/")
-    async def root():
-        index_path = STATIC_DIR / "index.html"
-        if index_path.exists():
-            return FileResponse(index_path)
-        return {"app": "SailCast", "version": "1.0.0", "docs": "/docs"}
-else:
 
-    @sailcast_app.get("/")
-    async def root():
-        return {
-            "app": "SailCast",
-            "version": "1.0.0",
-            "description": "Coastal sailing safety advisories",
-            "docs": "/docs",
-        }
+@sailcast_app.get("/")
+async def root():
+    index_path = STATIC_DIR / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
+    return {"app": "SailCast", "version": "1.0.0", "docs": "/docs"}
 
 
 @sailcast_app.get("/health")
