@@ -28,8 +28,19 @@ if command -v fuser >/dev/null 2>&1; then
 else
   pkill -f 'uvicorn app.main:app' 2>/dev/null || true
 fi
-sleep 2
+# Wait for port to be released (avoid "address already in use" -> 503)
+sleep 4
 
 nohup ./venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 > "$REPO_ROOT/server/uvicorn.log" 2>&1 &
 echo $! > "$PIDFILE"
-echo "Deployment finished at $(date). SailCast running on port 8000."
+
+# Wait for app to be up; fail the deploy if it never responds (so pipeline fails instead of 503)
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  if curl -sf -o /dev/null "http://127.0.0.1:8000/sailcast/health"; then
+    echo "Deployment finished at $(date). SailCast running on port 8000."
+    exit 0
+  fi
+  sleep 2
+done
+echo "ERROR: uvicorn did not respond on port 8000. Check $REPO_ROOT/server/uvicorn.log" >&2
+exit 1
