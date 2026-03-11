@@ -2,10 +2,10 @@
 Marine forecast (NWS) and tide predictions (NOAA CO-OPS).
 Caches results for the report API.
 """
-import re
+
 import logging
-from datetime import datetime, timedelta, timezone
-from typing import Optional
+import re
+from datetime import UTC, datetime, timedelta
 
 import httpx
 
@@ -16,9 +16,25 @@ logger = logging.getLogger("sailcast.marine")
 
 _PERIOD_LABELS = ("TODAY", "TONIGHT", "THIS AFTERNOON", "THIS EVENING", "THIS MORNING")
 _BREAK_LABELS = (
-    "TONIGHT", "TODAY", "THIS AFTERNOON", "THIS EVENING", "THIS MORNING",
-    "MON ", "MON NIGHT", "TUE ", "TUE NIGHT", "WED ", "WED NIGHT",
-    "THU ", "THU NIGHT", "FRI ", "FRI NIGHT", "SAT ", "SAT NIGHT", "SUN ", "SUN NIGHT",
+    "TONIGHT",
+    "TODAY",
+    "THIS AFTERNOON",
+    "THIS EVENING",
+    "THIS MORNING",
+    "MON ",
+    "MON NIGHT",
+    "TUE ",
+    "TUE NIGHT",
+    "WED ",
+    "WED NIGHT",
+    "THU ",
+    "THU NIGHT",
+    "FRI ",
+    "FRI NIGHT",
+    "SAT ",
+    "SAT NIGHT",
+    "SUN ",
+    "SUN NIGHT",
 )
 
 
@@ -58,8 +74,8 @@ def _parse_marine_html(html: str) -> str:
 
 class MarineService:
     def __init__(self):
-        self._marine_cache: Optional[dict] = None
-        self._tides_cache: Optional[list] = None
+        self._marine_cache: dict | None = None
+        self._tides_cache: list | None = None
 
     def _headers(self) -> dict:
         return {"User-Agent": settings.NWS_USER_AGENT}
@@ -114,7 +130,7 @@ class MarineService:
     async def fetch_tides(self) -> list:
         """Fetch 2-day tide predictions from NOAA CO-OPS (station 8594900 = Washington DC)."""
         station = settings.NOAA_TIDE_STATION
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         begin = now.strftime("%Y%m%d")
         end = (now + timedelta(days=2)).strftime("%Y%m%d")
         url = (
@@ -129,10 +145,7 @@ class MarineService:
                 resp.raise_for_status()
                 data = resp.json()
             predictions = data.get("predictions", [])
-            self._tides_cache = [
-                {"t": p.get("t"), "v": p.get("v"), "type": p.get("type")}
-                for p in predictions
-            ]
+            self._tides_cache = [{"t": p.get("t"), "v": p.get("v"), "type": p.get("type")} for p in predictions]
             logger.info(f"Tides cached ({len(self._tides_cache)} points)")
             return self._tides_cache
         except Exception as e:
@@ -140,10 +153,10 @@ class MarineService:
             self._tides_cache = []
             return []
 
-    def get_cached_marine(self) -> Optional[dict]:
+    def get_cached_marine(self) -> dict | None:
         return self._marine_cache
 
-    def get_cached_tides(self) -> Optional[list]:
+    def get_cached_tides(self) -> list | None:
         return self._tides_cache
 
 

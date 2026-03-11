@@ -1,15 +1,38 @@
 # Deploy SailCast to AWS Lightsail on push to main.
-# Requires: self-hosted runner on the Lightsail instance and a deploy script on the server.
+# Lint runs first on GitHub-hosted runner; deploy only proceeds if lint passes.
 # See sailcast/README.md section "CI/CD (GitHub Actions → Lightsail)".
-name: Deploy to Lightsail
+name: Lint & Deploy
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Ruff check (lint)
+        run: ruff check server/app/
+
+      - name: Ruff format check
+        run: ruff format --check server/app/
+
   deploy:
+    needs: lint
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: self-hosted
     steps:
       - name: Run deployment script

@@ -10,9 +10,9 @@ import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+from app.services.marine_service import marine_service
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
-from app.services.marine_service import marine_service
 
 logger = logging.getLogger("sailcast.scheduler")
 

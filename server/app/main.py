@@ -4,13 +4,13 @@ SailCast app is mounted at /sailcast; root app redirects / to /sailcast/.
 """
 
 import logging
-from pathlib import Path
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.routes.forecast import router as forecast_router
@@ -92,6 +92,7 @@ async def root():
 @sailcast_app.get("/health")
 async def health():
     return {"status": "ok"}
+
 
 # Root app: mount SailCast at /sailcast; lifespan runs here so scheduler/data refresh still run.
 root_app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)

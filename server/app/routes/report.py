@@ -2,12 +2,13 @@
 Build a single /api/report response from existing NWS + OpenAI caches
 for the SailCast static frontend.
 """
+
 from fastapi import APIRouter, HTTPException
 
 from app.config import settings
+from app.services.marine_service import marine_service
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
-from app.services.marine_service import marine_service
 
 router = APIRouter()
 
@@ -73,14 +74,22 @@ async def api_report():
             alerts = [_map_alert(a, ends_key="expires") for a in alerts_data["alerts"]]
 
     recommendation = ""
+    advice = None
     if summary_data and isinstance(summary_data, dict):
         summary = summary_data.get("summary", "") or summary_data.get("text", "")
         advisory = summary_data.get("advisory", "")
         recommendation = (
-            f"{summary}\n\n{advisory}".strip()
-            if (summary and advisory)
-            else summary or advisory or str(summary_data)
+            f"{summary}\n\n{advisory}".strip() if (summary and advisory) else summary or advisory or str(summary_data)
         )
+        if summary_data.get("safetyLevel"):
+            advice = {
+                "safetyLevel": summary_data.get("safetyLevel"),
+                "summary": summary,
+                "advisory": advisory,
+                "keyConcerns": summary_data.get("keyConcerns", []),
+                "generatedAt": summary_data.get("generatedAt"),
+                "model": summary_data.get("model"),
+            }
     elif isinstance(summary_data, str):
         recommendation = summary_data
 
@@ -94,7 +103,7 @@ async def api_report():
     marine = marine_service.get_cached_marine()
     tides = marine_service.get_cached_tides() or []
 
-    return {
+    result = {
         "location": location,
         "forecast_3day": forecast_3day,
         "hourly": hourly,
@@ -103,3 +112,6 @@ async def api_report():
         "tides": tides,
         "recommendation": recommendation or "No recommendation available.",
     }
+    if advice:
+        result["advice"] = advice
+    return result

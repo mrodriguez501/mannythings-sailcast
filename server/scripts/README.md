@@ -7,6 +7,25 @@ The backend and frontend are the same process: uvicorn serves both the API and t
 - **Local:** `bash server/scripts/start-local.sh` (kills anything on 8000, starts uvicorn with `--reload`). After editing HTML/JS/CSS, just refresh the browser (Cmd+Shift+R if cached).
 - **Production:** Push to `main` (deploy runs `systemctl restart sailcast`) or SSH and run `sudo systemctl restart sailcast`.
 
+## Linting
+
+CI runs [ruff](https://docs.astral.sh/ruff/) on every push/PR to `main`. To run locally:
+
+```bash
+cd server
+pip install ruff          # one-time (or: pip install -r requirements-dev.txt)
+ruff check app/           # lint
+ruff format --check app/  # format check
+```
+
+To auto-fix everything:
+
+```bash
+ruff check --fix app/ && ruff format app/
+```
+
+Config lives in `pyproject.toml` at the repo root.
+
 ## Environment (.env)
 
 **Never overwrite an existing `.env`.** To create one from the example only when missing:
