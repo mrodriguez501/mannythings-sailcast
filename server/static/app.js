@@ -147,7 +147,7 @@ function buildTidesByHour(tides) {
 
 /**
  * Render 24 hours forecast cards: long date, icon, description, temp, wind, tide.
- * Icons from /static-icons (e.g. Makin-Things/weather-icons in sailcast/static-icons).
+ * Icons from /static-icons (Makin-Things/weather-icons SVGs in server/static-icons).
  */
 function render24HourCards(hourly, tides) {
   if (!hourCardsEl) return;

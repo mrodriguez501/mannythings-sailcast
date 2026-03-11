@@ -14,27 +14,44 @@ from app.config import settings
 logger = logging.getLogger("sailcast.marine")
 
 
+_PERIOD_LABELS = ("TODAY", "TONIGHT", "THIS AFTERNOON", "THIS EVENING", "THIS MORNING")
+_BREAK_LABELS = (
+    "TONIGHT", "TODAY", "THIS AFTERNOON", "THIS EVENING", "THIS MORNING",
+    "MON ", "MON NIGHT", "TUE ", "TUE NIGHT", "WED ", "WED NIGHT",
+    "THU ", "THU NIGHT", "FRI ", "FRI NIGHT", "SAT ", "SAT NIGHT", "SUN ", "SUN NIGHT",
+)
+
+
+def _strip_html(raw: str) -> str:
+    """Remove script/style blocks, then HTML tags, then collapse whitespace."""
+    cleaned = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.DOTALL | re.IGNORECASE)
+    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
+    cleaned = cleaned.replace("&nbsp;", " ").replace("&#160;", " ")
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
 def _parse_marine_html(html: str) -> str:
     """Extract and clean forecast text from NWS marine zone HTML."""
     text = ""
     for m in re.finditer(r"<td[^>]*>(.*?)</td>", html, re.DOTALL | re.IGNORECASE):
         cell = m.group(1)
-        if "TODAY" in cell.upper() and ("TONIGHT" in cell.upper() or "kt" in cell):
-            block = re.sub(r"<[^>]+>", " ", cell)
-            block = block.replace("&nbsp;", " ").replace("&#160;", " ")
-            block = re.sub(r"\s+", " ", block).strip()
-            text = block[:2500]
+        upper = cell.upper()
+        has_period = any(lbl in upper for lbl in _PERIOD_LABELS)
+        if has_period and ("kt" in cell or any(lbl in upper for lbl in _PERIOD_LABELS[1:])):
+            text = _strip_html(cell)[:2500]
             break
     if not text:
-        block = re.sub(r"<[^>]+>", " ", html)
-        block = block.replace("&nbsp;", " ").replace("&#160;", " ")
-        block = re.sub(r"\s+", " ", block).strip()
-        if "TODAY" in block.upper():
-            idx = block.upper().find("TODAY")
-            text = block[idx : idx + 2500].strip()
-        else:
-            text = block[:2500].strip() if block else ""
-    for label in ("TONIGHT", "THU ", "THU NIGHT", "FRI ", "FRI NIGHT", "SAT ", "SUN "):
+        block = _strip_html(html)
+        for lbl in _PERIOD_LABELS:
+            idx = block.upper().find(lbl)
+            if idx != -1:
+                text = block[idx : idx + 2500].strip()
+                break
+        if not text:
+            nws_marker = block.upper().find("NWS FORECAST FOR:")
+            if nws_marker != -1:
+                text = block[nws_marker : nws_marker + 2500].strip()
+    for label in _BREAK_LABELS:
         text = re.sub(rf"\s+({re.escape(label)})", r"\n\1", text, flags=re.IGNORECASE)
     return text
 
