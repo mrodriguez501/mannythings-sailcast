@@ -1,5 +1,12 @@
 # Server scripts
 
+## Restarting the app (server + frontend)
+
+The backend and frontend are the same process: uvicorn serves both the API and the static files in `server/static/`. Restarting the server restarts both.
+
+- **Local:** `bash server/scripts/start-local.sh` (kills anything on 8000, starts uvicorn with `--reload`). After editing HTML/JS/CSS, just refresh the browser (Cmd+Shift+R if cached).
+- **Production:** Push to `main` (deploy runs `systemctl restart sailcast`) or SSH and run `sudo systemctl restart sailcast`.
+
 ## Environment (.env)
 
 **Never overwrite an existing `.env`.** To create one from the example only when missing:

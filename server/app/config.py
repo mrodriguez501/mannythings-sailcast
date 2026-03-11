@@ -63,5 +63,9 @@ class Settings:
         """NWS active alerts for the DC area (Potomac River / KDCA)."""
         return f"{self.NWS_BASE_URL}/alerts/active?point=38.8512,-77.0402"
 
+    # Marine and tides (Potomac / DCA)
+    MARINE_ZONE_ID: str = os.getenv("MARINE_ZONE_ID", "ANZ535")
+    NOAA_TIDE_STATION: str = os.getenv("NOAA_TIDE_STATION", "8594900")
+
 
 settings = Settings()

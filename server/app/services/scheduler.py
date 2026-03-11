@@ -12,6 +12,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
+from app.services.marine_service import marine_service
 
 logger = logging.getLogger("sailcast.scheduler")
 
@@ -19,14 +20,16 @@ scheduler = AsyncIOScheduler()
 
 
 async def refresh_all_data():
-    """Fetch all NWS data and regenerate AI summary."""
+    """Fetch all NWS data, marine, tides, and regenerate AI summary."""
     logger.info("=== Scheduled data refresh starting ===")
     try:
-        # Fetch all NWS data concurrently
-        hourly, seven_day, alerts = await asyncio.gather(
+        # Fetch NWS + marine + tides concurrently
+        hourly, seven_day, alerts, _, _ = await asyncio.gather(
             nws_service.fetch_hourly_forecast(),
             nws_service.fetch_7day_forecast(),
             nws_service.fetch_alerts(),
+            marine_service.fetch_marine_forecast(),
+            marine_service.fetch_tides(),
         )
 
         # Generate AI summary with fresh data

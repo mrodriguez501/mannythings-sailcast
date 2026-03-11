@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException
 from app.config import settings
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
+from app.services.marine_service import marine_service
 
 router = APIRouter()
 
@@ -34,7 +35,8 @@ def _map_7day_period(p: dict) -> dict:
     }
 
 
-def _map_alert(f: dict) -> dict:
+def _map_alert_from_feature(f: dict) -> dict:
+    """Map GeoJSON feature (raw NWS) to report shape."""
     props = f.get("properties", {})
     return {
         "event": props.get("event"),
@@ -42,6 +44,17 @@ def _map_alert(f: dict) -> dict:
         "headline": props.get("headline"),
         "onset": props.get("onset"),
         "ends": props.get("ends"),
+    }
+
+
+def _map_alert_from_cached(a: dict) -> dict:
+    """Map cached alert dict (nws_service) to report shape."""
+    return {
+        "event": a.get("event"),
+        "severity": a.get("severity"),
+        "headline": a.get("headline"),
+        "onset": a.get("onset"),
+        "ends": a.get("expires"),
     }
 
 
@@ -65,15 +78,20 @@ async def api_report():
     if day7_data and day7_data.get("periods"):
         forecast_3day = [_map_7day_period(p) for p in day7_data["periods"][:9]]
     alerts = []
-    if alerts_data and alerts_data.get("features"):
-        alerts = [_map_alert(f) for f in alerts_data["features"]]
+    if alerts_data:
+        if alerts_data.get("features"):
+            alerts = [_map_alert_from_feature(f) for f in alerts_data["features"]]
+        elif alerts_data.get("alerts"):
+            alerts = [_map_alert_from_cached(a) for a in alerts_data["alerts"]]
 
     recommendation = ""
     if summary_data and isinstance(summary_data, dict):
+        summary = summary_data.get("summary", "") or summary_data.get("text", "")
+        advisory = summary_data.get("advisory", "")
         recommendation = (
-            summary_data.get("summary", "")
-            or summary_data.get("text", "")
-            or str(summary_data)
+            f"{summary}\n\n{advisory}".strip()
+            if (summary and advisory)
+            else summary or advisory or str(summary_data)
         )
     elif isinstance(summary_data, str):
         recommendation = summary_data
@@ -85,12 +103,15 @@ async def api_report():
         "lon": str(getattr(settings, "NWS_GRIDPOINT_X", "")),
     }
 
+    marine = marine_service.get_cached_marine()
+    tides = marine_service.get_cached_tides() or []
+
     return {
         "location": location,
         "forecast_3day": forecast_3day,
         "hourly": hourly,
         "alerts": alerts,
-        "marine_forecast": None,
-        "tides": [],
+        "marine_forecast": marine,
+        "tides": tides,
         "recommendation": recommendation or "No recommendation available.",
     }

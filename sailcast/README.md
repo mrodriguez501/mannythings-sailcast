@@ -15,6 +15,16 @@ Hourly sailing forecast and recommendation: **static HTML (Pico CSS)** frontend 
 
 ## Run locally
 
+**Option A – same stack as production (server):**
+
+```bash
+bash server/scripts/start-local.sh
+```
+
+Open **http://localhost:8000/sailcast/** (or http://localhost:8000 then follow redirect). See `server/scripts/README.md` for details.
+
+**Option B – sailcast app (this directory):**
+
 ```bash
 cd sailcast
 python -m venv .venv
@@ -52,6 +62,81 @@ Copy `.env.example` to `.env`. Optional:
 - **Backend:** Python 3.12, FastAPI, Uvicorn, httpx.
 - **Frontend:** Static HTML, Pico CSS, vanilla JS, Chart.js (tide chart).
 - **Data:** NWS (points, alerts, marine zone), NOAA CO-OPS (tides).
+
+## Repo layout and what runs where
+
+- **`server/`** – App that runs in **production** (and for local dev). FastAPI serves the API and the static frontend from `server/static/`. The frontend calls `api/report` (same origin); the report route must return the payload shape the frontend expects (location, hourly, alerts, marine_forecast, tides, recommendation). Icons are served from `sailcast/static-icons/` (single source, no copy).
+- **`sailcast/`** – Alternate app (Docker path, different structure). Shares assets (e.g. `sailcast/static-icons/`). Can be run locally; production currently uses **server/**.
+
+Linking frontend to backend: ensure the report API URL is correct (relative `api/report` under the same base path, e.g. `/sailcast/api/report` in prod) and that the report response matches the frontend’s expected fields.
+
+---
+
+## Architecture diagrams
+
+### Production (Lightsail)
+
+```
+                    GitHub (push to main)
+                              │
+                              ▼
+                    GitHub Actions workflow
+                    (self-hosted runner on Lightsail)
+                              │
+                              ▼
+                    /home/bitnami/deploy.sh
+                    (git pull → server/scripts/deploy.sh)
+                              │
+                              ▼
+                    systemctl restart sailcast
+                              │
+    ┌─────────────────────────┴─────────────────────────┐
+    │  systemd: sailcast.service                         │
+    │  uvicorn app.main:app (server/app/main.py)         │
+    │  port 8000, .env from server/.env                  │
+    └─────────────────────────┬─────────────────────────┘
+                              │
+    Browser ◄─────────────────┴─────────────────────────► Apache (:80/:443)
+    mannythings.us/sailcast/       ProxyPass /sailcast/ → http://127.0.0.1:8000/sailcast/
+                                          │
+                              ┌───────────┴───────────┐
+                              │  FastAPI (root_app)   │
+                              │  mount /sailcast →    │
+                              │  sailcast_app         │
+                              │  (/, /api/report,     │
+                              │   /static, /static-   │
+                              │   icons)              │
+                              └───────────┬───────────┘
+                                          │
+                    NWS, NOAA CO-OPS, OpenAI (data sources)
+```
+
+### Local
+
+```
+    Browser
+    http://localhost:8000/sailcast/
+              │
+              ▼
+    uvicorn app.main:app (server/)
+    --reload, port 8000
+    Started by: server/scripts/start-local.sh
+              │
+    ┌─────────┴─────────┐
+    │  FastAPI          │
+    │  /sailcast →      │
+    │  sailcast_app     │
+    │  (/, api/report,  │
+    │   static, static- │
+    │   icons from      │
+    │   ../sailcast/    │
+    │   static-icons)   │
+    └─────────┬─────────┘
+              │
+    NWS, NOAA CO-OPS, OpenAI (same .env in server/)
+```
+
+---
 
 ## Docker
 
@@ -210,7 +295,7 @@ Save and exit (in nano: Ctrl+O, Enter, Ctrl+X).
 **If you run with Docker (CI/CD setup):**
 
 ```bash
-cd ~/mannythings-sailcast/sailcast
+git cd ~/mannythings-sailcast/sailcast
 docker stop sailcast; docker rm sailcast
 docker run -d -p 8000:8000 --env-file .env --name sailcast sailcast
 ```
