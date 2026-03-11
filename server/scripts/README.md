@@ -12,22 +12,7 @@ The script kills the old uvicorn by PID file, then frees port 8000 with `fuser -
 
 ### On the Lightsail server
 
-Either:
+Use a **standalone** `/home/bitnami/deploy.sh` that contains the full script (with `REPO_ROOT=/home/bitnami/mannythings-sailcast`). That way the workflow does not depend on `server/scripts/deploy.sh` existing in the repo yet (avoiding exit 127 "command not found" on first deploy after adding the script).
 
-1. **Run the script from the repo** (recommended; updates when you pull):
-
-   Set `/home/bitnami/deploy.sh` to:
-
-   ```bash
-   #!/bin/bash
-   export REPO_ROOT=/home/bitnami/mannythings-sailcast
-   exec bash "$REPO_ROOT/server/scripts/deploy.sh"
-   ```
-
-2. **Or copy the script** and set `REPO_ROOT` at the top:
-
-   ```bash
-   cp /home/bitnami/mannythings-sailcast/server/scripts/deploy.sh /home/bitnami/deploy.sh
-   # Edit line: REPO_ROOT=/home/bitnami/mannythings-sailcast
-   chmod +x /home/bitnami/deploy.sh
-   ```
+- **Option A:** Copy the full contents of `server/scripts/deploy.sh` into `/home/bitnami/deploy.sh` and set the first line after `set -e` to `REPO_ROOT=/home/bitnami/mannythings-sailcast`.
+- **Option B:** After cloning/pulling, run once: `bash /home/bitnami/mannythings-sailcast/server/scripts/deploy.sh` to confirm it works; keep `/home/bitnami/deploy.sh` as a copy of that script with `REPO_ROOT` set so the workflow always has a working script.
