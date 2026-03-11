@@ -43,9 +43,15 @@
         <div id="marine-forecast"></div>
       </section>
 
-      <section id="hourly-section" aria-label="2-day hourly wind">
-        <h2>2-day hourly wind</h2>
-        <div id="hourly-list"></div>
+      <section id="hourly-section" aria-label="Hourly wind">
+        <h2>Hourly Wind</h2>
+        <div id="wind-chart-container" class="chart-container">
+          <canvas id="wind-chart" aria-label="Next 8 hours wind speed bar chart"></canvas>
+        </div>
+        <details class="accordion-hourly">
+          <summary>24-Hour Hourly Wind Report</summary>
+          <div id="hourly-list"></div>
+        </details>
       </section>
 
       <section id="tides-section" aria-label="2-day tide predictions">

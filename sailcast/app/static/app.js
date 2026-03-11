@@ -307,10 +307,8 @@ function renderHourly(periods) {
   table.innerHTML = `
     <thead><tr>
       <th>Date / Time</th>
-      <th>Temp</th>
       <th>Wind</th>
       <th>Gusts</th>
-      <th>Conditions</th>
     </tr></thead>
     <tbody></tbody>
   `;
@@ -319,10 +317,8 @@ function renderHourly(periods) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${formatTime(p.startTime)}</td>
-      <td>${p.temp ?? '—'}°F</td>
       <td>${p.windSpeed ?? '—'}</td>
       <td>${p.windGust ?? '—'}</td>
-      <td>${p.shortForecast ?? '—'}</td>
     `;
     tbody.appendChild(tr);
   }

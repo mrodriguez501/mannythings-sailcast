@@ -158,3 +158,61 @@ table {
   width: 100%;
   font-size: 0.9rem;
 }
+
+/* Wind bar chart (next 6 hours) */
+.chart-container {
+  position: relative;
+  max-width: 100%;
+  min-height: 180px;
+  margin-bottom: var(--pico-block-spacing-vertical);
+}
+
+#wind-chart {
+  max-height: 280px;
+}
+
+/* Accordion: 24-hour table */
+.accordion-hourly {
+  margin-top: 0.5rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  padding: 0;
+}
+
+.accordion-hourly summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  background: var(--pico-primary-background);
+  color: var(--pico-primary-inverse);
+  border: 2px solid var(--pico-primary-border);
+  border-radius: var(--pico-border-radius);
+  transition: background-color 0.15s ease, filter 0.15s ease;
+}
+
+.accordion-hourly summary:hover {
+  filter: brightness(1.1);
+}
+
+.accordion-hourly summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-hourly summary::after {
+  content: '';
+  font-size: 0.9em;
+  margin-left: 0.25rem;
+}
+
+.accordion-hourly[open] summary::after {
+  content: '';
+}
+
+.accordion-hourly #hourly-list {
+  padding: 1rem;
+  overflow-x: auto;
+}

@@ -42,6 +42,8 @@ function setLoading() {
   if (alertsListEl) showSectionMessage(alertsListEl, 'loading');
   if (marineForecastEl) showSectionMessage(marineForecastEl, 'loading');
   if (hourlyListEl) showSectionMessage(hourlyListEl, 'loading');
+  const windCanvas = document.getElementById('wind-chart');
+  if (windCanvas) windCanvas.style.display = 'none';
   const tideCanvas = document.getElementById('tide-chart');
   if (tideCanvas) tideCanvas.style.display = 'none';
   if (tideChartMessageEl) {
@@ -307,10 +309,8 @@ function renderHourly(periods) {
   table.innerHTML = `
     <thead><tr>
       <th>Date / Time</th>
-      <th>Temp</th>
       <th>Wind</th>
       <th>Gusts</th>
-      <th>Conditions</th>
     </tr></thead>
     <tbody></tbody>
   `;
@@ -319,14 +319,90 @@ function renderHourly(periods) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${formatTime(p.startTime)}</td>
-      <td>${p.temp ?? '—'}°F</td>
       <td>${p.windSpeed ?? '—'}</td>
       <td>${p.windGust ?? '—'}</td>
-      <td>${p.shortForecast ?? '—'}</td>
     `;
     tbody.appendChild(tr);
   }
   hourlyListEl.appendChild(table);
+}
+
+/** Chart.js instance for wind bar chart (destroy before redraw). */
+let windChartInstance = null;
+
+/**
+ * Bar chart: next 8 hours wind speed (mph). Uses first 8 periods from hourly data.
+ */
+function renderWindChart(periods) {
+  const canvas = document.getElementById('wind-chart');
+  if (!canvas) return;
+
+  const next8 = Array.isArray(periods) ? periods.slice(0, 8) : [];
+  if (next8.length === 0) {
+    if (windChartInstance) {
+      windChartInstance.destroy();
+      windChartInstance = null;
+    }
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const labels = next8.map((p) => {
+    try {
+      const d = new Date(p.startTime);
+      return d.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+    } catch {
+      return p.startTime || '—';
+    }
+  });
+  const windValues = next8.map((p) => {
+    const v = p.windSpeed;
+    if (typeof v === 'number') return v;
+    if (typeof v === 'string') return parseFloat(v.replace(/[^\d.-]/g, '')) || 0;
+    return 0;
+  });
+
+  // Color by mph: > 20 red, > 17 orange, else blue
+  const barColors = windValues.map((mph) => {
+    if (mph > 20) return { bg: 'rgba(211, 47, 47, 0.8)', border: 'rgb(211, 47, 47)' };
+    if (mph > 17) return { bg: 'rgba(245, 124, 0, 0.8)', border: 'rgb(245, 124, 0)' };
+    return { bg: 'rgba(33, 150, 243, 0.7)', border: 'rgb(33, 150, 243)' };
+  });
+
+  if (windChartInstance) windChartInstance.destroy();
+  windChartInstance = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Wind (mph)',
+          data: windValues,
+          backgroundColor: barColors.map((c) => c.bg),
+          borderColor: barColors.map((c) => c.border),
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 2,
+      plugins: {
+        legend: { position: 'top' },
+        title: { display: true, text: 'Next 8 hours wind speed' },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Wind (mph)' },
+        },
+        x: { title: { display: true, text: 'Time' } },
+      },
+    },
+  });
+
+  canvas.style.display = '';
 }
 
 /** Chart.js instance for tide chart (destroy before redraw). */
@@ -405,6 +481,12 @@ function setErrorState(errorMessage) {
   if (alertsListEl) showSectionMessage(alertsListEl, 'no-data');
   if (marineForecastEl) showSectionMessage(marineForecastEl, 'no-data');
   if (hourlyListEl) showSectionMessage(hourlyListEl, 'no-data');
+  if (windChartInstance) {
+    windChartInstance.destroy();
+    windChartInstance = null;
+  }
+  const windCanvasEl = document.getElementById('wind-chart');
+  if (windCanvasEl) windCanvasEl.style.display = 'none';
   if (tideChartMessageEl) {
     tideChartMessageEl.innerHTML = `<p class="section-message section-message--error">${escapeHtml(errorMessage)}</p>`;
     tideChartMessageEl.style.display = '';
@@ -429,6 +511,7 @@ async function fetchReport() {
     render24HourCards(data.hourly ?? [], data.tides ?? []);
     renderAlerts(data.alerts ?? []);
     renderMarineForecast(data.marine_forecast ?? null);
+    renderWindChart(data.hourly ?? []);
     renderHourly(data.hourly ?? []);
     renderTideChart(data.tides ?? []);
     renderForecast3day(data.forecast_3day ?? []);
