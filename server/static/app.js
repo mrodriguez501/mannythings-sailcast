@@ -2,7 +2,7 @@
  * SailCast frontend: fetch /api/report and display sailing report.
  * Refreshes every hour (primary flow).
  */
-const REPORT_URL = '/api/report';
+const REPORT_URL = 'api/report';
 const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
 
 const locationEl = document.getElementById('location');
@@ -160,7 +160,7 @@ function render24HourCards(hourly, tides) {
     card.innerHTML = `
       <header class="hour-card-date">${escapeHtml(formatLongDate(p.startTime))}</header>
       <div class="hour-card-icon" aria-hidden="true">
-        <img src="/static-icons/${escapeHtml(iconName)}.svg" alt="" width="48" height="48" loading="lazy" onerror="this.style.display='none'">
+        <img src="static-icons/${escapeHtml(iconName)}.svg" alt="" width="48" height="48" loading="lazy" onerror="this.style.display='none'">
       </div>
       <p class="hour-card-conditions">${escapeHtml(conditions)}</p>
       <p class="hour-card-temp meta">${escapeHtml(temp)}</p>
