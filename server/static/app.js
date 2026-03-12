@@ -309,9 +309,10 @@ function renderAdviceCard(data) {
     const msg = document.createElement('span');
     msg.textContent = icon + 'Small Craft Advisory is in effect — club boats may not leave the dock. ';
     scaDiv.appendChild(msg);
-    if (sca.url) {
+    const marineUrl = (data.marine_forecast && data.marine_forecast.url) || null;
+    if (marineUrl) {
       const link = document.createElement('a');
-      link.href = sca.url;
+      link.href = marineUrl;
       link.target = '_blank';
       link.rel = 'noopener';
       link.textContent = 'View NWS Advisory';
@@ -753,14 +754,14 @@ function renderHourly(periods) {
 let windChartInstance = null;
 
 /**
- * Bar chart: next 8 hours wind speed (mph). Uses first 8 periods from hourly data.
+ * Bar chart: wind speed (mph) for the filtered time window.
  */
 function renderWindChart(periods) {
   const canvas = document.getElementById('wind-chart');
   if (!canvas) return;
 
-  const next8 = Array.isArray(periods) ? periods.slice(0, 8) : [];
-  if (next8.length === 0) {
+  const chartData = Array.isArray(periods) ? periods : [];
+  if (chartData.length === 0) {
     if (windChartInstance) {
       windChartInstance.destroy();
       windChartInstance = null;
@@ -769,7 +770,7 @@ function renderWindChart(periods) {
     return;
   }
 
-  const labels = next8.map((p) => {
+  const labels = chartData.map((p) => {
     try {
       const d = new Date(p.startTime);
       return d.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' });
@@ -777,7 +778,7 @@ function renderWindChart(periods) {
       return p.startTime || '—';
     }
   });
-  const windValues = next8.map((p) => {
+  const windValues = chartData.map((p) => {
     const v = p.windSpeed;
     if (typeof v === 'number') return v;
     if (typeof v === 'string') return parseFloat(v.replace(/[^\d.-]/g, '')) || 0;
@@ -814,7 +815,7 @@ function renderWindChart(periods) {
       aspectRatio: mobile ? 1.4 : 2,
       plugins: {
         legend: { display: !mobile },
-        title: { display: true, text: 'Next 8 hours wind speed', font: { size: mobile ? 11 : 14 } },
+        title: { display: true, text: `Wind speed (${chartData.length} hours)`, font: { size: mobile ? 11 : 14 } },
         tooltip: { enabled: true, intersect: false, mode: 'index' },
       },
       scales: {
