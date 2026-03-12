@@ -194,10 +194,29 @@ function parseMph(val) {
 }
 
 /**
- * Compute safety level from raw hourly + alerts data (client-side fallback).
- * Uses SCOW club rule thresholds: 17/23/29 MPH.
+ * Check if the marine forecast contains a Small Craft Advisory.
+ * Returns the advisory object with its NWS link, or null.
  */
-function computeSafetyLevel(hourly, alerts) {
+function findSmallCraftAdvisory(marine) {
+  if (!marine) return null;
+  const advisories = marine.advisories || [];
+  for (const a of advisories) {
+    if (/small craft advisory/i.test(a.label)) return a;
+  }
+  const text = marine.forecast_text || '';
+  if (/small craft advisory/i.test(text)) {
+    return { label: 'Small Craft Advisory', url: marine.url || null };
+  }
+  return null;
+}
+
+/**
+ * Compute safety level from raw hourly + alerts + marine data (client-side fallback).
+ * Uses SCOW club rule thresholds: 17/23/29 MPH.
+ * A Small Craft Advisory in the marine forecast = UNSAFE (no boats out).
+ */
+function computeSafetyLevel(hourly, alerts, marine) {
+  if (findSmallCraftAdvisory(marine)) return 'UNSAFE';
   if (Array.isArray(alerts)) {
     for (const a of alerts) {
       const sev = (a.severity || '').toLowerCase();
@@ -270,7 +289,11 @@ function renderAdviceCard(data) {
   adviceCardEl.innerHTML = '';
 
   const advice = data.advice || null;
-  const level = (advice && advice.safetyLevel) || computeSafetyLevel(data.hourly || [], data.alerts || []);
+  const marine = data.marine_forecast || null;
+  const sca = findSmallCraftAdvisory(marine);
+
+  let level = (advice && advice.safetyLevel) || computeSafetyLevel(data.hourly || [], data.alerts || [], marine);
+  if (sca && level !== 'UNSAFE') level = 'UNSAFE';
   const colors = SAFETY_COLORS[level] || SAFETY_COLORS.SAFE;
 
   adviceCardEl.style.borderLeftColor = colors.border;
@@ -281,6 +304,24 @@ function renderAdviceCard(data) {
   badge.style.backgroundColor = colors.badge;
   badge.textContent = colors.text;
   adviceCardEl.appendChild(badge);
+
+  if (sca) {
+    const scaDiv = document.createElement('div');
+    scaDiv.className = 'advice-sca-warning';
+    const icon = '\u26A0\uFE0F ';
+    const msg = document.createElement('span');
+    msg.textContent = icon + 'Small Craft Advisory is in effect — club boats may not leave the dock. ';
+    scaDiv.appendChild(msg);
+    if (sca.url) {
+      const link = document.createElement('a');
+      link.href = sca.url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'View NWS Advisory';
+      scaDiv.appendChild(link);
+    }
+    adviceCardEl.appendChild(scaDiv);
+  }
 
   const summary = (advice && advice.summary) || data.recommendation || '';
   if (summary) {
@@ -311,7 +352,7 @@ function renderAdviceCard(data) {
   }
 
   const bestWindow = findBestWindow(data.hourly || []);
-  if (bestWindow) {
+  if (bestWindow && !sca) {
     const p = document.createElement('p');
     p.className = 'advice-window meta';
     p.textContent = `Best sailing window: ${bestWindow}`;

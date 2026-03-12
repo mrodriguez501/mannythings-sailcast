@@ -24,7 +24,7 @@ async def refresh_all_data():
     logger.info("=== Scheduled data refresh starting ===")
     try:
         # Fetch NWS + marine + tides concurrently
-        hourly, seven_day, alerts, _, _ = await asyncio.gather(
+        hourly, seven_day, alerts, marine, _ = await asyncio.gather(
             nws_service.fetch_hourly_forecast(),
             nws_service.fetch_7day_forecast(),
             nws_service.fetch_alerts(),
@@ -32,8 +32,8 @@ async def refresh_all_data():
             marine_service.fetch_tides(),
         )
 
-        # Generate AI summary with fresh data
-        await openai_service.generate_summary(hourly, seven_day, alerts)
+        # Generate AI summary with fresh data (including marine advisories)
+        await openai_service.generate_summary(hourly, seven_day, alerts, marine)
 
         logger.info("=== Scheduled data refresh complete ===")
 

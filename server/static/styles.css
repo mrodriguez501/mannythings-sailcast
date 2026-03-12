@@ -69,6 +69,23 @@
   font-size: 0.8rem;
 }
 
+.advice-sca-warning {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  background: rgba(198, 40, 40, 0.08);
+  border: 1px solid rgba(198, 40, 40, 0.3);
+  border-radius: var(--pico-border-radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #b71c1c;
+}
+
+.advice-sca-warning a {
+  color: #b71c1c;
+  text-decoration: underline;
+  font-weight: 400;
+}
+
 /* ===== Current Conditions Grid ===== */
 .conditions-grid {
   display: grid;
