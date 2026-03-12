@@ -1,6 +1,9 @@
 """
 Marine forecast (NWS) and tide predictions (NOAA CO-OPS).
-Caches results for the report API.
+
+Advisory/alert detection uses the reliable NWS alerts JSON API.
+Forecast text (period-by-period) is scraped from the NWS marine HTML page
+with a safeguard that detects format changes and falls back gracefully.
 """
 
 import logging
@@ -40,7 +43,6 @@ _BREAK_LABELS = (
     "SUN NIGHT",
 )
 
-
 _MARINE_BASE_URL = "https://marine.weather.gov/"
 
 
@@ -50,21 +52,6 @@ def _strip_html(raw: str) -> str:
     cleaned = re.sub(r"<[^>]+>", " ", cleaned)
     cleaned = cleaned.replace("&nbsp;", " ").replace("&#160;", " ")
     return re.sub(r"\s+", " ", cleaned).strip()
-
-
-def _extract_advisories(html: str) -> list[dict]:
-    """Extract advisory links (Small Craft Advisory, Hazardous Weather, etc.) from the HTML."""
-    advisories = []
-    for m in re.finditer(
-        r'<a\s+href="(showsigwx\.php[^"]*)"[^>]*>\s*(?:<[^>]+>)*\s*([^<]+)',
-        html,
-        re.IGNORECASE,
-    ):
-        href = m.group(1)
-        label = m.group(2).strip()
-        if label:
-            advisories.append({"label": label, "url": _MARINE_BASE_URL + href})
-    return advisories
 
 
 def _parse_forecast_periods(text: str) -> list[dict]:
@@ -86,19 +73,22 @@ def _parse_forecast_periods(text: str) -> list[dict]:
 
 
 def _parse_marine_html(html: str) -> dict:
-    """Extract advisories, periods, and raw text from NWS marine zone HTML."""
-    advisories = _extract_advisories(html)
+    """Extract forecast periods from NWS marine zone HTML.
 
+    Returns a dict with:
+      - forecast_text: raw cleaned text
+      - periods: list of {name, forecast} dicts
+      - parse_ok: True if we successfully extracted structured periods
+    """
     text = ""
-    forecast_cell = ""
     for m in re.finditer(r"<td[^>]*>(.*?)</td>", html, re.DOTALL | re.IGNORECASE):
         cell = m.group(1)
         upper = cell.upper()
         has_period = any(lbl in upper for lbl in _PERIOD_LABELS)
         if has_period and ("kt" in cell.lower() or any(lbl in upper for lbl in _PERIOD_LABELS[1:])):
-            forecast_cell = cell
             text = _strip_html(cell)[:2500]
             break
+
     if not text:
         block = _strip_html(html)
         for lbl in _PERIOD_LABELS:
@@ -116,10 +106,9 @@ def _parse_marine_html(html: str) -> dict:
 
     periods = _parse_forecast_periods(text)
 
-    if not advisories and forecast_cell:
-        advisories = _extract_advisories(forecast_cell)
+    parse_ok = len(periods) >= 2 and any("kt" in p.get("forecast", "").lower() for p in periods)
 
-    return {"forecast_text": text, "advisories": advisories, "periods": periods}
+    return {"forecast_text": text, "periods": periods, "parse_ok": parse_ok}
 
 
 class MarineService:
@@ -130,28 +119,73 @@ class MarineService:
     def _headers(self) -> dict:
         return {"User-Agent": settings.NWS_USER_AGENT}
 
-    async def fetch_marine_forecast(self) -> dict:
-        """Fetch NWS marine zone forecast text (ANZ535 = Tidal Potomac)."""
+    def _api_headers(self) -> dict:
+        return {
+            "User-Agent": settings.NWS_USER_AGENT,
+            "Accept": "application/geo+json",
+        }
+
+    async def fetch_marine_alerts(self) -> list[dict]:
+        """Fetch active marine alerts for the zone from the NWS JSON API.
+
+        This is the reliable source for Small Craft Advisories and other
+        marine warnings. Returns a list of structured alert dicts.
+        """
         zone_id = settings.MARINE_ZONE_ID
-        url = f"https://marine.weather.gov/MapClick.php?TextType=1&zoneid={zone_id}"
+        url = settings.nws_marine_alerts_url
+        logger.info(f"Fetching marine alerts for zone {zone_id}...")
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.get(url, headers=self._api_headers())
+                resp.raise_for_status()
+                data = resp.json()
+
+            features = data.get("features", [])
+            alerts = []
+            for f in features:
+                props = f.get("properties", {})
+                alerts.append(
+                    {
+                        "event": props.get("event", ""),
+                        "headline": props.get("headline", ""),
+                        "description": props.get("description", ""),
+                        "instruction": props.get("instruction", ""),
+                        "severity": props.get("severity", ""),
+                        "urgency": props.get("urgency", ""),
+                        "onset": props.get("onset"),
+                        "ends": props.get("ends"),
+                        "url": props.get("@id", ""),
+                    }
+                )
+            logger.info(f"Marine alerts cached ({len(alerts)} active)")
+            return alerts
+
+        except Exception as e:
+            logger.warning(f"Marine alerts fetch failed: {e}")
+            return []
+
+    async def fetch_marine_forecast(self) -> dict:
+        """Fetch NWS marine zone forecast text and alerts.
+
+        Forecast text is scraped from the NWS HTML page (with safeguard).
+        Alerts come from the reliable JSON API.
+        """
+        zone_id = settings.MARINE_ZONE_ID
+        page_url = f"https://marine.weather.gov/MapClick.php?TextType=1&zoneid={zone_id}"
+
+        marine_alerts = await self.fetch_marine_alerts()
+
+        html = ""
         try:
             async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
                 resp = await client.get(
-                    url,
+                    page_url,
                     headers={**self._headers(), "Accept": "text/html"},
                 )
                 resp.raise_for_status()
                 html = resp.text
         except Exception as e:
-            logger.warning(f"Marine forecast fetch failed: {e}")
-            self._marine_cache = {
-                "zone_id": zone_id,
-                "name": "",
-                "forecast_text": "",
-                "error": "Could not load marine forecast.",
-                "url": url,
-            }
-            return self._marine_cache
+            logger.warning(f"Marine forecast HTML fetch failed: {e}")
 
         name = "Tidal Potomac from Key Bridge to Indian Head MD"
         try:
@@ -166,17 +200,34 @@ class MarineService:
         except Exception:
             pass
 
-        parsed = _parse_marine_html(html)
+        parsed = _parse_marine_html(html) if html else {"forecast_text": "", "periods": [], "parse_ok": False}
+
+        advisories = [
+            {
+                "label": a["event"],
+                "url": a.get("url", ""),
+                "headline": a.get("headline", ""),
+                "description": a.get("description", ""),
+                "instruction": a.get("instruction", ""),
+                "onset": a.get("onset"),
+                "ends": a.get("ends"),
+            }
+            for a in marine_alerts
+        ]
+
+        if not parsed["parse_ok"]:
+            logger.warning("Marine forecast HTML parse failed — format may have changed")
 
         self._marine_cache = {
             "zone_id": zone_id,
             "name": name,
-            "forecast_text": parsed["forecast_text"] or "Marine forecast not available.",
-            "advisories": parsed["advisories"],
-            "periods": parsed["periods"],
-            "url": url,
+            "forecast_text": parsed["forecast_text"] if parsed["parse_ok"] else "",
+            "advisories": advisories,
+            "periods": parsed["periods"] if parsed["parse_ok"] else [],
+            "parse_ok": parsed["parse_ok"],
+            "url": page_url,
         }
-        logger.info("Marine forecast cached")
+        logger.info(f"Marine forecast cached (parse_ok={parsed['parse_ok']}, {len(advisories)} advisories)")
         return self._marine_cache
 
     async def fetch_tides(self) -> list:

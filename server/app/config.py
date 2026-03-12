@@ -67,5 +67,10 @@ class Settings:
     MARINE_ZONE_ID: str = os.getenv("MARINE_ZONE_ID", "ANZ535")
     NOAA_TIDE_STATION: str = os.getenv("NOAA_TIDE_STATION", "8594900")
 
+    @property
+    def nws_marine_alerts_url(self) -> str:
+        """NWS active alerts for the marine zone (e.g. ANZ535)."""
+        return f"{self.NWS_BASE_URL}/alerts/active?zone={self.MARINE_ZONE_ID}"
+
 
 settings = Settings()

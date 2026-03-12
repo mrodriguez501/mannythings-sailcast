@@ -234,21 +234,32 @@
 }
 
 .marine-advisory-link {
-  display: inline-block;
-  padding: 0.3rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.4rem 0.75rem;
   border-radius: var(--pico-border-radius);
   background: rgba(198, 40, 40, 0.1);
   border: 1px solid rgba(198, 40, 40, 0.4);
   color: #b71c1c;
   font-size: 0.85rem;
   font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s ease;
 }
 
-.marine-advisory-link:hover {
-  background: rgba(198, 40, 40, 0.2);
-  text-decoration: underline;
+.marine-advisory-headline {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--pico-muted-color);
+}
+
+.marine-card__fallback {
+  font-size: 0.9rem;
+  color: var(--pico-muted-color);
+  margin: 0;
+}
+
+.marine-card__fallback a {
+  color: var(--pico-primary);
 }
 
 .marine-periods {
