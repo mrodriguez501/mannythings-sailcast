@@ -23,6 +23,9 @@ async def refresh_all_data():
     """Fetch all NWS data, marine, tides, and regenerate AI summary."""
     logger.info("=== Scheduled data refresh starting ===")
     try:
+        # Fetch gridpoint gust data first (needed to enrich hourly periods)
+        await nws_service.fetch_gridpoint_gusts()
+
         # Fetch NWS + marine + tides concurrently
         hourly, seven_day, alerts, marine, _ = await asyncio.gather(
             nws_service.fetch_hourly_forecast(),
