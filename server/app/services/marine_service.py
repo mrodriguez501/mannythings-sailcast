@@ -70,9 +70,7 @@ def _extract_advisories(html: str) -> list[dict]:
 def _parse_forecast_periods(text: str) -> list[dict]:
     """Split cleaned forecast text into structured {name, forecast} period dicts."""
     period_re = re.compile(
-        r"(?:^|\n)\s*("
-        + "|".join(re.escape(lbl.strip()) for lbl in _BREAK_LABELS)
-        + r"[^:]*?):\s*",
+        r"(?:^|\n)\s*(" + "|".join(re.escape(lbl.strip()) for lbl in _BREAK_LABELS) + r"[^:]*?):\s*",
         re.IGNORECASE,
     )
     parts = period_re.split(text)
