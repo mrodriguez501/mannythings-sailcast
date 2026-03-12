@@ -309,9 +309,10 @@ function renderAdviceCard(data) {
     const msg = document.createElement('span');
     msg.textContent = icon + 'Small Craft Advisory is in effect — club boats may not leave the dock. ';
     scaDiv.appendChild(msg);
-    if (sca.url) {
+    const marineUrl = (data.marine_forecast && data.marine_forecast.url) || null;
+    if (marineUrl) {
       const link = document.createElement('a');
-      link.href = sca.url;
+      link.href = marineUrl;
       link.target = '_blank';
       link.rel = 'noopener';
       link.textContent = 'View NWS Advisory';
@@ -652,36 +653,24 @@ function applyTimeFilter(filterName) {
         return d >= now && d <= new Date(now.getTime() + 4 * 3600000);
       });
       break;
-    case '6hr':
+    case '8hr':
       filtered = hourly.filter((p) => {
         const d = new Date(p.startTime);
-        return d >= now && d <= new Date(now.getTime() + 6 * 3600000);
+        return d >= now && d <= new Date(now.getTime() + 8 * 3600000);
       });
       break;
-    case 'today': {
-      const endOfDay = new Date(now);
-      endOfDay.setHours(23, 59, 59, 999);
-      filtered = hourly.filter((p) => new Date(p.startTime) <= endOfDay);
-      break;
-    }
-    case 'tomorrow': {
-      const tmrwStart = new Date(now);
-      tmrwStart.setDate(tmrwStart.getDate() + 1);
-      tmrwStart.setHours(0, 0, 0, 0);
-      const tmrwEnd = new Date(tmrwStart);
-      tmrwEnd.setHours(23, 59, 59, 999);
+    case '12hr':
       filtered = hourly.filter((p) => {
         const d = new Date(p.startTime);
-        return d >= tmrwStart && d <= tmrwEnd;
+        return d >= now && d <= new Date(now.getTime() + 12 * 3600000);
       });
       break;
-    }
-    default: {
-      const eod = new Date(now);
-      eod.setHours(23, 59, 59, 999);
-      filtered = hourly.filter((p) => new Date(p.startTime) <= eod);
+    default:
+      filtered = hourly.filter((p) => {
+        const d = new Date(p.startTime);
+        return d >= now && d <= new Date(now.getTime() + 4 * 3600000);
+      });
       break;
-    }
   }
 
   if (filtered.length === 0) filtered = hourly.slice(0, 1);
@@ -753,14 +742,14 @@ function renderHourly(periods) {
 let windChartInstance = null;
 
 /**
- * Bar chart: next 8 hours wind speed (mph). Uses first 8 periods from hourly data.
+ * Bar chart: wind speed (mph) for the filtered time window.
  */
 function renderWindChart(periods) {
   const canvas = document.getElementById('wind-chart');
   if (!canvas) return;
 
-  const next8 = Array.isArray(periods) ? periods.slice(0, 8) : [];
-  if (next8.length === 0) {
+  const chartData = Array.isArray(periods) ? periods : [];
+  if (chartData.length === 0) {
     if (windChartInstance) {
       windChartInstance.destroy();
       windChartInstance = null;
@@ -769,15 +758,15 @@ function renderWindChart(periods) {
     return;
   }
 
-  const labels = next8.map((p) => {
+  const labels = chartData.map((p) => {
     try {
       const d = new Date(p.startTime);
-      return d.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+      return d.toLocaleString(undefined, { hour: 'numeric', hour12: true });
     } catch {
       return p.startTime || '—';
     }
   });
-  const windValues = next8.map((p) => {
+  const windValues = chartData.map((p) => {
     const v = p.windSpeed;
     if (typeof v === 'number') return v;
     if (typeof v === 'string') return parseFloat(v.replace(/[^\d.-]/g, '')) || 0;
@@ -814,7 +803,7 @@ function renderWindChart(periods) {
       aspectRatio: mobile ? 1.4 : 2,
       plugins: {
         legend: { display: !mobile },
-        title: { display: true, text: 'Next 8 hours wind speed', font: { size: mobile ? 11 : 14 } },
+        title: { display: true, text: `Wind speed (${chartData.length} hours)`, font: { size: mobile ? 11 : 14 } },
         tooltip: { enabled: true, intersect: false, mode: 'index' },
       },
       scales: {
@@ -829,22 +818,40 @@ function renderWindChart(periods) {
           ticks: {
             font: { size: mobile ? 8 : 12 },
             maxRotation: mobile ? 45 : 0,
-            callback: mobile
-              ? function (val, idx) {
-                  const lbl = this.getLabelForValue(val);
-                  const parts = lbl.split(',');
-                  return parts.length > 1 ? parts[1].trim() : lbl;
-                }
-              : undefined,
+            autoSkip: false,
           },
         },
       },
     },
-    plugins: [windThresholdLinesPlugin],
+    plugins: [windThresholdLinesPlugin, windBarLabelsPlugin],
   });
 
   canvas.style.display = '';
 }
+
+const windBarLabelsPlugin = {
+  id: 'windBarLabels',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    if (!meta || !meta.data) return;
+    const mobile = isMobileView();
+    ctx.save();
+    ctx.font = `bold ${mobile ? '9px' : '11px'} sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    const borderColors = chart.data.datasets[0].borderColor;
+    for (let i = 0; i < meta.data.length; i++) {
+      const bar = meta.data[i];
+      const value = chart.data.datasets[0].data[i];
+      if (value != null) {
+        ctx.fillStyle = Array.isArray(borderColors) ? borderColors[i] : borderColors;
+        ctx.fillText(Math.round(value), bar.x, bar.y - 3);
+      }
+    }
+    ctx.restore();
+  },
+};
 
 /** Chart.js instance for tide chart (destroy before redraw). */
 let tideChartInstance = null;
