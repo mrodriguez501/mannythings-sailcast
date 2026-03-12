@@ -653,36 +653,24 @@ function applyTimeFilter(filterName) {
         return d >= now && d <= new Date(now.getTime() + 4 * 3600000);
       });
       break;
-    case '6hr':
+    case '8hr':
       filtered = hourly.filter((p) => {
         const d = new Date(p.startTime);
-        return d >= now && d <= new Date(now.getTime() + 6 * 3600000);
+        return d >= now && d <= new Date(now.getTime() + 8 * 3600000);
       });
       break;
-    case 'today': {
-      const endOfDay = new Date(now);
-      endOfDay.setHours(23, 59, 59, 999);
-      filtered = hourly.filter((p) => new Date(p.startTime) <= endOfDay);
-      break;
-    }
-    case 'tomorrow': {
-      const tmrwStart = new Date(now);
-      tmrwStart.setDate(tmrwStart.getDate() + 1);
-      tmrwStart.setHours(0, 0, 0, 0);
-      const tmrwEnd = new Date(tmrwStart);
-      tmrwEnd.setHours(23, 59, 59, 999);
+    case '12hr':
       filtered = hourly.filter((p) => {
         const d = new Date(p.startTime);
-        return d >= tmrwStart && d <= tmrwEnd;
+        return d >= now && d <= new Date(now.getTime() + 12 * 3600000);
       });
       break;
-    }
-    default: {
-      const eod = new Date(now);
-      eod.setHours(23, 59, 59, 999);
-      filtered = hourly.filter((p) => new Date(p.startTime) <= eod);
+    default:
+      filtered = hourly.filter((p) => {
+        const d = new Date(p.startTime);
+        return d >= now && d <= new Date(now.getTime() + 4 * 3600000);
+      });
       break;
-    }
   }
 
   if (filtered.length === 0) filtered = hourly.slice(0, 1);
@@ -773,7 +761,7 @@ function renderWindChart(periods) {
   const labels = chartData.map((p) => {
     try {
       const d = new Date(p.startTime);
-      return d.toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+      return d.toLocaleString(undefined, { hour: 'numeric', hour12: true });
     } catch {
       return p.startTime || '—';
     }
@@ -830,22 +818,40 @@ function renderWindChart(periods) {
           ticks: {
             font: { size: mobile ? 8 : 12 },
             maxRotation: mobile ? 45 : 0,
-            callback: mobile
-              ? function (val, idx) {
-                  const lbl = this.getLabelForValue(val);
-                  const parts = lbl.split(',');
-                  return parts.length > 1 ? parts[1].trim() : lbl;
-                }
-              : undefined,
+            autoSkip: false,
           },
         },
       },
     },
-    plugins: [windThresholdLinesPlugin],
+    plugins: [windThresholdLinesPlugin, windBarLabelsPlugin],
   });
 
   canvas.style.display = '';
 }
+
+const windBarLabelsPlugin = {
+  id: 'windBarLabels',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    if (!meta || !meta.data) return;
+    const mobile = isMobileView();
+    ctx.save();
+    ctx.font = `bold ${mobile ? '9px' : '11px'} sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    const borderColors = chart.data.datasets[0].borderColor;
+    for (let i = 0; i < meta.data.length; i++) {
+      const bar = meta.data[i];
+      const value = chart.data.datasets[0].data[i];
+      if (value != null) {
+        ctx.fillStyle = Array.isArray(borderColors) ? borderColors[i] : borderColors;
+        ctx.fillText(Math.round(value), bar.x, bar.y - 3);
+      }
+    }
+    ctx.restore();
+  },
+};
 
 /** Chart.js instance for tide chart (destroy before redraw). */
 let tideChartInstance = null;
