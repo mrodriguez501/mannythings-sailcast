@@ -194,10 +194,26 @@ function parseMph(val) {
 }
 
 /**
- * Compute safety level from raw hourly + alerts data (client-side fallback).
- * Uses SCOW club rule thresholds: 17/23/29 MPH.
+ * Check if the marine forecast contains a Small Craft Advisory.
+ * Advisories now come from the reliable NWS alerts JSON API.
+ * Returns the advisory object or null.
  */
-function computeSafetyLevel(hourly, alerts) {
+function findSmallCraftAdvisory(marine) {
+  if (!marine) return null;
+  const advisories = marine.advisories || [];
+  for (const a of advisories) {
+    if (/small craft advisory/i.test(a.label)) return a;
+  }
+  return null;
+}
+
+/**
+ * Compute safety level from raw hourly + alerts + marine data (client-side fallback).
+ * Uses SCOW club rule thresholds: 17/23/29 MPH.
+ * A Small Craft Advisory in the marine forecast = UNSAFE (no boats out).
+ */
+function computeSafetyLevel(hourly, alerts, marine) {
+  if (findSmallCraftAdvisory(marine)) return 'UNSAFE';
   if (Array.isArray(alerts)) {
     for (const a of alerts) {
       const sev = (a.severity || '').toLowerCase();
@@ -270,7 +286,11 @@ function renderAdviceCard(data) {
   adviceCardEl.innerHTML = '';
 
   const advice = data.advice || null;
-  const level = (advice && advice.safetyLevel) || computeSafetyLevel(data.hourly || [], data.alerts || []);
+  const marine = data.marine_forecast || null;
+  const sca = findSmallCraftAdvisory(marine);
+
+  let level = (advice && advice.safetyLevel) || computeSafetyLevel(data.hourly || [], data.alerts || [], marine);
+  if (sca && level !== 'UNSAFE') level = 'UNSAFE';
   const colors = SAFETY_COLORS[level] || SAFETY_COLORS.SAFE;
 
   adviceCardEl.style.borderLeftColor = colors.border;
@@ -281,6 +301,24 @@ function renderAdviceCard(data) {
   badge.style.backgroundColor = colors.badge;
   badge.textContent = colors.text;
   adviceCardEl.appendChild(badge);
+
+  if (sca) {
+    const scaDiv = document.createElement('div');
+    scaDiv.className = 'advice-sca-warning';
+    const icon = '\u26A0\uFE0F ';
+    const msg = document.createElement('span');
+    msg.textContent = icon + 'Small Craft Advisory is in effect — club boats may not leave the dock. ';
+    scaDiv.appendChild(msg);
+    if (sca.url) {
+      const link = document.createElement('a');
+      link.href = sca.url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'View NWS Advisory';
+      scaDiv.appendChild(link);
+    }
+    adviceCardEl.appendChild(scaDiv);
+  }
 
   const summary = (advice && advice.summary) || data.recommendation || '';
   if (summary) {
@@ -311,7 +349,7 @@ function renderAdviceCard(data) {
   }
 
   const bestWindow = findBestWindow(data.hourly || []);
-  if (bestWindow) {
+  if (bestWindow && !sca) {
     const p = document.createElement('p');
     p.className = 'advice-window meta';
     p.textContent = `Best sailing window: ${bestWindow}`;
@@ -483,22 +521,22 @@ function renderAlerts(alerts) {
 
 /**
  * Render NWS marine zone forecast (ANZ535) as a standalone card.
- * Highlights red when advisories include Small Craft Advisory or Hazardous Weather.
+ * Advisories come from the reliable NWS alerts JSON API.
+ * Forecast periods come from HTML scraping with a parse_ok safeguard.
  */
 function renderMarineForecast(marine) {
   if (!marineForecastEl) return;
   marineForecastEl.innerHTML = '';
-  if (!marine || (!marine.forecast_text && !marine.error)) {
+  if (!marine) {
     showSectionMessage(marineForecastEl, 'no-data');
     return;
   }
   const name = marine.name || marine.zone_id || 'ANZ535';
   const advisories = marine.advisories || [];
   const periods = marine.periods || [];
-  const text = marine.error || marine.forecast_text || '';
+  const parseOk = marine.parse_ok !== false;
 
-  const hasHazard = advisories.some((a) => /small craft advisory|hazardous weather/i.test(a.label))
-    || /small craft advisory|hazardous weather/i.test(text);
+  const hasHazard = advisories.some((a) => /small craft advisory|hazardous weather/i.test(a.label));
 
   const card = document.createElement('div');
   card.className = 'marine-card' + (hasHazard ? ' marine-card--hazard' : '');
@@ -523,18 +561,23 @@ function renderMarineForecast(marine) {
     const advDiv = document.createElement('div');
     advDiv.className = 'marine-advisories';
     for (const adv of advisories) {
-      const a = document.createElement('a');
-      a.href = adv.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.className = 'marine-advisory-link';
-      a.textContent = adv.label;
-      advDiv.appendChild(a);
+      const badge = document.createElement('div');
+      badge.className = 'marine-advisory-link';
+      const labelSpan = document.createElement('span');
+      labelSpan.textContent = adv.label;
+      badge.appendChild(labelSpan);
+      if (adv.headline) {
+        const hl = document.createElement('span');
+        hl.className = 'marine-advisory-headline';
+        hl.textContent = adv.headline;
+        badge.appendChild(hl);
+      }
+      advDiv.appendChild(badge);
     }
     card.appendChild(advDiv);
   }
 
-  if (periods.length > 0) {
+  if (parseOk && periods.length > 0) {
     const list = document.createElement('dl');
     list.className = 'marine-periods';
     for (const p of periods) {
@@ -547,10 +590,13 @@ function renderMarineForecast(marine) {
     }
     card.appendChild(list);
   } else {
-    const para = document.createElement('p');
-    para.className = 'marine-card__text';
-    para.textContent = text;
-    card.appendChild(para);
+    const fallback = document.createElement('p');
+    fallback.className = 'marine-card__fallback';
+    fallback.innerHTML = 'NWS marine forecast text is not available at this time. '
+      + (marine.url
+        ? `<a href="${escapeHtml(marine.url)}" target="_blank" rel="noopener">View forecast on NWS website</a>`
+        : '');
+    card.appendChild(fallback);
   }
 
   marineForecastEl.appendChild(card);

@@ -61,11 +61,25 @@ class OpenAIService:
             "- Reference specific wind speeds and gust thresholds from the rules\n"
             "- Clearly state if conditions are SAFE, CAUTION, or UNSAFE for sailing\n"
             "- Mention any active weather alerts prominently\n"
+            "- If the NWS Marine Forecast contains a Small Craft Advisory, conditions are UNSAFE — "
+            "the club does not allow boats out during a Small Craft Advisory\n"
             "- Format your response with clear sections"
         )
 
-    def _build_forecast_prompt(self, hourly_data: dict, seven_day_data: dict, alerts_data: dict) -> str:
+    def _build_forecast_prompt(
+        self, hourly_data: dict, seven_day_data: dict, alerts_data: dict, marine_data: dict | None = None
+    ) -> str:
         """Build the user prompt with current forecast data."""
+        marine_section = ""
+        if marine_data:
+            advisories = marine_data.get("advisories", [])
+            adv_names = [a.get("label", "") for a in advisories] if advisories else []
+            marine_section = (
+                f"NWS MARINE FORECAST ({marine_data.get('zone_id', 'ANZ535')}):\n"
+                f"Active marine advisories: {', '.join(adv_names) if adv_names else 'None'}\n"
+                f"Forecast: {marine_data.get('forecast_text', 'N/A')}\n\n"
+            )
+
         return (
             "Based on the following NWS forecast data, generate:\n"
             "1. A human-readable 24-HOUR WEATHER SUMMARY (2-3 sentences)\n"
@@ -77,6 +91,7 @@ class OpenAIService:
             f"{json.dumps(seven_day_data.get('periods', [])[:4], indent=2)}\n\n"
             f"ACTIVE ALERTS ({alerts_data.get('count', 0)}):\n"
             f"{json.dumps(alerts_data.get('alerts', []), indent=2)}\n\n"
+            f"{marine_section}"
             "Provide your response in the following JSON format:\n"
             "{\n"
             '  "summary": "24-hour weather summary text",\n'
@@ -87,14 +102,15 @@ class OpenAIService:
             "}"
         )
 
-    async def generate_summary(self, hourly_data: dict, seven_day_data: dict, alerts_data: dict) -> dict:
+    async def generate_summary(
+        self, hourly_data: dict, seven_day_data: dict, alerts_data: dict, marine_data: dict | None = None
+    ) -> dict:
         """Generate an AI-powered weather summary and sailing advisory."""
 
         # --- Budget gate: check before calling OpenAI ---
         allowed, reason = budget_tracker.can_make_request()
         if not allowed:
             logger.warning(f"AI summary SKIPPED: {reason}")
-            # Return cached summary if available, or a budget-exceeded notice
             if self._summary_cache:
                 self._summary_cache["budgetNotice"] = reason
                 return self._summary_cache
@@ -117,7 +133,7 @@ class OpenAIService:
                     {"role": "system", "content": self._build_system_prompt()},
                     {
                         "role": "user",
-                        "content": self._build_forecast_prompt(hourly_data, seven_day_data, alerts_data),
+                        "content": self._build_forecast_prompt(hourly_data, seven_day_data, alerts_data, marine_data),
                     },
                 ],
                 temperature=0.3,
