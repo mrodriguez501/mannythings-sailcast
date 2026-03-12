@@ -110,8 +110,8 @@ function setLoading() {
     document.getElementById('metric-gust-val'),
     document.getElementById('metric-temp-val'),
     document.getElementById('metric-direction-val'),
-    document.getElementById('metric-prev-tide-val'),
-    document.getElementById('metric-tide-val'),
+    document.getElementById('metric-next-high-val'),
+    document.getElementById('metric-next-low-val'),
   ].forEach((el) => { if (el) el.textContent = '—'; });
   _applySectionStates([
     [hourCardsEl, 'loading'], [alertsListEl, 'loading'], [marineForecastEl, 'loading'],
@@ -332,11 +332,11 @@ function renderConditionsGrid(hourly, tides) {
   const gustVal = document.getElementById('metric-gust-val');
   const tempVal = document.getElementById('metric-temp-val');
   const dirVal = document.getElementById('metric-direction-val');
-  const tideVal = document.getElementById('metric-tide-val');
-  const prevTideVal = document.getElementById('metric-prev-tide-val');
+  const nextHighVal = document.getElementById('metric-next-high-val');
+  const nextLowVal = document.getElementById('metric-next-low-val');
 
   if (!Array.isArray(hourly) || hourly.length === 0) {
-    [windVal, gustVal, tempVal, dirVal, tideVal, prevTideVal].forEach((el) => { if (el) el.textContent = '—'; });
+    [windVal, gustVal, tempVal, dirVal, nextHighVal, nextLowVal].forEach((el) => { if (el) el.textContent = '—'; });
     return;
   }
 
@@ -346,44 +346,25 @@ function renderConditionsGrid(hourly, tides) {
   if (tempVal) tempVal.textContent = p.temp != null ? `${p.temp}°F` : '—';
   if (dirVal) dirVal.textContent = p.windDirection || '—';
 
-  if (tideVal) {
-    const nextTide = findNextTide(tides);
-    tideVal.textContent = nextTide || '—';
-  }
-  if (prevTideVal) {
-    const prevTide = findPreviousTide(tides);
-    prevTideVal.textContent = prevTide || '—';
-  }
+  const { nextHigh, nextLow } = findNextHighLow(tides);
+  if (nextHighVal) nextHighVal.textContent = nextHigh || '—';
+  if (nextLowVal) nextLowVal.textContent = nextLow || '—';
 }
 
-function findNextTide(tides) {
-  if (!Array.isArray(tides) || tides.length === 0) return null;
+function findNextHighLow(tides) {
+  const result = { nextHigh: null, nextLow: null };
+  if (!Array.isArray(tides) || tides.length === 0) return result;
   const now = Date.now();
   for (const t of tides) {
     const d = new Date(t.t.replace(' ', 'T'));
-    if (d.getTime() >= now) {
-      const label = t.type === 'H' ? 'High' : t.type === 'L' ? 'Low' : '';
-      const time = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
-      return `${label} ${t.v || ''} ft @ ${time}`.trim();
-    }
+    if (d.getTime() < now) continue;
+    const time = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
+    const str = `${t.v || ''} ft @ ${time}`.trim();
+    if (t.type === 'H' && !result.nextHigh) result.nextHigh = str;
+    if (t.type === 'L' && !result.nextLow) result.nextLow = str;
+    if (result.nextHigh && result.nextLow) break;
   }
-  return null;
-}
-
-function findPreviousTide(tides) {
-  if (!Array.isArray(tides) || tides.length === 0) return null;
-  const now = Date.now();
-  let prev = null;
-  for (const t of tides) {
-    const d = new Date(t.t.replace(' ', 'T'));
-    if (d.getTime() >= now) break;
-    prev = t;
-  }
-  if (!prev) return null;
-  const d = new Date(prev.t.replace(' ', 'T'));
-  const label = prev.type === 'H' ? 'High' : prev.type === 'L' ? 'Low' : '';
-  const time = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
-  return `${label} ${prev.v || ''} ft @ ${time}`.trim();
+  return result;
 }
 
 function renderTideSummary(tides) {
