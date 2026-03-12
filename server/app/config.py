@@ -40,13 +40,14 @@ class Settings:
         return self.ENVIRONMENT == "production"
 
     @property
+    def nws_gridpoint_url(self) -> str:
+        """NWS raw gridpoint data (wind gusts, quantitative values)."""
+        return f"{self.NWS_BASE_URL}/gridpoints/{self.NWS_OFFICE}/{self.NWS_GRIDPOINT_X},{self.NWS_GRIDPOINT_Y}"
+
+    @property
     def nws_forecast_url(self) -> str:
         """NWS hourly forecast endpoint for configured gridpoint."""
-        return (
-            f"{self.NWS_BASE_URL}/gridpoints/"
-            f"{self.NWS_OFFICE}/{self.NWS_GRIDPOINT_X},{self.NWS_GRIDPOINT_Y}"
-            f"/forecast/hourly"
-        )
+        return f"{self.nws_gridpoint_url}/forecast/hourly"
 
     @property
     def nws_forecast_7day_url(self) -> str:
