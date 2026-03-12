@@ -72,7 +72,7 @@
 /* ===== Current Conditions Grid ===== */
 .conditions-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 0.75rem;
   margin-bottom: var(--pico-block-spacing-vertical);
 }
@@ -172,6 +172,89 @@
   white-space: pre-wrap;
   font-family: var(--pico-font-family);
   font-size: 0.9rem;
+}
+
+/* ===== NWS Marine Forecast Card ===== */
+.marine-card {
+  padding: 1rem 1.25rem;
+  background: var(--pico-card-background-color);
+  border-radius: var(--pico-border-radius);
+  border: 1px solid var(--pico-muted-border-color);
+  border-left: 0.5rem solid #005ea2;
+  margin-bottom: var(--pico-block-spacing-vertical);
+}
+
+.marine-card--hazard {
+  border-left-color: #c62828;
+  border-color: rgba(198, 40, 40, 0.3);
+  background: rgba(198, 40, 40, 0.06);
+}
+
+.marine-card__heading {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.marine-card__heading a {
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.marine-card__text {
+  white-space: pre-wrap;
+  font-family: var(--pico-font-family);
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.marine-advisories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.marine-advisory-link {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--pico-border-radius);
+  background: rgba(198, 40, 40, 0.1);
+  border: 1px solid rgba(198, 40, 40, 0.4);
+  color: #b71c1c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.marine-advisory-link:hover {
+  background: rgba(198, 40, 40, 0.2);
+  text-decoration: underline;
+}
+
+.marine-periods {
+  margin: 0;
+  padding: 0;
+}
+
+.marine-periods dt {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0.6rem 0 0.15rem 0;
+  padding: 0;
+}
+
+.marine-periods dt:first-child {
+  margin-top: 0;
+}
+
+.marine-periods dd {
+  margin: 0 0 0 0;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 /* ===== 24-hour cards grid ===== */

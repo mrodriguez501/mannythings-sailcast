@@ -51,6 +51,10 @@
             <span class="metric-label">Direction</span>
             <span class="metric-value" id="metric-direction-val">—</span>
           </div>
+          <div class="metric-card" id="metric-prev-tide">
+            <span class="metric-label">Prev Tide</span>
+            <span class="metric-value" id="metric-prev-tide-val">—</span>
+          </div>
           <div class="metric-card" id="metric-tide">
             <span class="metric-label">Next Tide</span>
             <span class="metric-value" id="metric-tide-val">—</span>
@@ -61,8 +65,7 @@
       <section id="hourly-section" aria-label="Hourly wind">
         <h2>Hourly Wind</h2>
         <div id="time-filter" class="time-filter" aria-label="Time filter">
-          <button class="time-filter-btn time-filter-btn--active" data-filter="now">Now</button>
-          <button class="time-filter-btn" data-filter="2hr">2 hr</button>
+          <button class="time-filter-btn time-filter-btn--active" data-filter="4hr">4 hr</button>
           <button class="time-filter-btn" data-filter="6hr">6 hr</button>
           <button class="time-filter-btn" data-filter="today">Today</button>
           <button class="time-filter-btn" data-filter="tomorrow">Tomorrow</button>
@@ -94,15 +97,15 @@
         </div>
       </section>
 
+      <section id="marine-section" aria-label="NWS Marine Forecast">
+        <h2>NWS Marine Forecast</h2>
+        <div id="marine-forecast"></div>
+      </section>
+
       <section id="details-section" aria-label="Details">
         <details class="collapsible">
           <summary>24-Hour Forecast Cards</summary>
           <div id="hour-cards" class="hour-cards-grid collapsible-body"></div>
-        </details>
-
-        <details class="collapsible">
-          <summary>NWS Marine Forecast</summary>
-          <div id="marine-forecast" class="collapsible-body"></div>
         </details>
 
         <details class="collapsible">

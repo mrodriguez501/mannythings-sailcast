@@ -16,6 +16,9 @@ logger = logging.getLogger("sailcast.marine")
 
 _PERIOD_LABELS = ("TODAY", "TONIGHT", "THIS AFTERNOON", "THIS EVENING", "THIS MORNING")
 _BREAK_LABELS = (
+    "REST OF THIS AFTERNOON",
+    "REST OF TONIGHT",
+    "REST OF TODAY",
     "TONIGHT",
     "TODAY",
     "THIS AFTERNOON",
@@ -38,6 +41,9 @@ _BREAK_LABELS = (
 )
 
 
+_MARINE_BASE_URL = "https://marine.weather.gov/"
+
+
 def _strip_html(raw: str) -> str:
     """Remove script/style blocks, then HTML tags, then collapse whitespace."""
     cleaned = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.DOTALL | re.IGNORECASE)
@@ -46,14 +52,51 @@ def _strip_html(raw: str) -> str:
     return re.sub(r"\s+", " ", cleaned).strip()
 
 
-def _parse_marine_html(html: str) -> str:
-    """Extract and clean forecast text from NWS marine zone HTML."""
+def _extract_advisories(html: str) -> list[dict]:
+    """Extract advisory links (Small Craft Advisory, Hazardous Weather, etc.) from the HTML."""
+    advisories = []
+    for m in re.finditer(
+        r'<a\s+href="(showsigwx\.php[^"]*)"[^>]*>\s*(?:<[^>]+>)*\s*([^<]+)',
+        html,
+        re.IGNORECASE,
+    ):
+        href = m.group(1)
+        label = m.group(2).strip()
+        if label:
+            advisories.append({"label": label, "url": _MARINE_BASE_URL + href})
+    return advisories
+
+
+def _parse_forecast_periods(text: str) -> list[dict]:
+    """Split cleaned forecast text into structured {name, forecast} period dicts."""
+    period_re = re.compile(
+        r"(?:^|\n)\s*(" + "|".join(re.escape(lbl.strip()) for lbl in _BREAK_LABELS) + r"[^:]*?):\s*",
+        re.IGNORECASE,
+    )
+    parts = period_re.split(text)
+    periods = []
+    i = 1
+    while i < len(parts) - 1:
+        name = parts[i].strip().rstrip(":")
+        body = parts[i + 1].strip()
+        if name and body:
+            periods.append({"name": name, "forecast": body})
+        i += 2
+    return periods
+
+
+def _parse_marine_html(html: str) -> dict:
+    """Extract advisories, periods, and raw text from NWS marine zone HTML."""
+    advisories = _extract_advisories(html)
+
     text = ""
+    forecast_cell = ""
     for m in re.finditer(r"<td[^>]*>(.*?)</td>", html, re.DOTALL | re.IGNORECASE):
         cell = m.group(1)
         upper = cell.upper()
         has_period = any(lbl in upper for lbl in _PERIOD_LABELS)
-        if has_period and ("kt" in cell or any(lbl in upper for lbl in _PERIOD_LABELS[1:])):
+        if has_period and ("kt" in cell.lower() or any(lbl in upper for lbl in _PERIOD_LABELS[1:])):
+            forecast_cell = cell
             text = _strip_html(cell)[:2500]
             break
     if not text:
@@ -67,9 +110,16 @@ def _parse_marine_html(html: str) -> str:
             nws_marker = block.upper().find("NWS FORECAST FOR:")
             if nws_marker != -1:
                 text = block[nws_marker : nws_marker + 2500].strip()
+
     for label in _BREAK_LABELS:
         text = re.sub(rf"\s+({re.escape(label)})", r"\n\1", text, flags=re.IGNORECASE)
-    return text
+
+    periods = _parse_forecast_periods(text)
+
+    if not advisories and forecast_cell:
+        advisories = _extract_advisories(forecast_cell)
+
+    return {"forecast_text": text, "advisories": advisories, "periods": periods}
 
 
 class MarineService:
@@ -116,12 +166,14 @@ class MarineService:
         except Exception:
             pass
 
-        forecast_text = _parse_marine_html(html)
+        parsed = _parse_marine_html(html)
 
         self._marine_cache = {
             "zone_id": zone_id,
             "name": name,
-            "forecast_text": forecast_text or "Marine forecast not available.",
+            "forecast_text": parsed["forecast_text"] or "Marine forecast not available.",
+            "advisories": parsed["advisories"],
+            "periods": parsed["periods"],
             "url": url,
         }
         logger.info("Marine forecast cached")

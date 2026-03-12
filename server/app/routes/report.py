@@ -94,8 +94,8 @@ async def api_report():
         recommendation = summary_data
 
     location = {
-        "name": getattr(settings, "LOCATION_NAME", None)
-        or f"{settings.NWS_OFFICE} {settings.NWS_GRIDPOINT_X},{settings.NWS_GRIDPOINT_Y}",
+        "label": settings.LOCATION_LABEL,
+        "name": f"{settings.NWS_OFFICE} {settings.NWS_GRIDPOINT_X},{settings.NWS_GRIDPOINT_Y}",
         "lat": str(getattr(settings, "NWS_GRIDPOINT_Y", "")),
         "lon": str(getattr(settings, "NWS_GRIDPOINT_X", "")),
     }

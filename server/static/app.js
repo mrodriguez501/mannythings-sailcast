@@ -110,6 +110,7 @@ function setLoading() {
     document.getElementById('metric-gust-val'),
     document.getElementById('metric-temp-val'),
     document.getElementById('metric-direction-val'),
+    document.getElementById('metric-prev-tide-val'),
     document.getElementById('metric-tide-val'),
   ].forEach((el) => { if (el) el.textContent = '—'; });
   _applySectionStates([
@@ -174,8 +175,9 @@ function getWeatherIconName(shortForecast, startTime) {
 
 function renderLocation(loc) {
   if (!locationEl || !loc) return;
-  const { name, lat, lon } = loc;
-  locationEl.textContent = `${name} (${lat}, ${lon})`;
+  const { label, name, lat, lon } = loc;
+  const parts = [label, name, `(${lat}, ${lon})`].filter(Boolean);
+  locationEl.textContent = parts.join(' · ');
 }
 
 function escapeHtml(str) {
@@ -331,9 +333,10 @@ function renderConditionsGrid(hourly, tides) {
   const tempVal = document.getElementById('metric-temp-val');
   const dirVal = document.getElementById('metric-direction-val');
   const tideVal = document.getElementById('metric-tide-val');
+  const prevTideVal = document.getElementById('metric-prev-tide-val');
 
   if (!Array.isArray(hourly) || hourly.length === 0) {
-    [windVal, gustVal, tempVal, dirVal, tideVal].forEach((el) => { if (el) el.textContent = '—'; });
+    [windVal, gustVal, tempVal, dirVal, tideVal, prevTideVal].forEach((el) => { if (el) el.textContent = '—'; });
     return;
   }
 
@@ -346,6 +349,10 @@ function renderConditionsGrid(hourly, tides) {
   if (tideVal) {
     const nextTide = findNextTide(tides);
     tideVal.textContent = nextTide || '—';
+  }
+  if (prevTideVal) {
+    const prevTide = findPreviousTide(tides);
+    prevTideVal.textContent = prevTide || '—';
   }
 }
 
@@ -361,6 +368,22 @@ function findNextTide(tides) {
     }
   }
   return null;
+}
+
+function findPreviousTide(tides) {
+  if (!Array.isArray(tides) || tides.length === 0) return null;
+  const now = Date.now();
+  let prev = null;
+  for (const t of tides) {
+    const d = new Date(t.t.replace(' ', 'T'));
+    if (d.getTime() >= now) break;
+    prev = t;
+  }
+  if (!prev) return null;
+  const d = new Date(prev.t.replace(' ', 'T'));
+  const label = prev.type === 'H' ? 'High' : prev.type === 'L' ? 'Low' : '';
+  const time = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
+  return `${label} ${prev.v || ''} ft @ ${time}`.trim();
 }
 
 function renderTideSummary(tides) {
@@ -478,8 +501,8 @@ function renderAlerts(alerts) {
 }
 
 /**
- * Render NWS marine zone forecast (ANZ535) in a USWDS-style alert box.
- * Source: marine.weather.gov/MapClick.php?TextType=1&zoneid=ANZ535 (text-only)
+ * Render NWS marine zone forecast (ANZ535) as a standalone card.
+ * Highlights red when advisories include Small Craft Advisory or Hazardous Weather.
  */
 function renderMarineForecast(marine) {
   if (!marineForecastEl) return;
@@ -488,16 +511,21 @@ function renderMarineForecast(marine) {
     showSectionMessage(marineForecastEl, 'no-data');
     return;
   }
-  const text = marine.error || marine.forecast_text || '';
   const name = marine.name || marine.zone_id || 'ANZ535';
-  const alertDiv = document.createElement('div');
-  alertDiv.className = 'usa-alert usa-alert--info';
-  alertDiv.setAttribute('role', 'region');
-  alertDiv.setAttribute('aria-label', 'NWS Marine forecast');
-  const body = document.createElement('div');
-  body.className = 'usa-alert__body';
+  const advisories = marine.advisories || [];
+  const periods = marine.periods || [];
+  const text = marine.error || marine.forecast_text || '';
+
+  const hasHazard = advisories.some((a) => /small craft advisory|hazardous weather/i.test(a.label))
+    || /small craft advisory|hazardous weather/i.test(text);
+
+  const card = document.createElement('div');
+  card.className = 'marine-card' + (hasHazard ? ' marine-card--hazard' : '');
+  card.setAttribute('role', 'region');
+  card.setAttribute('aria-label', 'NWS Marine forecast');
+
   const heading = document.createElement('h4');
-  heading.className = 'usa-alert__heading';
+  heading.className = 'marine-card__heading';
   heading.textContent = `${marine.zone_id} – ${name}`;
   if (marine.url) {
     heading.appendChild(document.createTextNode(' '));
@@ -508,13 +536,43 @@ function renderMarineForecast(marine) {
     link.textContent = 'View on NWS';
     heading.appendChild(link);
   }
-  const para = document.createElement('p');
-  para.className = 'usa-alert__text marine-forecast-text';
-  para.textContent = text;
-  body.appendChild(heading);
-  body.appendChild(para);
-  alertDiv.appendChild(body);
-  marineForecastEl.appendChild(alertDiv);
+  card.appendChild(heading);
+
+  if (advisories.length > 0) {
+    const advDiv = document.createElement('div');
+    advDiv.className = 'marine-advisories';
+    for (const adv of advisories) {
+      const a = document.createElement('a');
+      a.href = adv.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.className = 'marine-advisory-link';
+      a.textContent = adv.label;
+      advDiv.appendChild(a);
+    }
+    card.appendChild(advDiv);
+  }
+
+  if (periods.length > 0) {
+    const list = document.createElement('dl');
+    list.className = 'marine-periods';
+    for (const p of periods) {
+      const dt = document.createElement('dt');
+      dt.textContent = p.name;
+      const dd = document.createElement('dd');
+      dd.textContent = p.forecast;
+      list.appendChild(dt);
+      list.appendChild(dd);
+    }
+    card.appendChild(list);
+  } else {
+    const para = document.createElement('p');
+    para.className = 'marine-card__text';
+    para.textContent = text;
+    card.appendChild(para);
+  }
+
+  marineForecastEl.appendChild(card);
 }
 
 function renderForecast3day(periods) {
@@ -561,10 +619,10 @@ function applyTimeFilter(filterName) {
   let filtered;
 
   switch (filterName) {
-    case '2hr':
+    case '4hr':
       filtered = hourly.filter((p) => {
         const d = new Date(p.startTime);
-        return d >= now && d <= new Date(now.getTime() + 2 * 3600000);
+        return d >= now && d <= new Date(now.getTime() + 4 * 3600000);
       });
       break;
     case '6hr':
@@ -591,8 +649,12 @@ function applyTimeFilter(filterName) {
       });
       break;
     }
-    default:
-      filtered = hourly;
+    default: {
+      const eod = new Date(now);
+      eod.setHours(23, 59, 59, 999);
+      filtered = hourly.filter((p) => new Date(p.startTime) <= eod);
+      break;
+    }
   }
 
   if (filtered.length === 0) filtered = hourly.slice(0, 1);
@@ -885,8 +947,8 @@ async function fetchReport() {
     renderAlerts(data.alerts ?? []);
     renderAdviceCard(data);
     renderConditionsGrid(data.hourly ?? [], data.tides ?? []);
-    renderWindChart(data.hourly ?? []);
-    renderHourly(data.hourly ?? []);
+    const activeFilter = document.querySelector('.time-filter-btn--active');
+    applyTimeFilter(activeFilter ? activeFilter.dataset.filter : '4hr');
     renderTideSummary(data.tides ?? []);
     renderTideChart(data.tides ?? []);
     render24HourCards(data.hourly ?? [], data.tides ?? []);
