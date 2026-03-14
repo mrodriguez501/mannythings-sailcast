@@ -3,7 +3,8 @@
  * Refreshes every hour (primary flow).
  */
 const REPORT_URL = 'api/report';
-const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+const SSE_URL = 'api/events';
+const FALLBACK_POLL_MS = 5 * 60 * 1000; // 5 min fallback if SSE unavailable
 
 /* SCOW wind restriction thresholds (MPH) per club_rules.md */
 const WIND_LIMIT_DAYSAILER_RESTRICTED = 17; // reef, lagoon-only, PFDs
@@ -1008,4 +1009,52 @@ async function fetchReport() {
 
 initTimeFilter();
 fetchReport();
-setInterval(fetchReport, REFRESH_INTERVAL_MS);
+
+/**
+ * SSE-based live refresh: the server pushes a "refresh" event after each
+ * scheduled data update. Falls back to polling every 5 min if SSE drops.
+ */
+function initSSE() {
+  let fallbackTimer = null;
+
+  function startFallbackPoll() {
+    if (fallbackTimer) return;
+    fallbackTimer = setInterval(fetchReport, FALLBACK_POLL_MS);
+  }
+
+  function stopFallbackPoll() {
+    if (fallbackTimer) {
+      clearInterval(fallbackTimer);
+      fallbackTimer = null;
+    }
+  }
+
+  if (typeof EventSource === 'undefined') {
+    startFallbackPoll();
+    return;
+  }
+
+  const baseTag = document.querySelector('base');
+  const base = baseTag ? baseTag.getAttribute('href') : '/';
+  const url = `${base}${SSE_URL}`.replace(/\/+/g, '/');
+
+  function connect() {
+    const es = new EventSource(url);
+
+    es.addEventListener('refresh', () => {
+      fetchReport();
+    });
+
+    es.onopen = () => {
+      stopFallbackPoll();
+    };
+
+    es.onerror = () => {
+      startFallbackPoll();
+    };
+  }
+
+  connect();
+}
+
+initSSE();
