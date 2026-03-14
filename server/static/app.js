@@ -675,7 +675,7 @@ function applyTimeFilter(filterName) {
 
   if (filtered.length === 0) filtered = hourly.slice(0, 1);
   renderWindChart(filtered);
-  renderHourly(filtered);
+  renderHourly(hourly);
 }
 
 function initTimeFilter() {
