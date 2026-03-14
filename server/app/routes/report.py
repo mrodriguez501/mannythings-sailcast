@@ -81,7 +81,7 @@ async def _sse_generator(request: Request):
             try:
                 msg = await asyncio.wait_for(q.get(), timeout=HEARTBEAT_INTERVAL_S)
                 yield f"event: {msg.get('event', 'refresh')}\ndata: {json.dumps(msg)}\n\n"
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 yield ": heartbeat\n\n"
     finally:
         event_bus.unsubscribe(q)
