@@ -18,8 +18,8 @@ logger = logging.getLogger("sailcast.brief")
 
 LOCAL_TZ = ZoneInfo("America/New_York")
 BRIEF_PATH = Path(__file__).resolve().parent.parent / "data" / "weather_brief.md"
-DAYTIME_START = 8   # 8 AM local
-DAYTIME_END = 20    # 8 PM local
+DAYTIME_START = 8  # 8 AM local
+DAYTIME_END = 20  # 8 PM local
 
 
 def _wind_mph(wind_str: str | None) -> int | None:
@@ -95,7 +95,7 @@ def _peak_conditions(daytime: list[tuple[datetime, dict]]) -> dict:
 def build_weather_brief(report: dict) -> str:
     """Build a structured markdown weather brief from the report dict.
 
-    Only includes daytime periods (8 AM – 8 PM ET) within the next 24 hours.
+    Only includes daytime periods (8 AM - 8 PM ET) within the next 24 hours.
     The report dict is the same shape produced by report_builder.build_report().
     """
     now = datetime.now(LOCAL_TZ)
@@ -109,7 +109,7 @@ def build_weather_brief(report: dict) -> str:
     lines: list[str] = [
         "# SailCast Weather Brief",
         f"Generated: {now.strftime('%Y-%m-%d %I:%M %p %Z')}",
-        "Coverage: Daytime only (8 AM – 8 PM ET), next 24 hours",
+        "Coverage: Daytime only (8 AM - 8 PM ET), next 24 hours",
         "",
     ]
 
@@ -118,9 +118,7 @@ def build_weather_brief(report: dict) -> str:
     if alerts:
         for a in alerts:
             lines.append(
-                f"- **{a.get('event', 'Unknown')}** | "
-                f"Severity: {a.get('severity', 'N/A')} | "
-                f"{a.get('headline', '')}"
+                f"- **{a.get('event', 'Unknown')}** | Severity: {a.get('severity', 'N/A')} | {a.get('headline', '')}"
             )
     else:
         lines.append("- None")
@@ -148,18 +146,18 @@ def build_weather_brief(report: dict) -> str:
 
     if daytime:
         pk = _peak_conditions(daytime)
-        lines.append("## Peak Conditions (8 AM – 8 PM)")
+        lines.append("## Peak Conditions (8 AM - 8 PM)")
         lines.append(f"- **Max sustained wind:** {pk['max_wind']} mph at {pk['max_wind_hour']}")
         if pk["max_gust"]:
             lines.append(f"- **Max gust:** {pk['max_gust']} mph at {pk['max_gust_hour']}")
         else:
             lines.append("- **Max gust:** None forecast")
         if pk["temp_lo"] is not None:
-            lines.append(f"- **Temperature range:** {pk['temp_lo']}–{pk['temp_hi']}°F")
+            lines.append(f"- **Temperature range:** {pk['temp_lo']}-{pk['temp_hi']}°F")
         lines.append("")
 
     # ── Hourly Table ──────────────────────────────────────────────
-    lines.append("## Hourly Wind & Weather (8 AM – 8 PM)")
+    lines.append("## Hourly Wind & Weather (8 AM - 8 PM)")
     if daytime:
         lines.append("")
         lines.append("| Hour | Wind | Gust | Direction | Temp | Forecast |")
@@ -200,9 +198,7 @@ def build_weather_brief(report: dict) -> str:
             forecast = p.get("shortForecast", "")
             temp_val = p.get("temp", "")
             if name:
-                lines.append(
-                    f"- **{name}**: {forecast}, {temp_val}°F, wind {wind} {direction}"
-                )
+                lines.append(f"- **{name}**: {forecast}, {temp_val}°F, wind {wind} {direction}")
     else:
         lines.append("Extended forecast not available.")
     lines.append("")

@@ -69,7 +69,7 @@ class OpenAIService:
     def _build_forecast_prompt(self, weather_brief: str) -> str:
         """Build the user prompt from the pre-built weather brief."""
         return (
-            "Based on the following Weather Brief (daytime periods only, 8 AM – 8 PM), generate:\n"
+            "Based on the following Weather Brief (daytime periods only, 8 AM - 8 PM), generate:\n"
             "1. A human-readable DAYTIME WEATHER SUMMARY (2-3 sentences)\n"
             "2. A SAILING ADVISORY with safety recommendation\n"
             "3. KEY CONCERNS if any\n"
@@ -84,9 +84,9 @@ class OpenAIService:
             '  "safetyLevel": "SAFE | CAUTION | UNSAFE",\n'
             '  "keyConcerns": ["concern1", "concern2"],\n'
             '  "sailingWindows": {\n'
-            '    "cruisingBoats": "e.g. 8AM–2PM (winds below 29 mph)",\n'
-            '    "daysailers": "e.g. 8AM–12PM (winds below 23 mph)",\n'
-            '    "reefRequired": "e.g. 12PM–3PM (winds 17–23 mph, reef + lagoon + PFDs)"\n'
+            '    "cruisingBoats": "e.g. 8AM-2PM (winds below 29 mph)",\n'
+            '    "daysailers": "e.g. 8AM-12PM (winds below 23 mph)",\n'
+            '    "reefRequired": "e.g. 12PM-3PM (winds 17-23 mph, reef + lagoon + PFDs)"\n'
             "  },\n"
             '  "generatedAt": "ISO timestamp"\n'
             "}"

@@ -111,8 +111,7 @@ class ReportBuilder:
         self._cache = report
         self._write_to_disk(report)
         logger.info(
-            f"Report built: {len(hourly)} hourly, {len(forecast_3day)} 3-day, "
-            f"{len(alerts)} alerts, {len(tides)} tides"
+            f"Report built: {len(hourly)} hourly, {len(forecast_3day)} 3-day, {len(alerts)} alerts, {len(tides)} tides"
         )
         return report
 
