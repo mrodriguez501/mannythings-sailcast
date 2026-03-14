@@ -1,5 +1,5 @@
 # SailCast Weather Brief
-Generated: 2026-03-13 10:00 PM EDT
+Generated: 2026-03-13 10:17 PM EDT
 Coverage: Daytime only (8 AM – 8 PM ET), next 24 hours
 
 ## Active Alerts
@@ -42,6 +42,9 @@ Coverage: Daytime only (8 AM – 8 PM ET), next 24 hours
 - 2026-03-16 01:23 — Low: 0.216 ft
 
 ## 3-Day Outlook
+- **Tonight**: Mostly Clear, 43°F, wind 10 to 14 mph SW
 - **Saturday**: Mostly Sunny, 56°F, wind 10 to 15 mph W
+- **Saturday Night**: Mostly Cloudy, 40°F, wind 2 to 10 mph NE
 - **Sunday**: Mostly Cloudy, 58°F, wind 6 to 15 mph SE
+- **Sunday Night**: Light Rain, 52°F, wind 10 to 14 mph SE
 - **Monday**: Showers And Thunderstorms, 69°F, wind 10 to 20 mph S

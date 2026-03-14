@@ -1,9 +1,9 @@
 """
 Weather Brief Builder
 
-Assembles filtered, structured weather data into a rewritable markdown file
-that serves as the LLM's input context. Written to disk every hour *before*
-the OpenAI call so the AI always sees fresh, daytime-only data.
+Derives a filtered, daytime-only markdown brief from the prepared report
+dict (built by report_builder). Written to disk every hour *before* the
+OpenAI call so the AI always sees fresh data.
 
 Output: server/app/data/weather_brief.md
 """
@@ -14,9 +14,6 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from app.services.marine_service import marine_service
-from app.services.nws_service import nws_service
-
 logger = logging.getLogger("sailcast.brief")
 
 LOCAL_TZ = ZoneInfo("America/New_York")
@@ -26,8 +23,7 @@ DAYTIME_END = 20    # 8 PM local
 
 
 def _wind_mph(wind_str: str | None) -> int | None:
-    """Extract numeric mph from strings like '15 mph' or '10 to 15 mph'.
-    Returns the higher end of a range."""
+    """Extract numeric mph from strings like '15 mph' or '10 to 15 mph'."""
     if not wind_str:
         return None
     nums = re.findall(r"\d+", wind_str)
@@ -82,7 +78,7 @@ def _peak_conditions(daytime: list[tuple[datetime, dict]]) -> dict:
             max_gust = g
             max_gust_hour = hour_label
 
-        t = p.get("temperature")
+        t = p.get("temp")
         if isinstance(t, (int, float)):
             temps.append(int(t))
 
@@ -96,18 +92,19 @@ def _peak_conditions(daytime: list[tuple[datetime, dict]]) -> dict:
     }
 
 
-def build_weather_brief() -> str:
-    """Build a structured markdown weather brief from cached data.
+def build_weather_brief(report: dict) -> str:
+    """Build a structured markdown weather brief from the report dict.
 
     Only includes daytime periods (8 AM – 8 PM ET) within the next 24 hours.
+    The report dict is the same shape produced by report_builder.build_report().
     """
     now = datetime.now(LOCAL_TZ)
 
-    hourly = nws_service.get_cached_hourly()
-    seven_day = nws_service.get_cached_7day()
-    alerts = nws_service.get_cached_alerts()
-    marine = marine_service.get_cached_marine()
-    tides = marine_service.get_cached_tides() or []
+    hourly = report.get("hourly", [])
+    forecast_3day = report.get("forecast_3day", [])
+    alerts = report.get("alerts", [])
+    marine = report.get("marine_forecast")
+    tides = report.get("tides", [])
 
     lines: list[str] = [
         "# SailCast Weather Brief",
@@ -117,10 +114,9 @@ def build_weather_brief() -> str:
     ]
 
     # ── Active Alerts ─────────────────────────────────────────────
-    alert_list = alerts.get("alerts", []) if alerts else []
     lines.append("## Active Alerts")
-    if alert_list:
-        for a in alert_list:
+    if alerts:
+        for a in alerts:
             lines.append(
                 f"- **{a.get('event', 'Unknown')}** | "
                 f"Severity: {a.get('severity', 'N/A')} | "
@@ -147,8 +143,8 @@ def build_weather_brief() -> str:
 
     # ── Peak Conditions ───────────────────────────────────────────
     daytime: list[tuple[datetime, dict]] = []
-    if hourly and hourly.get("periods"):
-        daytime = _filter_daytime_periods(hourly["periods"])
+    if hourly:
+        daytime = _filter_daytime_periods(hourly)
 
     if daytime:
         pk = _peak_conditions(daytime)
@@ -173,7 +169,9 @@ def build_weather_brief() -> str:
             wind = p.get("windSpeed", "—")
             gust = p.get("windGust") or "—"
             direction = p.get("windDirection", "—")
-            temp = f"{p.get('temperature', '—')}°{p.get('temperatureUnit', 'F')}"
+            temp_val = p.get("temp", "—")
+            unit = p.get("temperatureUnit", "F")
+            temp = f"{temp_val}°{unit}"
             forecast = p.get("shortForecast", "—")
             lines.append(f"| {hour} | {wind} | {gust} | {direction} | {temp} | {forecast} |")
     else:
@@ -192,18 +190,18 @@ def build_weather_brief() -> str:
         lines.append("Tide data not available.")
     lines.append("")
 
-    # ── 3-Day Outlook (daytime only) ─────────────────────────────
+    # ── 3-Day Outlook ─────────────────────────────────────────────
     lines.append("## 3-Day Outlook")
-    if seven_day and seven_day.get("periods"):
-        for p in seven_day["periods"][:6]:
-            if p.get("isDaytime"):
-                name = p.get("name", "")
-                wind = p.get("windSpeed", "")
-                direction = p.get("windDirection", "")
-                forecast = p.get("shortForecast", "")
-                temp = p.get("temperature", "")
+    if forecast_3day:
+        for p in forecast_3day[:6]:
+            name = p.get("name", "")
+            wind = p.get("windSpeed", "")
+            direction = p.get("windDirection", "")
+            forecast = p.get("shortForecast", "")
+            temp_val = p.get("temp", "")
+            if name:
                 lines.append(
-                    f"- **{name}**: {forecast}, {temp}°F, wind {wind} {direction}"
+                    f"- **{name}**: {forecast}, {temp_val}°F, wind {wind} {direction}"
                 )
     else:
         lines.append("Extended forecast not available.")
@@ -212,9 +210,9 @@ def build_weather_brief() -> str:
     return "\n".join(lines)
 
 
-def write_weather_brief() -> str:
-    """Build the weather brief, write it to disk, and return the content."""
-    content = build_weather_brief()
+def write_weather_brief(report: dict) -> str:
+    """Build the weather brief from the report dict, write to disk, return content."""
+    content = build_weather_brief(report)
     try:
         BRIEF_PATH.parent.mkdir(parents=True, exist_ok=True)
         BRIEF_PATH.write_text(content, encoding="utf-8")

@@ -1,117 +1,60 @@
 """
-Build a single /api/report response from existing NWS + OpenAI caches
-for the SailCast static frontend.
+Report API Route
+
+Serves the cached report payload (built by report_builder) with
+LLM advice merged at serve-time from the OpenAI cache.
 """
 
 from fastapi import APIRouter, HTTPException
 
-from app.config import settings
-from app.services.marine_service import marine_service
-from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
+from app.services.report_builder import report_builder
 
 router = APIRouter()
 
 
-def _map_hourly_period(p: dict) -> dict:
-    return {
-        "startTime": p.get("startTime"),
-        "temp": p.get("temperature"),
-        "temperatureUnit": p.get("temperatureUnit", "F"),
-        "windSpeed": p.get("windSpeed"),
-        "windDirection": p.get("windDirection"),
-        "shortForecast": p.get("shortForecast"),
-        "windGust": p.get("windGust"),
-    }
-
-
-def _map_7day_period(p: dict) -> dict:
-    return {
-        "name": p.get("name"),
-        "startTime": p.get("startTime"),
-        "temp": p.get("temperature"),
-        "windSpeed": p.get("windSpeed"),
-        "windDirection": p.get("windDirection"),
-        "shortForecast": p.get("shortForecast"),
-    }
-
-
-def _map_alert(d: dict, ends_key: str = "ends") -> dict:
-    """Map an alert dict (GeoJSON properties or cached) to report shape."""
-    return {
-        "event": d.get("event"),
-        "severity": d.get("severity"),
-        "headline": d.get("headline"),
-        "onset": d.get("onset"),
-        "ends": d.get(ends_key),
-    }
-
-
-@router.get("/report")
-async def api_report():
-    """Single report payload for the SailCast static UI at /."""
-    hourly_data = nws_service.get_cached_hourly()
-    day7_data = nws_service.get_cached_7day()
-    alerts_data = nws_service.get_cached_alerts()
-    summary_data = openai_service.get_cached_summary()
-
-    if hourly_data is None:
-        raise HTTPException(
-            status_code=503,
-            detail="Forecast data not yet available (scheduler may still be loading).",
-        )
-
-    periods = hourly_data.get("periods", [])
-    hourly = [_map_hourly_period(p) for p in periods]
-    forecast_3day = []
-    if day7_data and day7_data.get("periods"):
-        forecast_3day = [_map_7day_period(p) for p in day7_data["periods"][:9]]
-    alerts = []
-    if alerts_data:
-        if alerts_data.get("features"):
-            alerts = [_map_alert(f.get("properties", {})) for f in alerts_data["features"]]
-        elif alerts_data.get("alerts"):
-            alerts = [_map_alert(a, ends_key="expires") for a in alerts_data["alerts"]]
-
-    recommendation = ""
-    advice = None
+def _build_advice(summary_data: dict | str | None) -> tuple[str, dict | None]:
+    """Extract recommendation string and structured advice from OpenAI cache."""
     if summary_data and isinstance(summary_data, dict):
         summary = summary_data.get("summary", "") or summary_data.get("text", "")
         advisory = summary_data.get("advisory", "")
         recommendation = (
-            f"{summary}\n\n{advisory}".strip() if (summary and advisory) else summary or advisory or str(summary_data)
+            f"{summary}\n\n{advisory}".strip()
+            if (summary and advisory)
+            else summary or advisory or str(summary_data)
         )
+        advice = None
         if summary_data.get("safetyLevel"):
             advice = {
                 "safetyLevel": summary_data.get("safetyLevel"),
                 "summary": summary,
                 "advisory": advisory,
                 "keyConcerns": summary_data.get("keyConcerns", []),
+                "sailingWindows": summary_data.get("sailingWindows"),
                 "generatedAt": summary_data.get("generatedAt"),
                 "model": summary_data.get("model"),
             }
-    elif isinstance(summary_data, str):
-        recommendation = summary_data
+        return recommendation, advice
 
-    location = {
-        "label": settings.LOCATION_LABEL,
-        "name": f"{settings.NWS_OFFICE} {settings.NWS_GRIDPOINT_X},{settings.NWS_GRIDPOINT_Y}",
-        "lat": str(getattr(settings, "NWS_GRIDPOINT_Y", "")),
-        "lon": str(getattr(settings, "NWS_GRIDPOINT_X", "")),
-    }
+    if isinstance(summary_data, str):
+        return summary_data, None
 
-    marine = marine_service.get_cached_marine()
-    tides = marine_service.get_cached_tides() or []
+    return "", None
 
-    result = {
-        "location": location,
-        "forecast_3day": forecast_3day,
-        "hourly": hourly,
-        "alerts": alerts,
-        "marine_forecast": marine,
-        "tides": tides,
-        "recommendation": recommendation or "No recommendation available.",
-    }
+
+@router.get("/report")
+async def api_report():
+    """Single report payload for the SailCast static UI."""
+    report = report_builder.get_cached_report()
+    if report is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Forecast data not yet available (scheduler may still be loading).",
+        )
+
+    recommendation, advice = _build_advice(openai_service.get_cached_summary())
+
+    result = {**report, "recommendation": recommendation or "No recommendation available."}
     if advice:
         result["advice"] = advice
     return result

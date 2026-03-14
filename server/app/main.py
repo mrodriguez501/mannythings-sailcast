@@ -15,7 +15,6 @@ from fastapi.staticfiles import StaticFiles
 from app.config import settings
 from app.routes.forecast import router as forecast_router
 from app.routes.report import router as report_router
-from app.routes.test_scenarios import router as test_router
 from app.services.scheduler import (
     refresh_all_data,
     start_scheduler,
@@ -72,7 +71,6 @@ sailcast_app.add_middleware(
 # Register routes
 sailcast_app.include_router(forecast_router)
 sailcast_app.include_router(report_router, prefix="/api")
-sailcast_app.include_router(test_router)
 
 # Serve static frontend at / when server/static exists
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"

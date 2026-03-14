@@ -13,6 +13,7 @@ from apscheduler.triggers.cron import CronTrigger
 from app.services.marine_service import marine_service
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
+from app.services.report_builder import report_builder
 from app.services.weather_brief import write_weather_brief
 
 logger = logging.getLogger("sailcast.scheduler")
@@ -21,13 +22,13 @@ scheduler = AsyncIOScheduler()
 
 
 async def refresh_all_data():
-    """Fetch all NWS data, marine, tides, and regenerate AI summary."""
+    """Fetch all NWS data, build report, derive brief, and generate AI summary."""
     logger.info("=== Scheduled data refresh starting ===")
     try:
-        # Fetch gridpoint gust data first (needed to enrich hourly periods)
+        # 1. Fetch gridpoint gust data first (needed to enrich hourly periods)
         await nws_service.fetch_gridpoint_gusts()
 
-        # Fetch NWS + marine + tides concurrently (results cached by each service)
+        # 2. Fetch NWS + marine + tides concurrently (results cached by each service)
         await asyncio.gather(
             nws_service.fetch_hourly_forecast(),
             nws_service.fetch_7day_forecast(),
@@ -36,10 +37,13 @@ async def refresh_all_data():
             marine_service.fetch_tides(),
         )
 
-        # Build the weather brief file (filtered daytime data for the LLM)
-        weather_brief = write_weather_brief()
+        # 3. Build report.json (single source of truth for the frontend)
+        report = report_builder.build_report()
 
-        # Generate AI summary from the brief
+        # 4. Derive the weather brief from the report (daytime-only .md for the LLM)
+        weather_brief = write_weather_brief(report)
+
+        # 5. Generate AI summary from the brief
         await openai_service.generate_summary(weather_brief)
 
         logger.info("=== Scheduled data refresh complete ===")
@@ -50,7 +54,6 @@ async def refresh_all_data():
 
 def start_scheduler():
     """Start the hourly scheduler."""
-    # Run every hour at the top of the hour
     scheduler.add_job(
         refresh_all_data,
         trigger=CronTrigger(minute=0),
