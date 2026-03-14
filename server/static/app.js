@@ -742,7 +742,8 @@ function renderHourly(periods) {
 let windChartInstance = null;
 
 /**
- * Bar chart: wind speed (mph) for the filtered time window.
+ * Bar chart: wind speed + gust (mph) for the filtered time window.
+ * Wind bars are colored by SCOW restriction thresholds; gust bars use a neutral gray.
  */
 function renderWindChart(periods) {
   const canvas = document.getElementById('wind-chart');
@@ -766,17 +767,13 @@ function renderWindChart(periods) {
       return p.startTime || '—';
     }
   });
-  const windValues = chartData.map((p) => {
-    const v = p.windSpeed;
-    if (typeof v === 'number') return v;
-    if (typeof v === 'string') return parseFloat(v.replace(/[^\d.-]/g, '')) || 0;
-    return 0;
-  });
+  const windValues = chartData.map((p) => parseMph(p.windSpeed));
+  const gustValues = chartData.map((p) => parseMph(p.windGust));
 
-  const barColors = windValues.map((mph) => windRestrictionColor(mph));
+  const windColors = windValues.map((mph) => windRestrictionColor(mph));
 
-  const maxWind = Math.max(...windValues, 0);
-  const yMax = Math.max(maxWind + 5, WIND_LIMIT_CRUISER_MAX + 4);
+  const maxVal = Math.max(...windValues, ...gustValues, 0);
+  const yMax = Math.max(maxVal + 5, WIND_LIMIT_CRUISER_MAX + 4);
 
   const mobile = isMobileView();
 
@@ -789,10 +786,19 @@ function renderWindChart(periods) {
         {
           label: 'Wind (mph)',
           data: windValues,
-          backgroundColor: barColors.map((c) => c.bg),
-          borderColor: barColors.map((c) => c.border),
+          backgroundColor: windColors.map((c) => c.bg),
+          borderColor: windColors.map((c) => c.border),
           borderWidth: 1,
-          barPercentage: mobile ? 0.6 : 0.9,
+          barPercentage: mobile ? 0.85 : 0.9,
+          categoryPercentage: mobile ? 0.7 : 0.8,
+        },
+        {
+          label: 'Gust (mph)',
+          data: gustValues,
+          backgroundColor: gustValues.map((mph) => windRestrictionColor(mph).bg),
+          borderColor: gustValues.map((mph) => windRestrictionColor(mph).border),
+          borderWidth: 1,
+          barPercentage: mobile ? 0.85 : 0.9,
           categoryPercentage: mobile ? 0.7 : 0.8,
         },
       ],
@@ -803,14 +809,14 @@ function renderWindChart(periods) {
       aspectRatio: mobile ? 1.4 : 2,
       plugins: {
         legend: { display: !mobile },
-        title: { display: true, text: `Wind speed (${chartData.length} hours)`, font: { size: mobile ? 11 : 14 } },
+        title: { display: true, text: `Wind & Gusts (${chartData.length} hours)`, font: { size: mobile ? 11 : 14 } },
         tooltip: { enabled: true, intersect: false, mode: 'index' },
       },
       scales: {
         y: {
           beginAtZero: true,
           max: yMax,
-          title: { display: !mobile, text: 'Wind (mph)' },
+          title: { display: !mobile, text: 'MPH' },
           ticks: { font: { size: mobile ? 9 : 12 } },
         },
         x: {
@@ -833,20 +839,24 @@ const windBarLabelsPlugin = {
   id: 'windBarLabels',
   afterDatasetsDraw(chart) {
     const { ctx } = chart;
-    const meta = chart.getDatasetMeta(0);
-    if (!meta || !meta.data) return;
     const mobile = isMobileView();
     ctx.save();
-    ctx.font = `bold ${mobile ? '9px' : '11px'} sans-serif`;
+    ctx.font = `bold ${mobile ? '8px' : '10px'} sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    const borderColors = chart.data.datasets[0].borderColor;
-    for (let i = 0; i < meta.data.length; i++) {
-      const bar = meta.data[i];
-      const value = chart.data.datasets[0].data[i];
-      if (value != null) {
-        ctx.fillStyle = Array.isArray(borderColors) ? borderColors[i] : borderColors;
-        ctx.fillText(Math.round(value), bar.x, bar.y - 3);
+
+    for (let dsIdx = 0; dsIdx < chart.data.datasets.length; dsIdx++) {
+      const meta = chart.getDatasetMeta(dsIdx);
+      if (!meta || !meta.data) continue;
+      const ds = chart.data.datasets[dsIdx];
+      const borderColors = ds.borderColor;
+      for (let i = 0; i < meta.data.length; i++) {
+        const bar = meta.data[i];
+        const value = ds.data[i];
+        if (value != null && value > 0) {
+          ctx.fillStyle = Array.isArray(borderColors) ? borderColors[i] : borderColors;
+          ctx.fillText(Math.round(value), bar.x, bar.y - 2);
+        }
       }
     }
     ctx.restore();
