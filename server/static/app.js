@@ -675,7 +675,7 @@ function applyTimeFilter(filterName) {
 
   if (filtered.length === 0) filtered = hourly.slice(0, 1);
   renderWindChart(filtered);
-  renderHourly(filtered);
+  renderHourly(hourly);
 }
 
 function initTimeFilter() {
@@ -966,10 +966,40 @@ function setErrorState(errorMessage) {
   }
 }
 
+/** Scenario picker: loads test scenarios and overrides the report URL. */
+let _activeScenario = '';
+
+async function initScenarioPicker() {
+  const bar = document.getElementById('scenario-bar');
+  const select = document.getElementById('scenario-select');
+  if (!bar || !select) return;
+
+  try {
+    const res = await fetch('api/test/scenarios');
+    if (!res.ok) return;
+    const scenarios = await res.json();
+    for (const s of scenarios) {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.label;
+      select.appendChild(opt);
+    }
+    bar.style.display = 'flex';
+  } catch {
+    return;
+  }
+
+  select.addEventListener('change', () => {
+    _activeScenario = select.value;
+    fetchReport();
+  });
+}
+
 async function fetchReport() {
   setLoading();
+  const url = _activeScenario ? `api/test/report/${_activeScenario}` : REPORT_URL;
   try {
-    const res = await fetch(REPORT_URL);
+    const res = await fetch(url);
     if (!res.ok) {
       setErrorState(`Error: ${res.status} ${res.statusText}`);
       return;
@@ -997,5 +1027,6 @@ async function fetchReport() {
 }
 
 initTimeFilter();
+initScenarioPicker();
 fetchReport();
 setInterval(fetchReport, REFRESH_INTERVAL_MS);

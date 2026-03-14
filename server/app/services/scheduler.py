@@ -13,6 +13,7 @@ from apscheduler.triggers.cron import CronTrigger
 from app.services.marine_service import marine_service
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
+from app.services.weather_brief import write_weather_brief
 
 logger = logging.getLogger("sailcast.scheduler")
 
@@ -26,8 +27,8 @@ async def refresh_all_data():
         # Fetch gridpoint gust data first (needed to enrich hourly periods)
         await nws_service.fetch_gridpoint_gusts()
 
-        # Fetch NWS + marine + tides concurrently
-        hourly, seven_day, alerts, marine, _ = await asyncio.gather(
+        # Fetch NWS + marine + tides concurrently (results cached by each service)
+        await asyncio.gather(
             nws_service.fetch_hourly_forecast(),
             nws_service.fetch_7day_forecast(),
             nws_service.fetch_alerts(),
@@ -35,8 +36,11 @@ async def refresh_all_data():
             marine_service.fetch_tides(),
         )
 
-        # Generate AI summary with fresh data (including marine advisories)
-        await openai_service.generate_summary(hourly, seven_day, alerts, marine)
+        # Build the weather brief file (filtered daytime data for the LLM)
+        weather_brief = write_weather_brief()
+
+        # Generate AI summary from the brief
+        await openai_service.generate_summary(weather_brief)
 
         logger.info("=== Scheduled data refresh complete ===")
 

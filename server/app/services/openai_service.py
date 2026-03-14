@@ -28,8 +28,8 @@ class OpenAIService:
         self._load_club_rules()
 
     def _load_club_rules(self):
-        """Load club sailing rules from the data directory."""
-        rules_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "club_rules.md")
+        """Load club sailing rules from the RAG data directory."""
+        rules_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "rag", "club_rules.md")
         try:
             with open(rules_path) as f:
                 self._club_rules = f.read()
@@ -66,46 +66,39 @@ class OpenAIService:
             "- Format your response with clear sections"
         )
 
-    def _build_forecast_prompt(
-        self, hourly_data: dict, seven_day_data: dict, alerts_data: dict, marine_data: dict | None = None
-    ) -> str:
-        """Build the user prompt with current forecast data."""
-        marine_section = ""
-        if marine_data:
-            advisories = marine_data.get("advisories", [])
-            adv_names = [a.get("label", "") for a in advisories] if advisories else []
-            marine_section = (
-                f"NWS MARINE FORECAST ({marine_data.get('zone_id', 'ANZ535')}):\n"
-                f"Active marine advisories: {', '.join(adv_names) if adv_names else 'None'}\n"
-                f"Forecast: {marine_data.get('forecast_text', 'N/A')}\n\n"
-            )
-
+    def _build_forecast_prompt(self, weather_brief: str) -> str:
+        """Build the user prompt from the pre-built weather brief."""
         return (
-            "Based on the following NWS forecast data, generate:\n"
-            "1. A human-readable 24-HOUR WEATHER SUMMARY (2-3 sentences)\n"
+            "Based on the following Weather Brief (daytime periods only, 8 AM – 8 PM), generate:\n"
+            "1. A human-readable DAYTIME WEATHER SUMMARY (2-3 sentences)\n"
             "2. A SAILING ADVISORY with safety recommendation\n"
-            "3. KEY CONCERNS if any\n\n"
-            f"HOURLY FORECAST (next 24 hours):\n"
-            f"{json.dumps(hourly_data.get('periods', [])[:12], indent=2)}\n\n"
-            f"7-DAY OUTLOOK:\n"
-            f"{json.dumps(seven_day_data.get('periods', [])[:4], indent=2)}\n\n"
-            f"ACTIVE ALERTS ({alerts_data.get('count', 0)}):\n"
-            f"{json.dumps(alerts_data.get('alerts', []), indent=2)}\n\n"
-            f"{marine_section}"
+            "3. KEY CONCERNS if any\n"
+            "4. SAILING WINDOWS — list the safe hour ranges for each boat type "
+            "(cruising boats and daysailers) based on the club wind thresholds\n\n"
+            "WEATHER BRIEF:\n"
+            f"{weather_brief}\n\n"
             "Provide your response in the following JSON format:\n"
             "{\n"
-            '  "summary": "24-hour weather summary text",\n'
+            '  "summary": "Daytime weather summary text",\n'
             '  "advisory": "Sailing advisory text with safety level",\n'
             '  "safetyLevel": "SAFE | CAUTION | UNSAFE",\n'
             '  "keyConcerns": ["concern1", "concern2"],\n'
+            '  "sailingWindows": {\n'
+            '    "cruisingBoats": "e.g. 8AM–2PM (winds below 29 mph)",\n'
+            '    "daysailers": "e.g. 8AM–12PM (winds below 23 mph)",\n'
+            '    "reefRequired": "e.g. 12PM–3PM (winds 17–23 mph, reef + lagoon + PFDs)"\n'
+            "  },\n"
             '  "generatedAt": "ISO timestamp"\n'
             "}"
         )
 
-    async def generate_summary(
-        self, hourly_data: dict, seven_day_data: dict, alerts_data: dict, marine_data: dict | None = None
-    ) -> dict:
-        """Generate an AI-powered weather summary and sailing advisory."""
+    async def generate_summary(self, weather_brief: str) -> dict:
+        """Generate an AI-powered weather summary and sailing advisory.
+
+        Args:
+            weather_brief: Pre-built markdown weather brief (daytime-only,
+                           written by weather_brief.write_weather_brief()).
+        """
 
         # --- Budget gate: check before calling OpenAI ---
         allowed, reason = budget_tracker.can_make_request()
@@ -133,7 +126,7 @@ class OpenAIService:
                     {"role": "system", "content": self._build_system_prompt()},
                     {
                         "role": "user",
-                        "content": self._build_forecast_prompt(hourly_data, seven_day_data, alerts_data, marine_data),
+                        "content": self._build_forecast_prompt(weather_brief),
                     },
                 ],
                 temperature=0.3,
