@@ -2,8 +2,8 @@
 Marine forecast (NWS) and tide predictions (NOAA CO-OPS).
 
 Advisory/alert detection uses the reliable NWS alerts JSON API.
-Forecast text (period-by-period) is scraped from the NWS marine HTML page
-with a safeguard that detects format changes and falls back gracefully.
+Forecast text comes from the NWS Text Products API (Coastal Waters
+Forecast / CWF), which provides structured plaintext for each marine zone.
 """
 
 import logging
@@ -17,98 +17,52 @@ from app.config import settings
 logger = logging.getLogger("sailcast.marine")
 
 
-_PERIOD_LABELS = ("TODAY", "TONIGHT", "THIS AFTERNOON", "THIS EVENING", "THIS MORNING")
-_BREAK_LABELS = (
-    "REST OF THIS AFTERNOON",
-    "REST OF TONIGHT",
-    "REST OF TODAY",
-    "TONIGHT",
-    "TODAY",
-    "THIS AFTERNOON",
-    "THIS EVENING",
-    "THIS MORNING",
-    "MON ",
-    "MON NIGHT",
-    "TUE ",
-    "TUE NIGHT",
-    "WED ",
-    "WED NIGHT",
-    "THU ",
-    "THU NIGHT",
-    "FRI ",
-    "FRI NIGHT",
-    "SAT ",
-    "SAT NIGHT",
-    "SUN ",
-    "SUN NIGHT",
-)
+def _extract_zone_block(product_text: str, zone_id: str) -> str:
+    """Extract the forecast block for a specific zone from a CWF product.
 
-_MARINE_BASE_URL = "https://marine.weather.gov/"
-
-
-def _strip_html(raw: str) -> str:
-    """Remove script/style blocks, then HTML tags, then collapse whitespace."""
-    cleaned = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.DOTALL | re.IGNORECASE)
-    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
-    cleaned = cleaned.replace("&nbsp;", " ").replace("&#160;", " ")
-    return re.sub(r"\s+", " ", cleaned).strip()
-
-
-def _parse_forecast_periods(text: str) -> list[dict]:
-    """Split cleaned forecast text into structured {name, forecast} period dicts."""
-    period_re = re.compile(
-        r"(?:^|\n)\s*(" + "|".join(re.escape(lbl.strip()) for lbl in _BREAK_LABELS) + r"[^:]*?):\s*",
-        re.IGNORECASE,
+    CWF products contain multiple zones separated by "$$".  Each zone block
+    starts with a line like "ANZ535-140800-" and ends at the next "$$".
+    """
+    pattern = re.compile(
+        rf"^{re.escape(zone_id)}-.*?$(.*?)^\$\$",
+        re.MULTILINE | re.DOTALL,
     )
-    parts = period_re.split(text)
-    periods = []
-    i = 1
-    while i < len(parts) - 1:
-        name = parts[i].strip().rstrip(":")
-        body = parts[i + 1].strip()
+    m = pattern.search(product_text)
+    return m.group(1).strip() if m else ""
+
+
+def _parse_cwf_periods(zone_text: str) -> list[dict]:
+    """Parse period forecasts from CWF plaintext for a single zone.
+
+    Periods start with a leading dot: ".SAT...W winds 10 to 15 kt."
+    Stop capturing at the next period or a blank line (trailing notes).
+    """
+    period_re = re.compile(r"^\.([A-Z][A-Z \t]+?)\.{3}(.+?)(?=^\.|^\s*$|\Z)", re.MULTILINE | re.DOTALL)
+    periods: list[dict] = []
+    for m in period_re.finditer(zone_text):
+        name = m.group(1).strip()
+        body = " ".join(m.group(2).split())
         if name and body:
             periods.append({"name": name, "forecast": body})
-        i += 2
     return periods
 
 
-def _parse_marine_html(html: str) -> dict:
-    """Extract forecast periods from NWS marine zone HTML.
+def _parse_cwf_text(product_text: str, zone_id: str) -> dict:
+    """Parse a CWF product for the target zone.
 
-    Returns a dict with:
-      - forecast_text: raw cleaned text
+    Returns the same shape as the old HTML parser:
+      - forecast_text: raw zone block text
       - periods: list of {name, forecast} dicts
-      - parse_ok: True if we successfully extracted structured periods
+      - parse_ok: True if structured periods were extracted
     """
-    text = ""
-    for m in re.finditer(r"<td[^>]*>(.*?)</td>", html, re.DOTALL | re.IGNORECASE):
-        cell = m.group(1)
-        upper = cell.upper()
-        has_period = any(lbl in upper for lbl in _PERIOD_LABELS)
-        if has_period and ("kt" in cell.lower() or any(lbl in upper for lbl in _PERIOD_LABELS[1:])):
-            text = _strip_html(cell)[:2500]
-            break
+    zone_text = _extract_zone_block(product_text, zone_id)
+    if not zone_text:
+        return {"forecast_text": "", "periods": [], "parse_ok": False}
 
-    if not text:
-        block = _strip_html(html)
-        for lbl in _PERIOD_LABELS:
-            idx = block.upper().find(lbl)
-            if idx != -1:
-                text = block[idx : idx + 2500].strip()
-                break
-        if not text:
-            nws_marker = block.upper().find("NWS FORECAST FOR:")
-            if nws_marker != -1:
-                text = block[nws_marker : nws_marker + 2500].strip()
-
-    for label in _BREAK_LABELS:
-        text = re.sub(rf"\s+({re.escape(label)})", r"\n\1", text, flags=re.IGNORECASE)
-
-    periods = _parse_forecast_periods(text)
-
+    periods = _parse_cwf_periods(zone_text)
     parse_ok = len(periods) >= 2 and any("kt" in p.get("forecast", "").lower() for p in periods)
 
-    return {"forecast_text": text, "periods": periods, "parse_ok": parse_ok}
+    return {"forecast_text": zone_text, "periods": periods, "parse_ok": parse_ok}
 
 
 class MarineService:
@@ -164,28 +118,43 @@ class MarineService:
             logger.warning(f"Marine alerts fetch failed: {e}")
             return []
 
+    async def _fetch_cwf_product(self) -> str:
+        """Fetch the latest Coastal Waters Forecast product text from the NWS API."""
+        list_url = settings.nws_marine_cwf_url
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(list_url, headers=self._api_headers())
+            resp.raise_for_status()
+            products = resp.json().get("@graph", [])
+
+        if not products:
+            logger.warning("No CWF products returned by NWS API")
+            return ""
+
+        product_url = products[0].get("@id", "")
+        if not product_url:
+            return ""
+
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(product_url, headers=self._api_headers())
+            resp.raise_for_status()
+            return resp.json().get("productText", "")
+
     async def fetch_marine_forecast(self) -> dict:
         """Fetch NWS marine zone forecast text and alerts.
 
-        Forecast text is scraped from the NWS HTML page (with safeguard).
-        Alerts come from the reliable JSON API.
+        Forecast text comes from the NWS Text Products API (CWF).
+        Alerts come from the reliable NWS alerts JSON API.
         """
         zone_id = settings.MARINE_ZONE_ID
         page_url = f"https://marine.weather.gov/MapClick.php?TextType=1&zoneid={zone_id}"
 
         marine_alerts = await self.fetch_marine_alerts()
 
-        html = ""
+        product_text = ""
         try:
-            async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-                resp = await client.get(
-                    page_url,
-                    headers={**self._headers(), "Accept": "text/html"},
-                )
-                resp.raise_for_status()
-                html = resp.text
+            product_text = await self._fetch_cwf_product()
         except Exception as e:
-            logger.warning(f"Marine forecast HTML fetch failed: {e}")
+            logger.warning(f"CWF product fetch failed: {e}")
 
         name = "Tidal Potomac from Key Bridge to Indian Head MD"
         try:
@@ -200,7 +169,11 @@ class MarineService:
         except Exception:
             pass
 
-        parsed = _parse_marine_html(html) if html else {"forecast_text": "", "periods": [], "parse_ok": False}
+        parsed = (
+            _parse_cwf_text(product_text, zone_id)
+            if product_text
+            else {"forecast_text": "", "periods": [], "parse_ok": False}
+        )
 
         advisories = [
             {
@@ -216,7 +189,7 @@ class MarineService:
         ]
 
         if not parsed["parse_ok"]:
-            logger.warning("Marine forecast HTML parse failed — format may have changed")
+            logger.warning("CWF product parse failed for zone %s", zone_id)
 
         self._marine_cache = {
             "zone_id": zone_id,

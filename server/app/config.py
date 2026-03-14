@@ -73,5 +73,10 @@ class Settings:
         """NWS active alerts for the marine zone (e.g. ANZ535)."""
         return f"{self.NWS_BASE_URL}/alerts/active?zone={self.MARINE_ZONE_ID}"
 
+    @property
+    def nws_marine_cwf_url(self) -> str:
+        """NWS Coastal Waters Forecast product listing for the forecast office."""
+        return f"{self.NWS_BASE_URL}/products/types/CWF/locations/{self.NWS_OFFICE}"
+
 
 settings = Settings()
