@@ -278,8 +278,10 @@ function findBestWindow(hourly) {
 
 const SAFETY_COLORS = {
   SAFE: { border: '#2e7d32', bg: '#e8f5e9', badge: '#2e7d32', text: 'Safe to Sail' },
+  GOOD_TO_GO: { border: '#2e7d32', bg: '#e8f5e9', badge: '#2e7d32', text: 'Good to Go' },
   CAUTION: { border: '#f9a825', bg: '#fff8e1', badge: '#f57f17', text: 'Caution' },
   UNSAFE: { border: '#c62828', bg: '#ffebee', badge: '#c62828', text: 'Unsafe' },
+  NO_GO: { border: '#c62828', bg: '#ffebee', badge: '#c62828', text: 'No-Go' },
 };
 
 function renderAdviceCard(data) {
@@ -322,19 +324,11 @@ function renderAdviceCard(data) {
     adviceCardEl.appendChild(scaDiv);
   }
 
-  const summary = (advice && advice.summary) || data.recommendation || '';
-  if (summary) {
+  const recommendation = (advice && advice.recommendation) || data.recommendation || '';
+  if (recommendation) {
     const p = document.createElement('p');
     p.className = 'advice-summary';
-    p.textContent = summary;
-    adviceCardEl.appendChild(p);
-  }
-
-  const advisory = advice && advice.advisory;
-  if (advisory) {
-    const p = document.createElement('p');
-    p.className = 'advice-advisory';
-    p.textContent = advisory;
+    p.textContent = recommendation;
     adviceCardEl.appendChild(p);
   }
 

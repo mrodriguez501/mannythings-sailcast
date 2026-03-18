@@ -38,12 +38,3 @@ The NWS site only updates current wind conditions each hour. Skippers should hav
 - Wind speed and direction, and high and low tides bracketing the sailing period must be checked and entered in log books before sailing.
 
 ---
-
-# Hot Weather & Heat Safety
-
-Summer in our area brings a combination of high heat and high humidity. Skippers should take precautions to protect themselves and their crew against the risks of such weather.
-
-- **Dress for sun and heat** — Wear lightweight, loose-fitting, breathable fabrics that protect against UV rays. Wear a broad-brimmed hat and sunglasses. Use sunscreen and lip balm with an adequate UV rating. An inflatable PFD may be more comfortable than an inherently buoyant PFD.
-- **Stay hydrated** — Hydration is the main defense against hot weather risks. Bring adequate water or electrolyte replenishment drinks and make sure the crew drinks regularly. Avoid alcohol and caffeine.
-- **Monitor your crew** — Ask regularly if everyone is OK. Watch for dizziness, nausea, or excessive sweating. If any crew member is uncomfortable or showing signs of heat illness, return to shore and seek shade or air conditioning. At WSM, the chandlery and the indoor dining area at the pizza bar are both air conditioned.
-- **Time your outing** — Try to sail in the morning or late in the day. Check the weather before you sail so you're aware of conditions such as the predicted heat index.

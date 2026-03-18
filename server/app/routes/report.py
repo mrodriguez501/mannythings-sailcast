@@ -27,25 +27,30 @@ HEARTBEAT_INTERVAL_S = 30
 
 
 def _build_advice(summary_data: dict | str | None) -> tuple[str, dict | None]:
-    """Extract recommendation string and structured advice from OpenAI cache."""
+    """Extract recommendation string and structured advice from OpenAI cache.
+
+    Supports both the new few-shot schema (recommendation field) and the
+    legacy schema (summary + advisory fields) for backward compatibility.
+    """
     if summary_data and isinstance(summary_data, dict):
-        summary = summary_data.get("summary", "") or summary_data.get("text", "")
+        rec = summary_data.get("recommendation", "")
+        summary = summary_data.get("summary", "")
         advisory = summary_data.get("advisory", "")
-        recommendation = (
-            f"{summary}\n\n{advisory}".strip() if (summary and advisory) else summary or advisory or str(summary_data)
-        )
+        recommendation_text = rec or (
+            f"{summary}\n\n{advisory}".strip() if (summary and advisory) else summary or advisory
+        ) or str(summary_data)
+
         advice = None
         if summary_data.get("safetyLevel"):
             advice = {
-                "safetyLevel": summary_data.get("safetyLevel"),
-                "summary": summary,
-                "advisory": advisory,
+                "safetyLevel": summary_data["safetyLevel"],
+                "recommendation": recommendation_text,
                 "keyConcerns": summary_data.get("keyConcerns", []),
                 "sailingWindows": summary_data.get("sailingWindows"),
                 "generatedAt": summary_data.get("generatedAt"),
                 "model": summary_data.get("model"),
             }
-        return recommendation, advice
+        return recommendation_text, advice
 
     if isinstance(summary_data, str):
         return summary_data, None
