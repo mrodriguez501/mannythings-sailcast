@@ -36,9 +36,11 @@ def _build_advice(summary_data: dict | str | None) -> tuple[str, dict | None]:
         rec = summary_data.get("recommendation", "")
         summary = summary_data.get("summary", "")
         advisory = summary_data.get("advisory", "")
-        recommendation_text = rec or (
-            f"{summary}\n\n{advisory}".strip() if (summary and advisory) else summary or advisory
-        ) or str(summary_data)
+        recommendation_text = (
+            rec
+            or (f"{summary}\n\n{advisory}".strip() if (summary and advisory) else summary or advisory)
+            or str(summary_data)
+        )
 
         advice = None
         if summary_data.get("safetyLevel"):
