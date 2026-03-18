@@ -3,7 +3,8 @@
  * Refreshes every hour (primary flow).
  */
 const REPORT_URL = 'api/report';
-const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+const SSE_URL = 'api/events';
+const FALLBACK_POLL_MS = 5 * 60 * 1000; // 5 min fallback if SSE unavailable
 
 /* SCOW wind restriction thresholds (MPH) per club_rules.md */
 const WIND_LIMIT_DAYSAILER_RESTRICTED = 17; // reef, lagoon-only, PFDs
@@ -277,8 +278,10 @@ function findBestWindow(hourly) {
 
 const SAFETY_COLORS = {
   SAFE: { border: '#2e7d32', bg: '#e8f5e9', badge: '#2e7d32', text: 'Safe to Sail' },
+  GOOD_TO_GO: { border: '#2e7d32', bg: '#e8f5e9', badge: '#2e7d32', text: 'Good to Go' },
   CAUTION: { border: '#f9a825', bg: '#fff8e1', badge: '#f57f17', text: 'Caution' },
   UNSAFE: { border: '#c62828', bg: '#ffebee', badge: '#c62828', text: 'Unsafe' },
+  NO_GO: { border: '#c62828', bg: '#ffebee', badge: '#c62828', text: 'No-Go' },
 };
 
 function renderAdviceCard(data) {
@@ -321,19 +324,11 @@ function renderAdviceCard(data) {
     adviceCardEl.appendChild(scaDiv);
   }
 
-  const summary = (advice && advice.summary) || data.recommendation || '';
-  if (summary) {
+  const recommendation = (advice && advice.recommendation) || data.recommendation || '';
+  if (recommendation) {
     const p = document.createElement('p');
     p.className = 'advice-summary';
-    p.textContent = summary;
-    adviceCardEl.appendChild(p);
-  }
-
-  const advisory = advice && advice.advisory;
-  if (advisory) {
-    const p = document.createElement('p');
-    p.className = 'advice-advisory';
-    p.textContent = advisory;
+    p.textContent = recommendation;
     adviceCardEl.appendChild(p);
   }
 
@@ -1008,4 +1003,52 @@ async function fetchReport() {
 
 initTimeFilter();
 fetchReport();
-setInterval(fetchReport, REFRESH_INTERVAL_MS);
+
+/**
+ * SSE-based live refresh: the server pushes a "refresh" event after each
+ * scheduled data update. Falls back to polling every 5 min if SSE drops.
+ */
+function initSSE() {
+  let fallbackTimer = null;
+
+  function startFallbackPoll() {
+    if (fallbackTimer) return;
+    fallbackTimer = setInterval(fetchReport, FALLBACK_POLL_MS);
+  }
+
+  function stopFallbackPoll() {
+    if (fallbackTimer) {
+      clearInterval(fallbackTimer);
+      fallbackTimer = null;
+    }
+  }
+
+  if (typeof EventSource === 'undefined') {
+    startFallbackPoll();
+    return;
+  }
+
+  const baseTag = document.querySelector('base');
+  const base = baseTag ? baseTag.getAttribute('href') : '/';
+  const url = `${base}${SSE_URL}`.replace(/\/+/g, '/');
+
+  function connect() {
+    const es = new EventSource(url);
+
+    es.addEventListener('refresh', () => {
+      fetchReport();
+    });
+
+    es.onopen = () => {
+      stopFallbackPoll();
+    };
+
+    es.onerror = () => {
+      startFallbackPoll();
+    };
+  }
+
+  connect();
+}
+
+initSSE();

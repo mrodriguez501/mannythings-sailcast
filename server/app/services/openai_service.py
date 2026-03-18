@@ -49,48 +49,54 @@ class OpenAIService:
     def _build_system_prompt(self) -> str:
         """Build the system prompt with club rules context."""
         return (
-            "You are a sailing safety advisor for a sailing club on the Potomac River "
-            "near KDCA (Reagan National Airport). Your role is to provide clear, "
-            "actionable weather summaries and sailing advisories based on official NWS "
-            "forecast data and the club's safety rules.\n\n"
-            "CLUB SAFETY RULES:\n"
-            f"{self._club_rules}\n\n"
-            "GUIDELINES:\n"
-            "- Be concise but thorough\n"
-            "- Always err on the side of caution for safety\n"
-            "- Reference specific wind speeds and gust thresholds from the rules\n"
-            "- Clearly state if conditions are SAFE, CAUTION, or UNSAFE for sailing\n"
-            "- Mention any active weather alerts prominently\n"
-            "- If the NWS Marine Forecast contains a Small Craft Advisory, conditions are UNSAFE — "
-            "the club does not allow boats out during a Small Craft Advisory\n"
-            "- Format your response with clear sections"
+            "You are SailCast, a conservative sailing conditions recommendation assistant.\n\n"
+            "Your job is to evaluate the next 12 hours of sailing conditions using:\n"
+            "1. structured weather data,\n"
+            "2. retrieved club-guideline excerpts,\n"
+            "3. deterministic risk flags provided by the application.\n\n"
+            "Primary objective:\n"
+            "Produce a brief, practical recommendation for club sailors.\n\n"
+            "Decision principles:\n"
+            "- Follow club guidelines over general sailing knowledge whenever a conflict exists.\n"
+            "- Be conservative when conditions are ambiguous or borderline.\n"
+            "- Do not invent thresholds, rules, or club policies not present in the provided context.\n"
+            "- If context is insufficient, say that the recommendation is uncertain.\n"
+            "- Respect hard risk flags from the application.\n"
+            '- Distinguish between "good to go", "marginal/caution", and "no-go".\n'
+            "- If novice and experienced guidance would differ, state that clearly.\n\n"
+            "CLUB GUIDELINES:\n"
+            f"{self._club_rules}"
         )
 
     def _build_forecast_prompt(self, weather_brief: str) -> str:
         """Build the user prompt from the pre-built weather brief."""
         return (
-            "Based on the following Weather Brief (daytime periods only, 8 AM - 8 PM), generate:\n"
-            "1. A human-readable DAYTIME WEATHER SUMMARY (2-3 sentences)\n"
-            "2. A SAILING ADVISORY with safety recommendation\n"
-            "3. KEY CONCERNS if any\n"
-            "4. SAILING WINDOWS — list the safe hour ranges for each boat type "
-            "(cruising boats and daysailers) based on the club wind thresholds\n\n"
-            "WEATHER BRIEF:\n"
+            "WEATHER DATA:\n"
             f"{weather_brief}\n\n"
-            "Provide your response in the following JSON format:\n"
+            "Respond with JSON only. Schema:\n"
             "{\n"
-            '  "summary": "Daytime weather summary text",\n'
-            '  "advisory": "Sailing advisory text with safety level",\n'
-            '  "safetyLevel": "SAFE | CAUTION | UNSAFE",\n'
+            '  "safetyLevel": "GOOD_TO_GO | CAUTION | NO_GO",\n'
+            '  "recommendation": "Max 3 short sentences. '
+            "Sentence 1: overall recommendation. "
+            "Sentence 2: main reasons based on weather and club rules. "
+            'Sentence 3: optional caution or timing nuance only if useful.",\n'
             '  "keyConcerns": ["concern1", "concern2"],\n'
             '  "sailingWindows": {\n'
-            '    "cruisingBoats": "e.g. 8AM-2PM (winds below 29 mph)",\n'
-            '    "daysailers": "e.g. 8AM-12PM (winds below 23 mph)",\n'
-            '    "reefRequired": "e.g. 12PM-3PM (winds 17-23 mph, reef + lagoon + PFDs)"\n'
-            "  },\n"
-            '  "generatedAt": "ISO timestamp"\n'
-            "}"
+            '    "cruisingBoats": "safe hour range or NO_GO",\n'
+            '    "daysailers": "safe hour range or NO_GO",\n'
+            '    "reefRequired": "hour range requiring reef + lagoon + PFDs, or N/A"\n'
+            "  }\n"
+            "}\n\n"
+            "Do not mention token limits, prompting, or internal reasoning.\n"
+            "Do not quote large passages from the guidelines."
         )
+
+    # Models that do NOT support the temperature parameter (reasoning models)
+    _NO_TEMPERATURE_MODELS = {"o1", "o1-mini", "o1-preview", "o3-mini", "gpt-5-nano"}
+
+    def _model_supports_temperature(self) -> bool:
+        model = settings.OPENAI_MODEL.lower()
+        return model not in self._NO_TEMPERATURE_MODELS
 
     async def generate_summary(self, weather_brief: str) -> dict:
         """Generate an AI-powered weather summary and sailing advisory.
@@ -118,21 +124,27 @@ class OpenAIService:
             }
 
         logger.info("Generating AI summary...")
+        logger.info(f"Model: {settings.OPENAI_MODEL}")
+        logger.debug("Weather brief length: %d chars", len(weather_brief))
         try:
             client = self._get_client()
-            response = client.chat.completions.create(
-                model=settings.OPENAI_MODEL,
-                messages=[
+
+            kwargs: dict = {
+                "model": settings.OPENAI_MODEL,
+                "messages": [
                     {"role": "system", "content": self._build_system_prompt()},
                     {
                         "role": "user",
                         "content": self._build_forecast_prompt(weather_brief),
                     },
                 ],
-                temperature=0.3,
-                max_completion_tokens=1000,
-                response_format={"type": "json_object"},
-            )
+                "max_completion_tokens": 8000,
+                "response_format": {"type": "json_object"},
+            }
+            if self._model_supports_temperature():
+                kwargs["temperature"] = 0.3
+
+            response = client.chat.completions.create(**kwargs)
 
             # --- Record actual token usage ---
             usage = response.usage
@@ -141,14 +153,36 @@ class OpenAIService:
                     input_tokens=usage.prompt_tokens,
                     output_tokens=usage.completion_tokens,
                 )
+                logger.info(
+                    "Token usage: prompt=%d, completion=%d, total=%d",
+                    usage.prompt_tokens,
+                    usage.completion_tokens,
+                    usage.total_tokens,
+                )
 
-            content = response.choices[0].message.content
+            choice = response.choices[0]
+            content = choice.message.content
+            finish_reason = choice.finish_reason
+
+            logger.info("Finish reason: %s", finish_reason)
+            if choice.message.refusal:
+                logger.warning("Model refusal: %s", choice.message.refusal)
+
+            if not content:
+                logger.error("OpenAI returned empty content (finish_reason=%s)", finish_reason)
+                raise ValueError(f"OpenAI returned empty content (finish_reason={finish_reason})")
+
+            logger.info("Raw response (first 300 chars): %s", content[:300])
+
+            if finish_reason == "length":
+                logger.warning("Response truncated — max_completion_tokens may be too low")
+
             parsed = json.loads(content)
             parsed["generatedAt"] = datetime.now(UTC).isoformat()
             parsed["model"] = settings.OPENAI_MODEL
 
             self._summary_cache = parsed
-            logger.info(f"AI summary generated: safety={parsed.get('safetyLevel')}")
+            logger.info("AI summary generated: safety=%s", parsed.get("safetyLevel"))
             return parsed
 
         except Exception as e:

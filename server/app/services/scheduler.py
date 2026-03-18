@@ -10,6 +10,7 @@ import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+from app.services.event_bus import event_bus
 from app.services.marine_service import marine_service
 from app.services.nws_service import nws_service
 from app.services.openai_service import openai_service
@@ -45,6 +46,9 @@ async def refresh_all_data():
 
         # 5. Generate AI summary from the brief
         await openai_service.generate_summary(weather_brief)
+
+        # 6. Notify SSE subscribers that fresh data is ready
+        event_bus.publish("refresh", {"generatedAt": report.get("generatedAt", "")})
 
         logger.info("=== Scheduled data refresh complete ===")
 
